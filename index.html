@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#061b2a" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content" />
+    <script>
+      if (
+        window.location.protocol === 'http:' &&
+        !['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+      ) {
+        window.location.replace(`https://${window.location.host}${window.location.pathname}${window.location.search}${window.location.hash}`)
+      }
+    </script>
     <meta
       name="description"
       content="复杂系统拓扑统计理论及应用北京市重点实验室官方网站"
