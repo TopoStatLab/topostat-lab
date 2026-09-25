@@ -31,11 +31,6 @@ const teamMembers = [
     photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410352334150.jpg',
   },
   {
-    name: '邬荣领',
-    en: 'RONGLING WU',
-    photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410343895510.jpg',
-  },
-  {
     name: '丘成栋',
     en: 'CHENGDONG QIU',
     photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410361088743.jpg',
@@ -174,6 +169,13 @@ export default function TeamPage() {
     photo: `${base}people/team/yau-shingtung.jpg`,
     position: '50% 22%',
   }
+  
+    const director = {
+    name: '邬荣领',
+    en: 'RONGLING WU',
+    title: '主任',
+    photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410343895510.jpg',
+  }
 
   return (
     <div className="team-page">
@@ -201,6 +203,13 @@ export default function TeamPage() {
               <p>{leader.en}</p>
             </div>
 
+            <div className="team-director-node">
+              <Portrait person={director} leader />
+              <h2>{director.name}</h2>
+              <p>{director.title}</p>
+              <p>{director.en}</p>
+            </div>
+            
             <div className="team-tree-scroll">
               <div className="team-branch">
                 {teamMembers.map((person) => (
