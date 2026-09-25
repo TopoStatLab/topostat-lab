@@ -243,7 +243,7 @@
   left: 50%;
   top: calc(100% + 25px);
   width: 1px;
-  height: 70px;
+  height: 35px;
   background: linear-gradient(180deg, #4abde8, #87d9f4);
 }
 
