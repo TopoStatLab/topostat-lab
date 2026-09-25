@@ -218,6 +218,38 @@
 .team-footer {
   margin-top: 0;
 }
+.team-director-node {
+  position: relative;
+  z-index: 2;
+  width: 210px;
+  margin: 35px auto 0;
+  text-align: center;
+}
+
+.team-director-node::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -35px;
+  width: 1px;
+  height: 35px;
+  background: linear-gradient(180deg, #4abde8, #87d9f4);
+}
+
+.team-director-node h2 {
+  margin: 21px 0 0;
+  color: #143344;
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.team-director-node p {
+  margin: 7px 0 0;
+  color: #318eb4;
+  font-size: 9px;
+  letter-spacing: .17em;
+}
 
 @media (min-width: 1500px) {
   .team-branch { min-width: 0; }
