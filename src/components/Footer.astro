@@ -1,52 +1,56 @@
 ---
-import LabMark from './LabMark.astro'
 import { site } from '../data/site'
-import { ui, t, type Lang } from '../i18n'
+import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
   lang: Lang
 }
 const { lang } = Astro.props
+const zh = lang === 'zh'
+const L = (p: string) => localizedPath(p, lang)
 const year = new Date().getFullYear()
 ---
 
 <footer class="footer">
-  <div class="page-shell footer-main">
-    <div class="footer-brand">
-      <LabMark />
-      <div>
-        <strong>{ui.siteName.zh}</strong>
-        <span>{ui.siteName.en}</span>
-      </div>
+  <div class="wrap footer-main">
+    <div>
+      <p class="footer-name">{ui.siteName.zh}</p>
+      <p class="footer-en">{ui.siteName.en}</p>
     </div>
-    <div class="footer-location-grid">
+    <div>
       {site.contact.locations.map((loc, i) => (
-        <div class="footer-location">
-          <h4>{i === 0 ? t(ui.labAddress, lang) : t(loc.name, lang)}</h4>
-          <p>{t(loc.address, lang)}</p>
-        </div>
+        <p style={i ? 'margin-top:16px' : undefined}>
+          <span style="color:#fff">{i === 0 ? t(ui.labAddress, lang) : t(loc.name, lang)}</span><br />
+          {t(loc.address, lang)}
+        </p>
       ))}
       {site.contact.email && (
-        <div class="footer-location">
-          <h4>{t(ui.email, lang)}</h4>
-          <p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
-        </div>
+        <p style="margin-top:16px"><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
       )}
     </div>
+    <div>
+      <h2>{zh ? '站内' : 'On this site'}</h2>
+      <p>
+        <a href={L('/research/')}>{t(ui.research, lang)}</a><br />
+        <a href={L('/publications/')}>{t(ui.publications, lang)}</a><br />
+        <a href={L('/team/')}>{t(ui.team, lang)}</a><br />
+        <a href={L('/news/')}>{zh ? '动态' : 'News'}</a><br />
+        <a href={L('/contact/')}>{t(ui.contact, lang)}</a>
+      </p>
+      <h2 style="margin-top:20px">{zh ? '相关机构' : 'Institutions'}</h2>
+      <p><a href={site.hostInstitution.url} target="_blank" rel="noopener">{zh ? site.hostInstitution.zh : 'BIMSA'}</a><br />{site.partnerInstitution[lang]}</p>
+    </div>
   </div>
-  <div class="page-shell footer-bottom">
-    <span>© {year} {ui.siteName.en}</span>
-    <span class="footer-meta-right">
+  <div class="wrap footer-bottom">
+    <span>© {year} {zh ? '复杂系统拓扑统计理论及应用北京市重点实验室' : ui.siteName.en}</span>
+    <span>
       {site.icp && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">{site.icp}</a>}
       {site.policeFiling && (
         <a href={`https://beian.mps.gov.cn/#/query/webSearch?code=${site.policeFiling.code}`} target="_blank" rel="noopener">{site.policeFiling.text}</a>
       )}
       {site.visitCounter && (
         <span id="busuanzi_container_site_pv" class="site-visit-counter" style="display:none" title={t(ui.visits, lang)}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
-            <circle cx="12" cy="12" r="2.7"></circle>
-          </svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
           <span class="visually-hidden">{t(ui.visits, lang)}</span>
           <span id="busuanzi_value_site_pv">--</span>
         </span>

@@ -41,7 +41,7 @@ const fromPublications: NewsItem[] = publications.map((p) => ({
   date: String(p.year),
   category: 'progress',
   title: { zh: p.title, en: p.title },
-  summary: { zh: `${p.journal} · ${p.summary.zh}`, en: `${p.journal} · ${p.summary.en}` },
+  summary: { zh: `${p.journal}：${p.summary.zh}`, en: `${p.journal}: ${p.summary.en}` },
   href: doiUrl(p.doi),
 }))
 
@@ -73,8 +73,8 @@ export const newsCategories: { id: NewsCategory; anchor: string; eyebrow: string
 
 export function formatDate(date: string, lang: 'zh' | 'en') {
   const [y, m, d] = date.split('-')
-  if (!m) return y
-  if (lang === 'zh') return d ? `${y} · ${m} · ${d}` : `${y} · ${m}`
+  if (!m) return lang === 'zh' ? `${y} 年` : y
+  if (lang === 'zh') return d ? `${y} 年 ${Number(m)} 月 ${Number(d)} 日` : `${y} 年 ${Number(m)} 月`
   const month = new Date(Number(y), Number(m) - 1, 1).toLocaleString('en', { month: 'short' })
   return d ? `${month} ${Number(d)}, ${y}` : `${month} ${y}`
 }

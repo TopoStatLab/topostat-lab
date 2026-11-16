@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
-import PublicationRow from '../components/PublicationRow.astro'
+import BibItem from '../components/BibItem.astro'
 import { publications, doiUrl } from '../data/publications'
 import { researchDirections } from '../data/research'
 import { ui, t, type Lang } from '../i18n'
@@ -34,29 +34,30 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <PageHeading
-    eyebrow="PUBLICATIONS"
+    lang={lang}
     title={t(ui.publications, lang)}
-    kicker={`${publications.length} ${zh ? '篇论文' : 'papers'}`}
-    desc={zh ? '按年份排列，可按研究方向筛选。' : 'Listed by year; filter by research direction.'}
+    lead={zh ? `共 ${publications.length} 篇论文，按年份排列。` : `${publications.length} papers, newest first.`}
   />
 
-  <section class="section publications-section pubs-page">
-    <div class="page-shell">
-      <div class="pub-filter" role="group" aria-label={zh ? '按研究方向筛选' : 'Filter by research direction'}>
-        <button type="button" class="ph-chip active" data-filter="all" aria-pressed="true">{zh ? '全部' : 'All'}</button>
-        {researchDirections.map((d) => (
-          <button type="button" class="ph-chip" data-filter={d.id} aria-pressed="false">{t(d.title, lang)}</button>
-        ))}
-      </div>
-      {years.map((year) => (
-        <div class="pub-year-group" data-year={year}>
-          <h2 class="pub-year">{year}</h2>
-          <div class="publication-list">
-            {publications.filter((p) => p.year === year).map((paper) => <PublicationRow paper={paper} lang={lang} />)}
-          </div>
+  <section class="section" style="padding-top:clamp(32px,5vw,56px)">
+    <div class="wrap row">
+      <div class="main">
+        <div class="chips pub-filter" role="group" aria-label={zh ? '按研究方向筛选' : 'Filter by research direction'}>
+          <button type="button" class="chip" data-filter="all" aria-pressed="true">{zh ? '全部' : 'All'}</button>
+          {researchDirections.map((d) => (
+            <button type="button" class="chip" data-filter={d.id} aria-pressed="false">{t(d.title, lang)}</button>
+          ))}
         </div>
-      ))}
-      <p class="pub-empty" hidden>{zh ? '该方向暂无条目。' : 'No entries for this direction yet.'}</p>
+        {years.map((year) => (
+          <div class="pub-year-group">
+            <h2 class="year-head">{year}</h2>
+            <ol class="bib">
+              {publications.filter((p) => p.year === year).map((paper) => <BibItem paper={paper} lang={lang} />)}
+            </ol>
+          </div>
+        ))}
+        <p class="pub-empty muted" hidden>{zh ? '这个方向暂无论文。' : 'No papers in this direction yet.'}</p>
+      </div>
     </div>
   </section>
 </Base>
@@ -64,15 +65,11 @@ const jsonLd = [
 <script>
   const buttons = document.querySelectorAll<HTMLButtonElement>('.pub-filter [data-filter]')
   const apply = (filter: string) => {
-    buttons.forEach((b) => {
-      const on = b.dataset.filter === filter
-      b.classList.toggle('active', on)
-      b.setAttribute('aria-pressed', String(on))
-    })
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)))
     let shown = 0
     document.querySelectorAll<HTMLElement>('.pub-year-group').forEach((group) => {
       let visible = 0
-      group.querySelectorAll<HTMLElement>('.publication-row').forEach((row) => {
+      group.querySelectorAll<HTMLElement>('.bib-item').forEach((row) => {
         const ok = filter === 'all' || (row.dataset.directions ?? '').split(' ').includes(filter)
         row.hidden = !ok
         if (ok) visible++
