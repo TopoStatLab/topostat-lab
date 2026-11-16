@@ -41,7 +41,7 @@ export const director: Person = {
   id: 'wu-rongling',
   name: { zh: '邬荣领', en: 'Rongling Wu' },
   title: { zh: '实验室主任', en: 'Director' },
-  photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410343895510.jpg',
+  photo: '/people/remote/wu-rongling.jpg',
   homepage: 'https://www.bimsa.cn/zh-CN/detail/ronglingwu.html',
 }
 
@@ -49,7 +49,7 @@ export const members: Person[] = [
   {
     id: 'liu-jingyuan',
     name: { zh: '刘婧媛', en: 'Jingyuan Liu' },
-    photo: 'https://yurenhao.sizhengwang.cn/upload/resources/image/2020/09/29/343095.jpg',
+    photo: '/people/remote/liu-jingyuan.jpg',
     position: '35% 28%',
   },
   {
@@ -66,30 +66,30 @@ export const members: Person[] = [
   {
     id: 'fang-fuquan',
     name: { zh: '方复全', en: 'Fuquan Fang' },
-    photo: 'https://www.cms.org.cn/upload/editor/image/20171204/04082812269.jpg',
+    photo: '/people/remote/fang-fuquan.jpg',
   },
   {
     id: 'wu-jie',
     name: { zh: '吴杰', en: 'Jie Wu' },
-    photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410352334150.jpg',
+    photo: '/people/remote/wu-jie.jpg',
   },
   {
     id: 'qiu-chengdong',
     name: { zh: '丘成栋', en: 'Chengdong Qiu' },
-    photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410361088743.jpg',
+    photo: '/people/remote/qiu-chengdong.jpg',
   },
   {
     id: 'yang-fan',
     name: { zh: '杨帆', en: 'Fan Yang' },
     // Cropped from a larger photo on the live site; replace with a proper portrait.
-    photo: 'https://qzc.tsinghua.edu.cn/__local/8/3F/E3/75CCB8BF92C728EB25C2749DA40_5B623D0C_153555.png',
+    photo: '/people/remote/yang-fan.png',
     position: '72% 61%',
     zoom: 3.8,
   },
   {
     id: 'rao-yi',
     name: { zh: '饶毅', en: 'Yi Rao' },
-    photo: 'https://www.futureforum.org.cn/resource/data/uploads/95/58fcf4fa4c8c0a0afd827e1993b6e0d5.jpg',
+    photo: '/people/remote/rao-yi.jpg',
   },
   {
     id: 'zhu-liping',
@@ -99,6 +99,6 @@ export const members: Person[] = [
   {
     id: 'gong-xinqi',
     name: { zh: '龚新奇', en: 'Xinqi Gong' },
-    photo: 'https://hsc.beijing.gov.cn/hsc/ywdt8/zxdt72/543529537/2025021410350331219.jpg',
+    photo: '/people/remote/gong-xinqi.jpg',
   },
 ]
