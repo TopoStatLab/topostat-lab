@@ -1,5 +1,6 @@
 ---
-import '@fontsource-variable/inter'
+import '../styles/fonts.css'
+import interLatin from '../assets/fonts/inter-latin-wght-normal.woff2?url'
 import '../styles/global.css'
 import '../styles/pages.css'
 import Header from '../components/Header.astro'
@@ -61,6 +62,7 @@ const organization = {
     <link rel="alternate" hreflang="zh-CN" href={alternates['zh-CN']} />
     <link rel="alternate" hreflang="en" href={alternates.en} />
     <link rel="alternate" hreflang="x-default" href={alternates['zh-CN']} />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 

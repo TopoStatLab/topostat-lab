@@ -45,8 +45,8 @@ src/
   lib/persistence.ts   Vietoris–Rips persistent homology (H0/H1) used by the demo
   layouts/Base.astro   <head>: SEO meta, hreflang, Open Graph, schema.org JSON-LD
   styles/      global.css (original design) + pages.css (new pages, demo)
-public/        static files: photos, favicon, og-image, robots.txt, CNAME
-scripts/       check-links.mjs, localize-photos.mjs
+public/        static files: portraits (people/portraits/*.webp), favicon, og-image, robots.txt, CNAME
+scripts/       check-links.mjs
 ```
 
 Routing: Chinese at `/…/`, English at `/en/…/`. The header language switch goes to the same page in the other language. The old `/team.html` URL redirects to `/team/`.
@@ -57,7 +57,7 @@ Routing: Chinese at `/…/`, English at `/en/…/`. The header language switch g
 
 - [ ] Official contact email and phone → `src/data/site.ts`
 - [ ] Approved logo to replace the provisional mark (`src/components/LabMark.astro`, `public/favicon.svg`, `public/og-image.jpg`)
-- [ ] Confirm portrait permissions, then run `npm run photos:localize` on a machine with normal internet access to replace hot-linked photos with local copies. Unused local files `public/people/{yau,wu,gong}.jpg` and `team/{cui-yuehua,yang-fan}.jpg` have unconfirmed subjects — check before using.
+- [ ] Portrait for 崔跃华 (the old photo files were corrupt) → add `public/people/portraits/cui-yuehua.webp` (square, 288×288 px, WebP) and set `photo` in `src/data/people.ts`
 - [ ] Member titles, affiliations and homepages → `src/data/people.ts`
 - [ ] Recruitment details → `src/data/join.ts`, then set `showJoinPage: true`
 - [ ] Full publication list
