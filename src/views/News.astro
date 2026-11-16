@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeading from '../components/PageHeading.astro'
+import NewsGrid from '../components/NewsGrid.astro'
+import { ui, t, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+---
+
+<Base lang={lang} path="/news/" title={t(ui.news, lang)} description={zh ? '实验室新闻动态、学术活动与研究进展。' : 'Laboratory news, academic events and research progress.'}>
+  <PageHeading
+    eyebrow="NEWS & EVENTS"
+    title={t(ui.news, lang)}
+    desc={zh ? '科研动态分为新闻动态、学术活动和研究进展三类，持续更新。' : 'News, academic events and research progress, updated regularly.'}
+  />
+  <section class="section news-section">
+    <div class="page-shell">
+      <NewsGrid lang={lang} />
+    </div>
+  </section>
+</Base>

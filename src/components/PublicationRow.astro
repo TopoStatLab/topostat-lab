@@ -1,0 +1,20 @@
+---
+import { doiUrl, type Publication } from '../data/publications'
+import type { Lang } from '../i18n'
+
+interface Props {
+  paper: Publication
+  lang: Lang
+}
+const { paper, lang } = Astro.props
+---
+<a class="publication-row" href={doiUrl(paper.doi)} target="_blank" rel="noopener" data-directions={paper.directions.join(' ')}>
+  <div class="pub-meta"><strong>{paper.year}</strong><span>{paper.journal}</span></div>
+  <div class="pub-main">
+    <h3>{paper.title}</h3>
+    {paper.authors && <p class="pub-authors">{paper.authors}</p>}
+    <p>{paper.summary[lang]}</p>
+    <p class="pub-doi">DOI: {paper.doi}</p>
+  </div>
+  <span class="pub-arrow" aria-hidden="true">↗</span>
+</a>

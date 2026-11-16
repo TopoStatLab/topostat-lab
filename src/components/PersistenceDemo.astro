@@ -1,0 +1,295 @@
+---
+import type { Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+const datasets = [
+  ['circle', zh ? '圆环' : 'Circle'],
+  ['two-circles', zh ? '双环' : 'Two circles'],
+  ['figure-eight', zh ? '8 字形' : 'Figure eight'],
+  ['clusters', zh ? '三个簇' : 'Clusters'],
+  ['random', zh ? '随机' : 'Random'],
+]
+---
+
+<div class="ph-demo" data-lang={lang}>
+  <div class="ph-toolbar" role="group" aria-label={zh ? '选择数据集' : 'Choose a dataset'}>
+    {datasets.map(([id, label], i) => (
+      <button type="button" class:list={['ph-chip', { active: i === 0 }]} data-dataset={id} aria-pressed={i === 0 ? 'true' : 'false'}>{label}</button>
+    ))}
+    <button type="button" class="ph-chip ph-clear" data-action="clear">{zh ? '清空，自己画' : 'Clear & draw'}</button>
+  </div>
+
+  <div class="ph-panels">
+    <figure class="ph-cloud">
+      <canvas class="ph-cloud-canvas" aria-label={zh ? '点云与 Vietoris–Rips 复形。点击添加数据点。' : 'Point cloud and Vietoris–Rips complex. Click to add points.'}></canvas>
+      <figcaption>{zh ? '点击画布添加数据点（最多 80 个）' : 'Click to add points (up to 80)'}</figcaption>
+    </figure>
+
+    <div class="ph-side">
+      <div class="ph-controls">
+        <label class="ph-slider">
+          <span>{zh ? '尺度' : 'Scale'} <b>ε = <output class="ph-eps">0.000</output></b></span>
+          <input type="range" min="0" max="0.5" step="0.001" value="0.06" />
+        </label>
+        <button type="button" class="ph-play" data-action="play" aria-pressed="false">
+          <span class="ph-play-label">{zh ? '▶ 播放' : '▶ Play'}</span>
+        </button>
+      </div>
+
+      <div class="ph-betti" aria-live="polite">
+        <div><span>β<sub>0</sub></span><strong class="ph-b0">–</strong><small>{zh ? '连通分支' : 'components'}</small></div>
+        <div><span>β<sub>1</sub></span><strong class="ph-b1">–</strong><small>{zh ? '环 / 洞' : 'loops / holes'}</small></div>
+      </div>
+
+      <figure class="ph-barcode">
+        <canvas class="ph-barcode-canvas" aria-label={zh ? '持续条形码。点击可跳到对应尺度。' : 'Persistence barcode. Click to jump to a scale.'}></canvas>
+        <figcaption>
+          <span class="ph-key ph-key-0">H<sub>0</sub></span>
+          <span class="ph-key ph-key-1">H<sub>1</sub></span>
+          {zh ? '每根条代表一个拓扑特征从出现到消失的尺度区间；越长越“真实”，短条多是噪声。' : 'Each bar is the range of scales over which a feature lives; long bars are robust structure, short ones are noise.'}
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { ripsPersistence, bettiAt, dataset, type Point, type RipsResult, type DatasetId } from '../lib/persistence'
+
+  const MAX_EPS = 0.5
+  const MAX_POINTS = 80
+
+  for (const root of document.querySelectorAll<HTMLElement>('.ph-demo')) {
+    const zh = root.dataset.lang === 'zh'
+    const cloud = root.querySelector<HTMLCanvasElement>('.ph-cloud-canvas')!
+    const barcode = root.querySelector<HTMLCanvasElement>('.ph-barcode-canvas')!
+    const slider = root.querySelector<HTMLInputElement>('input[type=range]')!
+    const epsOut = root.querySelector<HTMLOutputElement>('.ph-eps')!
+    const b0El = root.querySelector('.ph-b0')!
+    const b1El = root.querySelector('.ph-b1')!
+    const playBtn = root.querySelector<HTMLButtonElement>('[data-action=play]')!
+    const playLabel = root.querySelector('.ph-play-label')!
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    let points: Point[] = dataset('circle')
+    let result: RipsResult = ripsPersistence(points, MAX_EPS)
+    let eps = Number(slider.value)
+    let playing = false
+    let raf = 0
+
+    const fit = (canvas: HTMLCanvasElement) => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const { width, height } = canvas.getBoundingClientRect()
+      canvas.width = Math.round(width * dpr)
+      canvas.height = Math.round(height * dpr)
+      const ctx = canvas.getContext('2d')!
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      return { ctx, width, height }
+    }
+
+    const drawCloud = () => {
+      const { ctx, width: s } = fit(cloud)
+      ctx.clearRect(0, 0, s, s)
+      const X = (p: Point) => p.x * s
+      const Y = (p: Point) => p.y * s
+
+      // ε/2 balls
+      ctx.fillStyle = 'rgba(104, 226, 251, 0.10)'
+      for (const p of points) {
+        ctx.beginPath()
+        ctx.arc(X(p), Y(p), (eps / 2) * s, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      // triangles
+      ctx.fillStyle = 'rgba(22, 141, 189, 0.16)'
+      for (const tri of result.triangles) {
+        if (tri.value > eps) break
+        const a = points[tri.a], b = points[tri.b], c = points[tri.c]
+        ctx.beginPath()
+        ctx.moveTo(X(a), Y(a))
+        ctx.lineTo(X(b), Y(b))
+        ctx.lineTo(X(c), Y(c))
+        ctx.closePath()
+        ctx.fill()
+      }
+      // edges
+      ctx.strokeStyle = 'rgba(13, 113, 153, 0.55)'
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      for (const e of result.edges) {
+        if (e.len > eps) break
+        ctx.moveTo(X(points[e.a]), Y(points[e.a]))
+        ctx.lineTo(X(points[e.b]), Y(points[e.b]))
+      }
+      ctx.stroke()
+      // vertices
+      ctx.fillStyle = '#08293b'
+      for (const p of points) {
+        ctx.beginPath()
+        ctx.arc(X(p), Y(p), 3.2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      if (!points.length) {
+        ctx.fillStyle = '#6a818c'
+        ctx.font = '14px Inter Variable, system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText(zh ? '点击这里画出你的点云' : 'Click here to draw a point cloud', s / 2, s / 2)
+      }
+    }
+
+    const PAD = { l: 34, r: 14, t: 10, b: 24 }
+    const drawBarcode = () => {
+      const { ctx, width: w, height: h } = fit(barcode)
+      ctx.clearRect(0, 0, w, h)
+      const plotW = w - PAD.l - PAD.r
+      const x = (v: number) => PAD.l + (Math.min(v, MAX_EPS) / MAX_EPS) * plotW
+      const h0 = result.bars.filter((b) => b.dim === 0).sort((a, b) => b.death - a.death)
+      const h1 = result.bars.filter((b) => b.dim === 1).sort((a, b) => b.death - b.birth - (a.death - a.birth))
+      const avail = h - PAD.t - PAD.b
+      const h0Area = h1.length ? avail * 0.58 : avail
+      const h1Area = avail - h0Area
+      const row0 = Math.min(7, h0Area / Math.max(h0.length, 1))
+      const row1 = Math.min(10, (h1Area - 10) / Math.max(h1.length, 1))
+
+      const drawBars = (bars: typeof h0, top: number, row: number, color: string, label: string) => {
+        ctx.fillStyle = '#6a818c'
+        ctx.font = '11px Inter Variable, system-ui, sans-serif'
+        ctx.textAlign = 'left'
+        ctx.fillText(label, 4, top + 10)
+        bars.forEach((bar, i) => {
+          const y = top + i * row
+          const alive = bar.birth <= eps && eps < bar.death
+          ctx.fillStyle = alive ? color : color + '55'
+          const x1 = x(bar.birth)
+          const x2 = bar.death === Infinity ? PAD.l + plotW : x(bar.death)
+          ctx.fillRect(x1, y + row * 0.15, Math.max(x2 - x1, 1.5), Math.max(row * 0.7, 1.2))
+          if (bar.death === Infinity && row >= 4) {
+            ctx.beginPath()
+            ctx.moveTo(x2, y + row * 0.5 - 3)
+            ctx.lineTo(x2 + 5, y + row * 0.5)
+            ctx.lineTo(x2, y + row * 0.5 + 3)
+            ctx.fill()
+          }
+        })
+      }
+      drawBars(h0, PAD.t, row0, '#168dbd', 'H₀')
+      if (h1.length) {
+        const top = PAD.t + h0Area + 10
+        ctx.strokeStyle = 'rgba(18, 70, 96, 0.13)'
+        ctx.beginPath()
+        ctx.moveTo(PAD.l, top - 5)
+        ctx.lineTo(PAD.l + plotW, top - 5)
+        ctx.stroke()
+        drawBars(h1, top, row1, '#e2802f', 'H₁')
+      }
+
+      // axis
+      ctx.strokeStyle = 'rgba(18, 70, 96, 0.25)'
+      ctx.beginPath()
+      ctx.moveTo(PAD.l, h - PAD.b + 4)
+      ctx.lineTo(PAD.l + plotW, h - PAD.b + 4)
+      ctx.stroke()
+      ctx.fillStyle = '#6a818c'
+      ctx.textAlign = 'center'
+      for (let v = 0; v <= MAX_EPS + 1e-9; v += 0.1) ctx.fillText(v.toFixed(1), x(v), h - 6)
+      // current ε
+      ctx.strokeStyle = '#08293b'
+      ctx.setLineDash([4, 3])
+      ctx.beginPath()
+      ctx.moveTo(x(eps), PAD.t - 4)
+      ctx.lineTo(x(eps), h - PAD.b + 4)
+      ctx.stroke()
+      ctx.setLineDash([])
+    }
+
+    const render = () => {
+      epsOut.textContent = eps.toFixed(3)
+      const [b0, b1] = bettiAt(result.bars, eps)
+      b0El.textContent = String(points.length ? b0 : 0)
+      b1El.textContent = String(b1)
+      drawCloud()
+      drawBarcode()
+    }
+
+    const recompute = () => {
+      result = ripsPersistence(points, MAX_EPS)
+      render()
+    }
+
+    const setPlaying = (on: boolean) => {
+      playing = on
+      playBtn.setAttribute('aria-pressed', String(on))
+      playLabel.textContent = on ? (zh ? '❚❚ 暂停' : '❚❚ Pause') : zh ? '▶ 播放' : '▶ Play'
+      cancelAnimationFrame(raf)
+      if (!on) return
+      if (eps >= MAX_EPS - 0.001) eps = 0
+      let last = performance.now()
+      const step = (now: number) => {
+        eps = Math.min(MAX_EPS, eps + ((now - last) / 1000) * 0.06)
+        last = now
+        slider.value = String(eps)
+        render()
+        if (eps >= MAX_EPS) setPlaying(false)
+        else raf = requestAnimationFrame(step)
+      }
+      raf = requestAnimationFrame(step)
+    }
+
+    slider.addEventListener('input', () => {
+      setPlaying(false)
+      eps = Number(slider.value)
+      render()
+    })
+    playBtn.addEventListener('click', () => {
+      if (reduced && !playing) {
+        eps = Math.min(MAX_EPS, eps + 0.05)
+        slider.value = String(eps)
+        render()
+        return
+      }
+      setPlaying(!playing)
+    })
+    root.querySelectorAll<HTMLButtonElement>('[data-dataset]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        root.querySelectorAll('[data-dataset]').forEach((b) => {
+          b.classList.toggle('active', b === btn)
+          b.setAttribute('aria-pressed', String(b === btn))
+        })
+        points = dataset(btn.dataset.dataset as DatasetId)
+        recompute()
+      }),
+    )
+    root.querySelector('[data-action=clear]')!.addEventListener('click', () => {
+      root.querySelectorAll('[data-dataset]').forEach((b) => {
+        b.classList.remove('active')
+        b.setAttribute('aria-pressed', 'false')
+      })
+      points = []
+      recompute()
+    })
+    cloud.addEventListener('click', (e) => {
+      if (points.length >= MAX_POINTS) return
+      const rect = cloud.getBoundingClientRect()
+      points = [...points, { x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height }]
+      recompute()
+    })
+    barcode.addEventListener('click', (e) => {
+      const rect = barcode.getBoundingClientRect()
+      const v = ((e.clientX - rect.left - PAD.l) / (rect.width - PAD.l - PAD.r)) * MAX_EPS
+      setPlaying(false)
+      eps = Math.max(0, Math.min(MAX_EPS, v))
+      slider.value = String(eps)
+      render()
+    })
+    let t = 0
+    window.addEventListener('resize', () => {
+      clearTimeout(t)
+      t = window.setTimeout(render, 120)
+    })
+    render()
+  }
+</script>

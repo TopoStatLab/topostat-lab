@@ -1,0 +1,57 @@
+---
+import LabMark from './LabMark.astro'
+import { site } from '../data/site'
+import { ui, t, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const year = new Date().getFullYear()
+---
+
+<footer class="footer">
+  <div class="page-shell footer-main">
+    <div class="footer-brand">
+      <LabMark />
+      <div>
+        <strong>{ui.siteName.zh}</strong>
+        <span>{ui.siteName.en}</span>
+      </div>
+    </div>
+    <div class="footer-location-grid">
+      {site.contact.locations.map((loc, i) => (
+        <div class="footer-location">
+          <h4>{i === 0 ? t(ui.labAddress, lang) : t(loc.name, lang)}</h4>
+          <p>{t(loc.address, lang)}</p>
+        </div>
+      ))}
+      {site.contact.email && (
+        <div class="footer-location">
+          <h4>{t(ui.email, lang)}</h4>
+          <p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
+        </div>
+      )}
+    </div>
+  </div>
+  <div class="page-shell footer-bottom">
+    <span>© {year} {ui.siteName.en}</span>
+    <span class="footer-meta-right">
+      {site.icp && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">{site.icp}</a>}
+      {site.policeFiling && (
+        <a href={`https://beian.mps.gov.cn/#/query/webSearch?code=${site.policeFiling.code}`} target="_blank" rel="noopener">{site.policeFiling.text}</a>
+      )}
+      {site.visitCounter && (
+        <span id="busuanzi_container_site_pv" class="site-visit-counter" style="display:none" title={t(ui.visits, lang)}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+            <circle cx="12" cy="12" r="2.7"></circle>
+          </svg>
+          <span class="visually-hidden">{t(ui.visits, lang)}</span>
+          <span id="busuanzi_value_site_pv">--</span>
+        </span>
+      )}
+    </span>
+  </div>
+  {site.visitCounter && <script is:inline async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>}
+</footer>

@@ -1,0 +1,190 @@
+/* Styles added in v0.2: accessibility helpers, new pages, interactive demo */
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+}
+.skip-link:focus { top: 12px; }
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.muted { color: var(--muted); }
+.anchor-target { scroll-margin-top: 110px; }
+[hidden] { display: none !important; }
+
+/* Header language switch reads as a real control now */
+.lang {
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.28);
+  color: rgba(255,255,255,.86);
+  transition: border-color .2s ease, color .2s ease;
+}
+.lang:hover { border-color: #7de8ff; color: #fff; }
+.nav-link.active { color: #fff; }
+.nav-link.active::after { right: 0; }
+
+/* Buttons */
+.button.outline { border-color: rgba(8, 41, 59, .3); color: var(--navy); }
+.button.outline:hover { border-color: var(--navy); }
+.text-link { display: inline-block; margin-top: 10px; color: #1588b4; font-size: 13px; }
+.text-link:hover { text-decoration: underline; }
+.split-heading > p .text-link { display: block; }
+
+/* Home */
+.hero h1.hero-title-en { font-size: clamp(48px, 6vw, 92px); white-space: normal; }
+.research-card { display: block; color: inherit; }
+.visual-cta { margin-top: 36px; }
+.team-teaser { background: #f9fbfc; }
+.team-teaser-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.team-teaser-layout .button { margin-top: 36px; }
+.team-teaser-faces { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; justify-items: center; }
+.team-teaser-face { transition: transform .2s ease; }
+.team-teaser-face:hover { transform: translateY(-4px); }
+.contact-more { margin-top: 28px; }
+
+/* Footer extras */
+.footer-meta-right { display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 20px; }
+.footer-meta-right a:hover, .footer-location a:hover { color: #fff; }
+.footer-location a { color: rgba(255,255,255,.7); }
+.site-visit-counter { display: inline-flex; align-items: center; gap: 7px; color: rgba(255,255,255,.62); font-variant-numeric: tabular-nums; }
+.site-visit-counter svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Sub-page heading (shared with the team page) */
+.team-page-heading h1 small { display: block; margin-top: 12px; font-size: .32em; letter-spacing: 0; color: var(--muted); }
+.not-found { min-height: 70vh; }
+.not-found .eyebrow { margin: 0 0 18px; color: #168bb8; font-size: 12px; letter-spacing: .24em; }
+.not-found .hero-actions { margin-top: 36px; }
+.not-found h1 { margin: 0; color: #102d3d; font-size: clamp(48px, 6vw, 80px); font-weight: 500; letter-spacing: -.04em; }
+
+/* Research directions */
+.direction-section { background: linear-gradient(180deg, #f5f9fb 0%, #eff6f9 100%); padding-top: 90px; }
+.direction-block {
+  display: grid;
+  grid-template-columns: 80px 1.4fr 1fr;
+  gap: 48px;
+  padding: 56px 0;
+  border-top: 1px solid var(--line);
+}
+.direction-block:last-child { border-bottom: 1px solid var(--line); }
+.direction-index { color: #64828f; font-size: 13px; letter-spacing: .16em; padding-top: 6px; }
+.direction-main .research-en { margin: 0 0 12px; }
+.direction-main h2 { margin: 0; color: #133345; font-size: clamp(28px, 3vw, 40px); line-height: 1.2; font-weight: 500; letter-spacing: -.02em; }
+.direction-body { margin: 22px 0 0; max-width: 640px; color: #4f6873; font-size: 15px; line-height: 1.95; }
+.direction-main .tag-row { margin-top: 28px; }
+.direction-papers h3 { margin: 4px 0 14px; color: #168bb8; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.direction-papers ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.direction-papers li a { display: block; padding: 14px 0; border-bottom: 1px solid var(--line); color: #183a4b; font-size: 14px; line-height: 1.55; }
+.direction-papers li a:hover { color: #0d7199; }
+.direction-papers li span { display: block; margin-bottom: 4px; color: #78909a; font-size: 11px; letter-spacing: .04em; }
+
+/* Interactive persistent homology demo */
+.demo-section { background: #fff; }
+.demo-aside { max-width: 420px; color: #4f6873; font-size: 14px; line-height: 1.9; border-left: 2px solid #6edff7; padding-left: 18px; }
+.ph-demo { margin-top: 56px; }
+.ph-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.ph-chip {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid rgba(19, 122, 160, .22);
+  background: #fff;
+  color: #2b4a58;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.ph-chip:hover { border-color: #168dbd; color: #0d7199; }
+.ph-chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.ph-clear { margin-left: auto; border-style: dashed; }
+.ph-panels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.ph-cloud, .ph-barcode { margin: 0; }
+.ph-cloud-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(22, 141, 189, .05) 1px, transparent 1px) 0 0 / 10% 10%,
+    linear-gradient(90deg, rgba(22, 141, 189, .05) 1px, transparent 1px) 0 0 / 10% 10%,
+    #fbfdfe;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+.ph-cloud figcaption, .ph-barcode figcaption { margin-top: 10px; color: #6a818c; font-size: 12px; line-height: 1.7; }
+.ph-controls { display: flex; align-items: flex-end; gap: 16px; }
+.ph-slider { flex: 1; display: grid; gap: 10px; color: #2b4a58; font-size: 13px; }
+.ph-slider b { color: var(--navy); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ph-slider input { width: 100%; accent-color: #168dbd; }
+.ph-play { min-height: 40px; padding: 0 18px; background: var(--navy); color: #fff; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.ph-play:hover { background: #10415b; }
+.ph-betti { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 0; }
+.ph-betti > div { padding: 16px 18px; border: 1px solid var(--line); background: #f6fafb; display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 12px; }
+.ph-betti span { color: #4f6873; font-size: 16px; font-family: Georgia, serif; font-style: italic; }
+.ph-betti strong { color: var(--navy); font-size: 34px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.ph-betti small { grid-column: 1 / -1; color: #6a818c; font-size: 11px; }
+.ph-barcode-canvas { display: block; width: 100%; height: 300px; border: 1px solid var(--line); background: #fbfdfe; cursor: pointer; }
+.ph-key { display: inline-flex; align-items: center; gap: 6px; margin-right: 12px; color: #2b4a58; font-weight: 600; }
+.ph-key::before { content: ''; width: 18px; height: 5px; }
+.ph-key-0::before { background: #168dbd; }
+.ph-key-1::before { background: #e2802f; }
+
+/* Publications page */
+.pubs-page { padding-top: 70px; }
+.pub-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
+.pub-year-group + .pub-year-group { margin-top: 56px; }
+.pub-year { margin: 0 0 4px; color: #1089b5; font-size: 34px; font-weight: 500; }
+.pub-year-group .publication-list { margin-top: 18px; }
+.pub-doi { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px !important; color: #8aa0aa !important; }
+.pub-empty { color: var(--muted); }
+
+/* News page */
+.news-mini-summary { margin: 8px 0 0; color: #6a818c; font-size: 12px; line-height: 1.7; }
+div.news-mini-card:hover { padding-left: 0; }
+
+/* Team page */
+.team-branch { list-style: none; margin: 0; }
+.node-title { color: #1688b5 !important; font-size: 11px !important; letter-spacing: .04em !important; }
+.node-link { display: inline-block; margin-top: 8px; color: #1688b5; font-size: 12px; }
+.team-tree-scroll:focus-visible { outline: 2px solid #69e2fb; outline-offset: 4px; }
+
+/* Contact page */
+.contact-page { padding-top: 80px; }
+.contact-cards-wide { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.contact-card h2 { margin: 34px 0 0; font-size: 21px; line-height: 1.5; font-weight: 600; }
+.contact-map { display: inline-block; margin-top: 22px; padding-bottom: 4px; border-bottom: 1px solid rgba(8, 43, 59, .4); font-size: 13px; }
+.contact-card a:hover { border-color: currentColor; }
+
+/* Join page */
+.join-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.join-grid .research-card { min-height: 260px; }
+.join-grid h2 { margin: 0; color: #133345; font-size: 24px; font-weight: 500; }
+.join-contact { margin-top: 36px; color: #4f6873; }
+
+@media (max-width: 1100px) {
+  .team-teaser-layout { grid-template-columns: 1fr; gap: 48px; }
+  .direction-block { grid-template-columns: 60px 1fr; }
+  .direction-papers { grid-column: 2; }
+  .ph-panels { grid-template-columns: 1fr; }
+  .ph-cloud { max-width: 620px; }
+  .join-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 820px) {
+  .lang { display: inline-block; padding: 5px 8px; font-size: 11px; }
+  .team-teaser-faces { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .team-teaser-faces .team-portrait { width: 68px; height: 68px; border-width: 3px; }
+  .direction-block { grid-template-columns: 1fr; gap: 20px; padding: 42px 0; }
+  .direction-papers { grid-column: auto; }
+  .ph-clear { margin-left: 0; }
+  .ph-barcode-canvas { height: 260px; }
+  .footer-meta-right { justify-content: flex-start; }
+}

@@ -1,0 +1,100 @@
+---
+import '../styles/fonts.css'
+import interLatin from '../assets/fonts/inter-latin-wght-normal.woff2?url'
+import '../styles/global.css'
+import '../styles/pages.css'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import { site } from '../data/site'
+import { ui, t, localizedPath, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+  /** Language-neutral path of this page, e.g. '/team/'. */
+  path: string
+  title?: string
+  description?: string
+  /** Extra JSON-LD objects for this page. */
+  jsonLd?: object[]
+  /** Use the dark-hero header treatment (home page). */
+  heroHeader?: boolean
+  noindex?: boolean
+}
+
+const { lang, path, title, description, jsonLd = [], heroHeader = false, noindex = false } = Astro.props
+const siteName = t(ui.siteName, lang)
+const fullTitle = title ? `${title} | ${siteName}` : siteName
+const desc =
+  description ??
+  (lang === 'zh'
+    ? '复杂系统拓扑统计理论及应用北京市重点实验室依托北京雁栖湖应用数学研究院（BIMSA）建设，与中国人民大学数学学院联合共建，聚焦拓扑统计、复杂网络与高阶互作的理论、方法与应用。'
+    : 'The Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems, hosted by BIMSA and co-built with Renmin University of China, studies the theory, methods and applications of topological statistics, complex networks and higher-order interactions.')
+
+const canonical = new URL(localizedPath(path, lang), site.url).href
+const alternates = {
+  'zh-CN': new URL(localizedPath(path, 'zh'), site.url).href,
+  en: new URL(localizedPath(path, 'en'), site.url).href,
+}
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'ResearchOrganization',
+  name: ui.siteName.zh,
+  alternateName: ui.siteName.en,
+  url: site.url,
+  foundingDate: String(site.founded),
+  parentOrganization: { '@type': 'ResearchOrganization', name: site.hostInstitution.en, url: site.hostInstitution.url },
+  address: { '@type': 'PostalAddress', streetAddress: site.contact.locations[0].address.zh, addressRegion: '北京', addressCountry: 'CN' },
+  ...(site.contact.email ? { email: site.contact.email } : {}),
+}
+---
+
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#061b2a" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="zh-CN" href={alternates['zh-CN']} />
+    <link rel="alternate" hreflang="en" href={alternates.en} />
+    <link rel="alternate" hreflang="x-default" href={alternates['zh-CN']} />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og-image.jpg', site.url).href} />
+    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify([organization, ...jsonLd])} />
+
+    {site.analytics.baiduTongjiId && (
+      <script is:inline define:vars={{ id: site.analytics.baiduTongjiId }}>
+        var _hmt = _hmt || [];
+        (function () {
+          var hm = document.createElement('script');
+          hm.src = 'https://hm.baidu.com/hm.js?' + id;
+          hm.async = true;
+          document.head.appendChild(hm);
+        })();
+      </script>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t(ui.skip, lang)}</a>
+    <Header lang={lang} path={path} hero={heroHeader} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>
