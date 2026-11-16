@@ -1,0 +1,25 @@
+name: One-off fetch remote portraits
+on:
+  push:
+    branches: [photo-fetch]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: site-v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/localize-photos.mjs
+      - name: Commit to site-v2
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/people/remote src/data/people.ts
+          git diff --cached --stat
+          git commit -m "Download remote portraits into public/people/remote" || echo "nothing to commit"
+          git push origin HEAD:site-v2
