@@ -1,0 +1,25 @@
+---
+import { formatDate, newsCategories, type NewsItem } from '../data/news'
+import { t, type Lang } from '../i18n'
+
+interface Props {
+  items: NewsItem[]
+  lang: Lang
+  showKind?: boolean
+  showSummary?: boolean
+}
+const { items, lang, showKind = true, showSummary = false } = Astro.props
+const kind = (c: NewsItem['category']) => t(newsCategories.find((n) => n.id === c)!.title, lang)
+---
+<ol class="timeline" reversed>
+  {items.map((item) => (
+    <li>
+      <time datetime={item.date}>{formatDate(item.date, lang)}</time>
+      <div>
+        {showKind && <span class="kind">{kind(item.category)}</span>}
+        <h3>{item.href ? <a href={item.href} target="_blank" rel="noopener">{t(item.title, lang)}</a> : t(item.title, lang)}</h3>
+        {showSummary && item.summary && <p>{t(item.summary, lang)}</p>}
+      </div>
+    </li>
+  ))}
+</ol>

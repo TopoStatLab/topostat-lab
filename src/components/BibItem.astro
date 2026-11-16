@@ -1,0 +1,21 @@
+---
+import { doiUrl, type Publication } from '../data/publications'
+import type { Lang } from '../i18n'
+
+interface Props {
+  paper: Publication
+  lang: Lang
+  summary?: boolean
+}
+const { paper, lang, summary = true } = Astro.props
+---
+<li class="bib-item" data-directions={paper.directions.join(' ')}>
+  <div>
+    <h3 class="bib-title"><a href={doiUrl(paper.doi)} target="_blank" rel="noopener">{paper.title}</a></h3>
+    <p class="bib-meta">
+      {paper.authors && <>{paper.authors}. </>}<i>{paper.journal}</i>, {paper.year}.
+      <span class="bib-doi">doi:{paper.doi}</span>
+    </p>
+    {summary && <p class="bib-summary">{paper.summary[lang]}</p>}
+  </div>
+</li>

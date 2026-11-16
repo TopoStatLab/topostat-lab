@@ -13,27 +13,31 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
 ---
 
 <Base lang={lang} path="/contact/" title={t(ui.contact, lang)} description={zh ? '复杂系统拓扑统计理论及应用北京市重点实验室联系方式与地址。' : 'Contact details and addresses of the laboratory.'}>
-  <PageHeading eyebrow="CONTACT" title={t(ui.contact, lang)} />
+  <PageHeading lang={lang} title={t(ui.contact, lang)} />
 
-  <section class="contact-section contact-page">
-    <div class="page-shell">
-      <div class="contact-cards contact-cards-wide">
-        {site.contact.locations.map((loc) => (
-          <article class="contact-card">
-            <span>{t(loc.tag, lang)}</span>
-            <h2>{t(loc.name, lang)}</h2>
-            <p>{t(loc.address, lang)}</p>
-            <a class="contact-map" href={amap(loc.mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)} ↗</a>
-          </article>
-        ))}
-        {(site.contact.email || site.contact.phone) && (
-          <article class="contact-card">
-            <span>GET IN TOUCH</span>
-            <h2>{zh ? '联系方式' : 'Get in touch'}</h2>
-            {site.contact.email && <p>{t(ui.email, lang)}：<a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>}
-            {site.contact.phone && <p>{t(ui.phone, lang)}：<a href={`tel:${site.contact.phone.replace(/\s/g, '')}`}>{site.contact.phone}</a></p>}
-          </article>
-        )}
+  <section class="section" style="padding-top:clamp(32px,5vw,56px)">
+    <div class="wrap row">
+      <div class="main">
+        <dl class="apps">
+          {site.contact.locations.map((loc) => (
+            <div>
+              <dt>{t(loc.name, lang)}</dt>
+              <dd>
+                {t(loc.address, lang)}<br />
+                <a class="link" href={amap(loc.mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)}</a>
+              </dd>
+            </div>
+          ))}
+          {(site.contact.email || site.contact.phone) && (
+            <div>
+              <dt>{zh ? '联系方式' : 'Get in touch'}</dt>
+              <dd>
+                {site.contact.email && <>{t(ui.email, lang)}：<a class="link" href={`mailto:${site.contact.email}`}>{site.contact.email}</a><br /></>}
+                {site.contact.phone && <>{t(ui.phone, lang)}：<a class="link" href={`tel:${site.contact.phone.replace(/\s/g, '')}`}>{site.contact.phone}</a></>}
+              </dd>
+            </div>
+          )}
+        </dl>
       </div>
     </div>
   </section>

@@ -12,21 +12,25 @@ const { lang } = Astro.props
 ---
 
 <Base lang={lang} path="/join/" title={t(ui.join, lang)} noindex={!site.showJoinPage}>
-  <PageHeading eyebrow="JOIN US" title={t(ui.join, lang)} desc={t(joinIntro, lang)} />
-  <section class="section join-page">
-    <div class="page-shell join-grid">
-      {positions.map((p) => (
-        <article class="research-card">
-          <h2>{t(p.title, lang)}</h2>
-          <p class="research-body">{t(p.body, lang)}</p>
-        </article>
-      ))}
+  <PageHeading lang={lang} title={t(ui.join, lang)} lead={t(joinIntro, lang)} />
+  <section class="section" style="padding-top:clamp(32px,5vw,56px)">
+    <div class="wrap row">
+      <div class="main">
+        <dl class="apps">
+          {positions.map((p) => (
+            <div>
+              <dt>{t(p.title, lang)}</dt>
+              <dd>{t(p.body, lang)}</dd>
+            </div>
+          ))}
+        </dl>
+        {site.contact.email && (
+          <p style="margin-top:40px">
+            {lang === 'zh' ? '申请材料请发送至 ' : 'Send applications to '}
+            <a class="link" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          </p>
+        )}
+      </div>
     </div>
-    {site.contact.email && (
-      <p class="page-shell join-contact">
-        {lang === 'zh' ? '申请材料请发送至 ' : 'Send applications to '}
-        <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
-      </p>
-    )}
   </section>
 </Base>

@@ -1,5 +1,5 @@
-/* Self-hosted Inter (variable, Latin subset only, ~48 KB). Chinese text uses
-   the system CJK font, so no other subsets are needed. */
+/* Self-hosted fonts. Latin subsets only — Chinese uses the system's own
+   serif (宋体) and sans (苹方 / 微软雅黑) faces. */
 @font-face {
   font-family: 'Inter Variable';
   font-style: normal;
@@ -7,4 +7,37 @@
   font-weight: 100 900;
   src: url('../assets/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+/* STIX Two: the typeface of mathematical journals; also sets ε, β and subscripts. */
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../assets/fonts/stix-two-text-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../assets/fonts/stix-two-text-latin-600-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../assets/fonts/stix-two-text-latin-400-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../assets/fonts/stix-two-text-greek-400-italic.woff2') format('woff2');
+  unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;
 }

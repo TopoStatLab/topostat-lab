@@ -6,72 +6,63 @@ import { ui, t, localizedPath, type Lang } from '../i18n'
 interface Props {
   lang: Lang
   path: string
-  hero?: boolean
 }
 
-const { lang, path, hero = false } = Astro.props
+const { lang, path } = Astro.props
 const other: Lang = lang === 'zh' ? 'en' : 'zh'
 const L = (p: string) => localizedPath(p, lang)
+const zh = lang === 'zh'
 
 const navItems = [
   {
     label: t(ui.research, lang),
     href: L('/research/'),
-    match: ['/research/', '/publications/'],
+    match: ['/research/'],
     children: [
       [t(ui.directions, lang), L('/research/')],
       [t(ui.demo, lang), L('/research/#demo')],
-      [t(ui.publications, lang), L('/publications/')],
     ],
   },
+  { label: t(ui.publications, lang), href: L('/publications/'), match: ['/publications/'] },
   { label: t(ui.team, lang), href: L('/team/'), match: ['/team/'] },
-  {
-    label: t(ui.news, lang),
-    href: L('/news/'),
-    match: ['/news/'],
-    children: [
-      [t(ui.newsUpdates, lang), L('/news/#news-updates')],
-      [t(ui.events, lang), L('/news/#academic-events')],
-      [t(ui.progress, lang), L('/news/#research-progress')],
-    ],
-  },
+  { label: zh ? '动态' : 'News', href: L('/news/'), match: ['/news/'] },
   ...(site.showJoinPage ? [{ label: t(ui.join, lang), href: L('/join/'), match: ['/join/'] }] : []),
   { label: t(ui.contact, lang), href: L('/contact/'), match: ['/contact/'] },
 ] as { label: string; href: string; match: string[]; children?: [string, string][] }[]
 ---
 
-<header class:list={['site-header', { 'is-hero': hero }]}>
-  <a class="brand" href={L('/')} aria-label={t(ui.backHome, lang)}>
-    <LabMark />
-    <span>
-      <strong>{t(ui.shortName, lang)}</strong>
-      <small>{t(ui.brandSub, lang)}</small>
-    </span>
-  </a>
-
-  <nav class="nav" id="site-nav" aria-label={t(ui.mainNav, lang)}>
-    {navItems.map((item) => {
-      const active = item.match.includes(path)
-      return (
-        <div class:list={['nav-item', { 'has-dropdown': item.children }]}>
-          <a class:list={['nav-link', { active }]} href={item.href} aria-current={active ? 'page' : undefined}>
-            <span>{item.label}</span>
-            {item.children && <span class="nav-chevron" aria-hidden="true">▼</span>}
-          </a>
-          {item.children && (
-            <div class="nav-dropdown">
-              {item.children.map(([label, href]) => <a href={href}>{label}</a>)}
-            </div>
-          )}
-        </div>
-      )
-    })}
-  </nav>
-
-  <div class="header-actions">
-    <a class="lang" href={localizedPath(path === '/404/' ? '/' : path, other)} hreflang={other === 'zh' ? 'zh-CN' : 'en'} lang={other === 'zh' ? 'zh-CN' : 'en'} aria-label={t(ui.switchLangLabel, lang)}>
-      {t(ui.switchLang, lang)}
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={L('/')} aria-label={t(ui.backHome, lang)}>
+      <LabMark />
+      <span>
+        <span class="brand-name">{zh ? '拓扑统计实验室' : 'TopoStat Lab'}</span>
+        <span class="brand-sub">{zh ? '北京市重点实验室，依托 BIMSA' : 'Beijing Key Laboratory at BIMSA'}</span>
+      </span>
     </a>
+
+    <nav class="nav" id="site-nav" aria-label={t(ui.mainNav, lang)}>
+      {navItems.map((item) => {
+        const active = item.match.includes(path)
+        return (
+          <div class="nav-item">
+            <a class:list={['nav-link', { active }]} href={item.href} aria-current={active ? 'page' : undefined}>
+              {item.label}
+              {item.children && <span class="nav-caret" aria-hidden="true" />}
+            </a>
+            {item.children && (
+              <div class="nav-dropdown">
+                {item.children.map(([label, href]) => <a href={href}>{label}</a>)}
+              </div>
+            )}
+          </div>
+        )
+      })}
+      <a class="lang" href={localizedPath(path === '/404/' ? '/' : path, other)} hreflang={other === 'zh' ? 'zh-CN' : 'en'} lang={other === 'zh' ? 'zh-CN' : 'en'}>
+        {other === 'zh' ? '中文' : 'English'}
+      </a>
+    </nav>
+
     <button class="menu-btn" type="button" aria-label={t(ui.toggleNav, lang)} aria-expanded="false" aria-controls="site-nav">
       <span></span>
       <span></span>
@@ -80,19 +71,37 @@ const navItems = [
 </header>
 
 <script>
-  const btn = document.querySelector<HTMLButtonElement>('.menu-btn')
-  const nav = document.getElementById('site-nav')
-  if (btn && nav) {
-    const set = (open: boolean) => {
-      nav.classList.toggle('open', open)
-      btn.setAttribute('aria-expanded', String(open))
-    }
-    btn.addEventListener('click', () => set(!nav.classList.contains('open')))
-    nav.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('a')) set(false)
-    })
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') set(false)
-    })
+  const header = document.querySelector<HTMLElement>('.site-header')!
+  const btn = header.querySelector<HTMLButtonElement>('.menu-btn')!
+  const nav = document.getElementById('site-nav')!
+  const setOpen = (open: boolean) => {
+    nav.classList.toggle('open', open)
+    btn.setAttribute('aria-expanded', String(open))
   }
+  btn.addEventListener('click', () => setOpen(!nav.classList.contains('open')))
+  nav.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false)
+  })
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false))
+
+  // The rule appears once scrolled; the header steps aside while reading down and returns on scroll up.
+  let lastY = window.scrollY
+  let ticking = false
+  const update = () => {
+    const y = window.scrollY
+    header.classList.toggle('scrolled', y > 8)
+    const goingDown = y > lastY + 4
+    const goingUp = y < lastY - 4
+    if (goingDown && y > 480 && !nav.classList.contains('open') && !header.matches(':focus-within')) header.classList.add('away')
+    else if (goingUp || y < 480) header.classList.remove('away')
+    lastY = y
+    ticking = false
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true
+      requestAnimationFrame(update)
+    }
+  }, { passive: true })
+  update()
 </script>

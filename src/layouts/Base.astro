@@ -1,8 +1,8 @@
 ---
 import '../styles/fonts.css'
 import interLatin from '../assets/fonts/inter-latin-wght-normal.woff2?url'
-import '../styles/global.css'
-import '../styles/pages.css'
+import stixRegular from '../assets/fonts/stix-two-text-latin-400-normal.woff2?url'
+import '../styles/site.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import { site } from '../data/site'
@@ -16,12 +16,10 @@ interface Props {
   description?: string
   /** Extra JSON-LD objects for this page. */
   jsonLd?: object[]
-  /** Use the dark-hero header treatment (home page). */
-  heroHeader?: boolean
   noindex?: boolean
 }
 
-const { lang, path, title, description, jsonLd = [], heroHeader = false, noindex = false } = Astro.props
+const { lang, path, title, description, jsonLd = [], noindex = false } = Astro.props
 const siteName = t(ui.siteName, lang)
 const fullTitle = title ? `${title} | ${siteName}` : siteName
 const desc =
@@ -54,7 +52,7 @@ const organization = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#061b2a" />
+    <meta name="theme-color" content="#f5f7f9" />
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     {noindex && <meta name="robots" content="noindex" />}
@@ -63,6 +61,7 @@ const organization = {
     <link rel="alternate" hreflang="en" href={alternates.en} />
     <link rel="alternate" hreflang="x-default" href={alternates['zh-CN']} />
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={stixRegular} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -91,7 +90,7 @@ const organization = {
   </head>
   <body>
     <a class="skip-link" href="#main">{t(ui.skip, lang)}</a>
-    <Header lang={lang} path={path} hero={heroHeader} />
+    <Header lang={lang} path={path} />
     <main id="main">
       <slot />
     </main>

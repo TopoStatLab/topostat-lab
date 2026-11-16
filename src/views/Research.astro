@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
-import SectionHeading from '../components/SectionHeading.astro'
 import PersistenceDemo from '../components/PersistenceDemo.astro'
 import { researchDirections, applications } from '../data/research'
 import { publications, doiUrl } from '../data/publications'
@@ -21,82 +20,70 @@ const zh = lang === 'zh'
   description={zh ? '实验室三大研究方向：广义统计物理与复杂网络、拓扑统计学、统计拓扑与高阶互作，以及持续同调交互演示。' : 'Our three research directions — generalized statistical physics and complex networks, topological statistics, statistical topology and higher-order interactions — plus an interactive persistent homology demo.'}
 >
   <PageHeading
-    eyebrow="SCIENTIFIC RESEARCH"
+    lang={lang}
     title={t(ui.research, lang)}
-    kicker="THEORY × DATA × INTELLIGENCE"
-    desc={zh ? '围绕复杂系统的结构、动力学与高阶互作，形成从理论创新到计算方法再到真实应用的研究链条。' : 'From theory to computation to real-world application — studying the structure, dynamics and higher-order interactions of complex systems.'}
+    lead={zh ? '围绕复杂系统的结构、动力学与高阶互作，从理论创新到计算方法，再到真实应用。' : 'The structure, dynamics and higher-order interactions of complex systems — from theory to computation to real applications.'}
   />
 
-  <section class="section direction-section">
-    <div class="page-shell">
-      {researchDirections.map((d, i) => {
-        const papers = publications.filter((p) => p.directions.includes(d.id))
-        return (
-          <article class="direction-block anchor-target" id={d.id}>
-            <div class="direction-index">{String(i + 1).padStart(2, '0')}</div>
-            <div class="direction-main">
-              <p class="research-en">{d.en}</p>
-              <h2>{t(d.title, lang)}</h2>
-              <p class="direction-body">{t(d.body, lang)}</p>
-              <div class="tag-row">{d.tags.map((tag) => <span>{tag}</span>)}</div>
-            </div>
-            <div class="direction-papers">
-              <h3>{zh ? '代表性成果' : 'Selected papers'}</h3>
-              {papers.length ? (
-                <ul>
-                  {papers.map((p) => (
-                    <li>
-                      <a href={doiUrl(p.doi)} target="_blank" rel="noopener">
-                        <span>{p.year} · {p.journal}</span>
-                        {p.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p class="muted">{zh ? '即将更新' : 'Coming soon'}</p>
-              )}
-              <a class="text-link" href={localizedPath('/publications/', lang) + `?direction=${d.id}`}>{t(ui.viewAll, lang)} →</a>
-            </div>
+  <section class="section" aria-label={t(ui.directions, lang)} style="padding-top:0;border-top:0">
+    {researchDirections.map((d) => {
+      const papers = publications.filter((p) => p.directions.includes(d.id))
+      return (
+        <div class="wrap row">
+          <article class="main direction" id={d.id}>
+            <h2 class="section-title" style="margin-bottom:0">{t(d.title, lang)}</h2>
+            <p>{t(d.body, lang)}</p>
+            <p class="keywords">{d.tags.join(zh ? '，' : ', ')}</p>
           </article>
-        )
-      })}
-    </div>
+          <aside class="note direction-note">
+            <h3>{zh ? '代表性成果' : 'Selected papers'}</h3>
+            {papers.length ? (
+              <ul>
+                {papers.map((p) => (
+                  <li><a href={doiUrl(p.doi)} target="_blank" rel="noopener">{p.title}</a><br /><i>{p.journal}</i>, {p.year}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>{zh ? '即将更新。' : 'Coming soon.'}</p>
+            )}
+            <p style="margin-top:10px"><a href={localizedPath('/publications/', lang) + `?direction=${d.id}`}>{zh ? '该方向的全部论文' : 'All papers in this direction'}</a></p>
+          </aside>
+        </div>
+      )
+    })}
   </section>
 
-  <section class="section demo-section anchor-target" id="demo">
-    <div class="page-shell">
-      <div class="split-heading">
-        <SectionHeading
-          eyebrow="INTERACTIVE · PERSISTENT HOMOLOGY"
-          title={zh ? '动手看见数据的形状' : 'See the shape of data'}
-          desc={zh
-            ? '持续同调是拓扑数据分析的核心工具。以每个点为圆心画半径 ε/2 的圆，相交即连边、三边两两相连即填成三角形（Vietoris–Rips 复形）。拖动 ε，观察连通分支（β₀）如何合并、环（β₁）如何出现又被填满。'
-            : 'Persistent homology is the core tool of topological data analysis. Grow a ball of radius ε/2 around every point; connect points whose balls meet and fill in triangles (the Vietoris–Rips complex). Drag ε to watch components (β₀) merge and loops (β₁) appear and fill in.'}
-        />
-        <p class="demo-aside">
+  <section class="section" id="demo" aria-labelledby="h-demo">
+    <div class="wrap row">
+      <div class="main">
+        <h2 class="section-title" id="h-demo">{zh ? '持续同调：自己动手' : 'Persistent homology, hands on'}</h2>
+        <p class="section-lead">
           {zh
-            ? '噪声只会产生短暂的特征，而真实结构会在很宽的尺度范围内持续存在——这正是“拓扑统计”要做的：把“形状”变成可以检验、可以推断的统计量。'
-            : 'Noise produces only short-lived features, while real structure persists across a wide range of scales — topological statistics turns that "shape" into quantities we can test and infer.'}
+            ? '以每个点为圆心画半径 ε/2 的圆，相交即连边，三点两两相连即填成三角形。拖动 ε，看连通分支如何合并、环如何出现又被填满。也可以清空画布，画出你自己的数据。'
+            : 'Grow a ball of radius ε/2 around each point; connect points whose balls meet and fill in triangles. Drag ε to watch components merge and loops appear and fill in — or clear the canvas and draw your own data.'}
         </p>
       </div>
+      <aside class="note">
+        <p>{zh ? '噪声只产生短暂的特征，真实结构会在很宽的尺度范围内持续存在。拓扑统计把这种“形状”变成可以检验、可以推断的统计量。' : 'Noise produces only short-lived features; real structure persists across scales. Topological statistics turns that shape into quantities we can test and infer.'}</p>
+      </aside>
+    </div>
+    <div class="wrap">
       <PersistenceDemo lang={lang} />
     </div>
   </section>
 
-  <section class="applications-section">
-    <div class="page-shell">
-      <SectionHeading eyebrow="APPLICATIONS" title={zh ? '应用领域' : 'Application areas'} />
-      <div class="application-grid">
-        {applications.map((app, i) => (
-          <article class="application-card">
-            <span>{String(i + 1).padStart(2, '0')}</span>
-            <p>{app.en}</p>
-            <h3>{t(app.title, lang)}</h3>
-            <div class="application-line"></div>
-            <small>{t(app.body, lang)}</small>
-          </article>
-        ))}
+  <section class="section" aria-labelledby="h-apps">
+    <div class="wrap row">
+      <div class="main">
+        <h2 class="section-title" id="h-apps">{zh ? '应用领域' : 'Where it applies'}</h2>
+        <dl class="apps">
+          {applications.map((app) => (
+            <div>
+              <dt>{t(app.title, lang)}</dt>
+              <dd>{t(app.body, lang)}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </div>
   </section>

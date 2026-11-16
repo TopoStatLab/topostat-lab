@@ -1,23 +1,20 @@
 ---
+import { ui, t, localizedPath, type Lang } from '../i18n'
+
 interface Props {
-  eyebrow: string
+  lang: Lang
   title: string
-  kicker?: string
-  desc?: string
+  lead?: string
 }
-const { eyebrow, title, kicker, desc } = Astro.props
+const { lang, title, lead } = Astro.props
 ---
-<section class="team-page-heading">
-  <div class="page-shell team-heading-grid">
-    <div>
-      <p>{eyebrow}</p>
-      <h1>{title}</h1>
+<header class="page-head">
+  <div class="wrap row">
+    <div class="main">
+      <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {title}</p>
+      <h1 class="page-title">{title}</h1>
+      {lead && <p class="page-lead">{lead}</p>}
     </div>
-    {(kicker || desc) && (
-      <div class="team-heading-copy">
-        {kicker && <span>{kicker}</span>}
-        {desc && <p>{desc}</p>}
-      </div>
-    )}
+    <aside class="note-slot"><slot name="note" /></aside>
   </div>
-</section>
+</header>

@@ -41,10 +41,10 @@ src/
   data/        content (edit these)
   views/       one component per page, shared by zh and en
   pages/       routes: /  /research/  /team/  /publications/  /news/  /contact/  and /en/…
-  components/  header, footer, portraits, persistent-homology demo, …
+  components/  header, footer, HeroFigure (scroll-driven Figure 1), demo, bibliography, timeline
   lib/persistence.ts   Vietoris–Rips persistent homology (H0/H1) used by the demo
   layouts/Base.astro   <head>: SEO meta, hreflang, Open Graph, schema.org JSON-LD
-  styles/      global.css (original design) + pages.css (new pages, demo)
+  styles/      site.css (design system) + fonts.css (self-hosted Inter and STIX Two)
 public/        static files: portraits (people/portraits/*.webp), favicon, og-image, robots.txt, CNAME
 scripts/       check-links.mjs
 ```
