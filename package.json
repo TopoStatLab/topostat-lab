@@ -1,18 +1,21 @@
 {
-  "name": "wulab-website",
+  "name": "topostat-lab-website",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview --host",
+    "check:links": "node scripts/check-links.mjs",
+    "photos:localize": "node scripts/localize-photos.mjs"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "react": "latest",
-    "react-dom": "latest"
-  },
-  "devDependencies": {}
+    "@astrojs/sitemap": "3.7.5",
+    "@fontsource-variable/inter": "5.3.0",
+    "astro": "7.4.12"
+  }
 }

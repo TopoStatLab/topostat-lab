@@ -1,0 +1,98 @@
+---
+import LabMark from './LabMark.astro'
+import { site } from '../data/site'
+import { ui, t, localizedPath, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+  path: string
+  hero?: boolean
+}
+
+const { lang, path, hero = false } = Astro.props
+const other: Lang = lang === 'zh' ? 'en' : 'zh'
+const L = (p: string) => localizedPath(p, lang)
+
+const navItems = [
+  {
+    label: t(ui.research, lang),
+    href: L('/research/'),
+    match: ['/research/', '/publications/'],
+    children: [
+      [t(ui.directions, lang), L('/research/')],
+      [t(ui.demo, lang), L('/research/#demo')],
+      [t(ui.publications, lang), L('/publications/')],
+    ],
+  },
+  { label: t(ui.team, lang), href: L('/team/'), match: ['/team/'] },
+  {
+    label: t(ui.news, lang),
+    href: L('/news/'),
+    match: ['/news/'],
+    children: [
+      [t(ui.newsUpdates, lang), L('/news/#news-updates')],
+      [t(ui.events, lang), L('/news/#academic-events')],
+      [t(ui.progress, lang), L('/news/#research-progress')],
+    ],
+  },
+  ...(site.showJoinPage ? [{ label: t(ui.join, lang), href: L('/join/'), match: ['/join/'] }] : []),
+  { label: t(ui.contact, lang), href: L('/contact/'), match: ['/contact/'] },
+] as { label: string; href: string; match: string[]; children?: [string, string][] }[]
+---
+
+<header class:list={['site-header', { 'is-hero': hero }]}>
+  <a class="brand" href={L('/')} aria-label={t(ui.backHome, lang)}>
+    <LabMark />
+    <span>
+      <strong>{t(ui.shortName, lang)}</strong>
+      <small>{t(ui.brandSub, lang)}</small>
+    </span>
+  </a>
+
+  <nav class="nav" id="site-nav" aria-label={t(ui.mainNav, lang)}>
+    {navItems.map((item) => {
+      const active = item.match.includes(path)
+      return (
+        <div class:list={['nav-item', { 'has-dropdown': item.children }]}>
+          <a class:list={['nav-link', { active }]} href={item.href} aria-current={active ? 'page' : undefined}>
+            <span>{item.label}</span>
+            {item.children && <span class="nav-chevron" aria-hidden="true">▼</span>}
+          </a>
+          {item.children && (
+            <div class="nav-dropdown">
+              {item.children.map(([label, href]) => <a href={href}>{label}</a>)}
+            </div>
+          )}
+        </div>
+      )
+    })}
+  </nav>
+
+  <div class="header-actions">
+    <a class="lang" href={localizedPath(path === '/404/' ? '/' : path, other)} hreflang={other === 'zh' ? 'zh-CN' : 'en'} lang={other === 'zh' ? 'zh-CN' : 'en'} aria-label={t(ui.switchLangLabel, lang)}>
+      {t(ui.switchLang, lang)}
+    </a>
+    <button class="menu-btn" type="button" aria-label={t(ui.toggleNav, lang)} aria-expanded="false" aria-controls="site-nav">
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn')
+  const nav = document.getElementById('site-nav')
+  if (btn && nav) {
+    const set = (open: boolean) => {
+      nav.classList.toggle('open', open)
+      btn.setAttribute('aria-expanded', String(open))
+    }
+    btn.addEventListener('click', () => set(!nav.classList.contains('open')))
+    nav.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) set(false)
+    })
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') set(false)
+    })
+  }
+</script>

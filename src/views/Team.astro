@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeading from '../components/PageHeading.astro'
+import Portrait from '../components/Portrait.astro'
+import { leader, director, members, type Person } from '../data/people'
+import { site } from '../data/site'
+import { ui, t, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+
+const personLd = (p: Person) => ({
+  '@type': 'Person',
+  name: p.name.zh,
+  alternateName: p.name.en,
+  ...(p.title ? { jobTitle: p.title.en } : {}),
+  ...(p.homepage ? { url: p.homepage } : {}),
+  affiliation: { '@type': 'ResearchOrganization', name: ui.siteName.zh },
+})
+const jsonLd = [{ '@context': 'https://schema.org', '@graph': [leader, director, ...members].map(personLd) }]
+---
+
+<Base
+  lang={lang}
+  path="/team/"
+  title={t(ui.team, lang)}
+  description={zh ? '复杂系统拓扑统计理论及应用北京市重点实验室研究团队与行政架构。' : 'People and organisation of the Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems.'}
+  jsonLd={jsonLd}
+>
+  <PageHeading
+    eyebrow="RESEARCH TEAM"
+    title={t(ui.team, lang)}
+    kicker="ORGANIZATION STRUCTURE"
+    desc={zh ? '以跨学科协同为基础组织研究力量，汇聚数学、统计、物理与生命科学等领域的研究者。' : 'An interdisciplinary team bringing together researchers in mathematics, statistics, physics and the life sciences.'}
+  />
+
+  <section class="team-tree-section">
+    <div class="page-shell team-tree-shell">
+      <div class="team-leader-node anchor-target" id={leader.id}>
+        <Portrait person={leader} lang={lang} large />
+        <h2>{leader.name[lang]}</h2>
+        <p>{zh ? leader.name.en.toUpperCase() : leader.name.zh}</p>
+      </div>
+
+      <div class="team-director-node anchor-target" id={director.id}>
+        <Portrait person={director} lang={lang} large />
+        <h2>{director.name[lang]}</h2>
+        {director.title && <p class="node-title">{t(director.title, lang)}</p>}
+        <p>{zh ? director.name.en.toUpperCase() : director.name.zh}</p>
+        {director.homepage && <a class="node-link" href={director.homepage} target="_blank" rel="noopener">{zh ? '个人主页' : 'Profile'} ↗</a>}
+      </div>
+
+      <div class="team-tree-scroll" tabindex="0" aria-label={zh ? '核心成员（可横向滚动）' : 'Core members (scrolls horizontally)'}>
+        <ul class="team-branch">
+          {members.map((p) => (
+            <li class="team-node anchor-target" id={p.id}>
+              <Portrait person={p} lang={lang} />
+              <h3>{p.name[lang]}</h3>
+              <p>{zh ? p.name.en.toUpperCase() : p.name.zh}</p>
+              {p.title && <p class="node-title">{t(p.title, lang)}</p>}
+              {p.homepage && <a class="node-link" href={p.homepage} target="_blank" rel="noopener">↗</a>}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="team-tree-caption">{zh ? '行政架构 · Organization Structure' : 'Organization Structure · 行政架构'}</div>
+    </div>
+  </section>
+
+  {site.showJoinPage && (
+    <section class="contact-section">
+      <div class="page-shell contact-layout">
+        <div class="contact-title">
+          <p>JOIN US</p>
+          <h2>{t(ui.join, lang)}</h2>
+        </div>
+        <a class="button dark" href={lang === 'zh' ? '/join/' : '/en/join/'}>{zh ? '查看招聘信息' : 'Open positions'} →</a>
+      </div>
+    </section>
+  )}
+</Base>
