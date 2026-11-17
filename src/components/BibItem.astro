@@ -1,21 +1,33 @@
 ---
-import { doiUrl, type Publication } from '../data/publications'
+import { paperUrl, type Publication } from '../data/publications'
 import type { Lang } from '../i18n'
 
 interface Props {
   paper: Publication
   lang: Lang
-  summary?: boolean
 }
-const { paper, lang, summary = true } = Astro.props
+const { paper, lang } = Astro.props
+const url = paperUrl(paper)
+
+// Split the author string so lab members can be set in bold.
+const parts: { text: string; lab: boolean }[] = []
+if (paper.authors) {
+  const names = paper.lab ?? []
+  const authors = paper.authors.split(/,\s*/)
+  authors.forEach((a, i) => parts.push({ text: a + (i < authors.length - 1 ? ', ' : ''), lab: names.includes(a.trim()) }))
+}
 ---
-<li class="bib-item" data-directions={paper.directions.join(' ')}>
+<li class="bib-item" data-directions={paper.directions.join(' ')} data-core={paper.core ? '1' : '0'}>
   <div>
-    <h3 class="bib-title"><a href={doiUrl(paper.doi)} target="_blank" rel="noopener">{paper.title}</a></h3>
+    <h3 class="bib-title">{url ? <a href={url} target="_blank" rel="noopener">{paper.title}</a> : paper.title}</h3>
+    {parts.length > 0 && (
+      <p class="bib-authors">{parts.map((p) => (p.lab ? <b>{p.text}</b> : p.text))}</p>
+    )}
     <p class="bib-meta">
-      {paper.authors && <>{paper.authors}. </>}<i>{paper.journal}</i>, {paper.year}.
-      <span class="bib-doi">doi:{paper.doi}</span>
+      <i>{paper.journal}</i>{paper.where && <>, {paper.where}</>}, {paper.year}.
+      {paper.preprint && <span class="bib-tag">{lang === 'zh' ? '预印本' : 'Preprint'}</span>}
+      {paper.doi && <span class="bib-doi"> doi:{paper.doi}</span>}
     </p>
-    {summary && <p class="bib-summary">{paper.summary[lang]}</p>}
+    {paper.summary && <p class="bib-summary">{paper.summary[lang]}</p>}
   </div>
 </li>

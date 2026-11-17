@@ -5,9 +5,9 @@ import BibItem from '../components/BibItem.astro'
 import Timeline from '../components/Timeline.astro'
 import Portrait from '../components/Portrait.astro'
 import { researchDirections, applications } from '../data/research'
-import { publications, doiUrl } from '../data/publications'
-import { news } from '../data/news'
-import { leader, director, members } from '../data/people'
+import { publications, sortedPublications, paperUrl } from '../data/publications'
+import { news, events } from '../data/news'
+import { director, deputies, assistants, committeeChair, committeeMembers } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -35,7 +35,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
       </div>
     </div>
     {researchDirections.map((d) => {
-      const papers = publications.filter((p) => p.directions.includes(d.id))
+      const papers = sortedPublications.filter((p) => p.core && p.directions.includes(d.id)).slice(0, 3)
       return (
         <div class="wrap row">
           <article class="main direction">
@@ -48,7 +48,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
             {papers.length ? (
               <ul>
                 {papers.map((p) => (
-                  <li><a href={doiUrl(p.doi)} target="_blank" rel="noopener">{p.title}</a><br /><i>{p.journal}</i>, {p.year}</li>
+                  <li><a href={paperUrl(p)} target="_blank" rel="noopener">{p.title}</a><br /><i>{p.journal}</i>, {p.year}</li>
                 ))}
               </ul>
             ) : (
@@ -63,14 +63,14 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="section" id="publications" aria-labelledby="h-pubs">
     <div class="wrap row">
       <div class="main">
-        <h2 class="section-title" id="h-pubs">{zh ? '近期论文' : 'Recent papers'}</h2>
+        <h2 class="section-title" id="h-pubs">{zh ? '科技成果' : 'Recent papers'}</h2>
         <ol class="bib">
-          {publications.slice(0, 5).map((paper) => <BibItem paper={paper} lang={lang} />)}
+          {sortedPublications.slice(0, 5).map((paper) => <BibItem paper={paper} lang={lang} />)}
         </ol>
       </div>
       <aside class="note">
-        <p>{zh ? `共 ${publications.length} 篇，可按研究方向筛选。` : `${publications.length} papers, filterable by research direction.`}</p>
-        <a href={L('/publications/')}>{zh ? '查看全部论文' : 'All papers'}</a>
+        <p>{zh ? `共 ${publications.length} 篇论文，加粗的作者是实验室成员。` : `${publications.length} papers. Laboratory members in bold.`}</p>
+        <a href={L('/publications/')}>{zh ? '全部论文与专利' : 'All papers and patents'}</a>
       </aside>
     </div>
   </section>
@@ -94,21 +94,21 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="section" id="people" aria-labelledby="h-people">
     <div class="wrap row">
       <div class="main">
-        <h2 class="section-title" id="h-people">{t(ui.team, lang)}</h2>
+        <h2 class="section-title" id="h-people">{zh ? '组织架构' : 'People'}</h2>
       </div>
       <aside class="note">
-        <p>{zh ? `${members.length + 2} 位成员，来自数学、统计、物理与生命科学。` : `${members.length + 2} members from mathematics, statistics, physics and the life sciences.`}</p>
-        <a href={L('/team/')}>{zh ? '查看团队' : 'Meet the team'}</a>
+        <p>{zh ? `学术委员会由丘成桐先生担任主任，共 ${committeeMembers.length + 1} 位委员。` : `The Academic Committee, chaired by Shing-Tung Yau, has ${committeeMembers.length + 1} members.`}</p>
+        <a href={L('/about/#organization')}>{zh ? '组织架构与学术委员会' : 'Organization and committee'}</a>
       </aside>
     </div>
     <div class="wrap">
       <ul class="people">
-        {[leader, director, ...members].map((p) => (
+        {[committeeChair, director, ...deputies, ...assistants].map((p) => (
           <li class="person">
-            <a href={L(`/team/#${p.id}`)}>
+            <a href={L(`/about/#${p.id}`)}>
               <Portrait person={p} lang={lang} />
               <p class="person-name">{p.name[lang]}</p>
-              {p.title && <p class="person-meta">{t(p.title, lang)}</p>}
+              {p.role && <p class="person-meta">{t(p.role, lang)}</p>}
             </a>
           </li>
         ))}
@@ -117,15 +117,17 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   </section>
 
   <section class="section" id="news" aria-labelledby="h-news">
-    <div class="wrap row">
-      <div class="main">
-        <h2 class="section-title" id="h-news">{zh ? '动态' : 'News'}</h2>
-        <Timeline items={news.slice(0, 5)} lang={lang} />
+    <div class="wrap two-col">
+      <div>
+        <h2 class="section-title" id="h-news">{t(ui.news, lang)}</h2>
+        <Timeline items={news.slice(0, 4)} lang={lang} showSummary={false} />
+        <p class="more"><a class="link" href={L('/news/')}>{zh ? '全部新闻' : 'All news'}</a></p>
       </div>
-      <aside class="note">
-        <p>{zh ? '新闻、学术活动与研究进展。' : 'News, academic events and research progress.'}</p>
-        <a href={L('/news/')}>{zh ? '查看全部动态' : 'All news'}</a>
-      </aside>
+      <div>
+        <h2 class="section-title">{t(ui.events, lang)}</h2>
+        <Timeline items={events.slice(0, 4)} lang={lang} showSummary={false} />
+        <p class="more"><a class="link" href={L('/events/')}>{zh ? '全部学术活动' : 'All events'}</a></p>
+      </div>
     </div>
   </section>
 

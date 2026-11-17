@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeading from '../components/PageHeading.astro'
+import Portrait from '../components/Portrait.astro'
+import { sortedVisitors as visitors } from '../data/visitors'
+import { ui, t, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+---
+
+<Base lang={lang} path="/visitors/" title={t(ui.visitors, lang)} description={zh ? '曾在实验室访学或工作的成员，他们在实验室期间的工作与后续发展。' : 'Visiting scholars and former members: their work at the laboratory and where they went next.'}>
+  <PageHeading
+    lang={lang}
+    title={t(ui.visitors, lang)}
+    lead={zh ? '曾在实验室访学、学习或工作的成员，以及他们在实验室期间的工作和后续发展。' : 'Visiting scholars, students and former members: what they worked on here and where they went next.'}
+  />
+  <section class="section" style="padding-top:clamp(32px,5vw,56px)">
+    <div class="wrap row">
+      <div class="main">
+        {visitors.length ? (
+          <ol class="visitors">
+            {visitors.map((v) => (
+              <li class="visitor">
+                <Portrait person={{ id: v.name.en, name: v.name, photo: v.photo }} lang={lang} />
+                <div>
+                  <h2 class="visitor-name">{v.homepage ? <a href={v.homepage} target="_blank" rel="noopener">{v.name[lang]}</a> : v.name[lang]}</h2>
+                  <p class="visitor-period">{v.period}{zh ? '，' : ', '}{t(v.role, lang)}</p>
+                  <dl class="visitor-path">
+                    {v.atLab && <><dt>{zh ? '在实验室' : 'At the lab'}</dt><dd>{t(v.atLab, lang)}</dd></>}
+                    {v.now && <><dt>{zh ? '现在' : 'Now'}</dt><dd>{t(v.now, lang)}</dd></>}
+                  </dl>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="empty-state">{zh ? '访学成员名单正在整理，近期公布。' : 'The list of visitors is being compiled and will be published soon.'}</p>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>

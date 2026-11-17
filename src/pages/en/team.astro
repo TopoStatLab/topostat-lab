@@ -1,4 +1,15 @@
 ---
-import View from '../../views/Team.astro'
+// The team page moved to /about/ (organization and academic committee).
+const target = '/en/about/#organization'
 ---
-<View lang="en" />
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={`https://topostat.cn${target}`} />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <title>Redirecting</title>
+  </head>
+  <body><a href={target}>{target}</a></body>
+</html>

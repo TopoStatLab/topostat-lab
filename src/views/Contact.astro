@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
+import PersonCard from '../components/PersonCard.astro'
+import { assistants } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, type Lang } from '../i18n'
 
@@ -12,12 +14,19 @@ const zh = lang === 'zh'
 const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComponent(q)}&city=110000`
 ---
 
-<Base lang={lang} path="/contact/" title={t(ui.contact, lang)} description={zh ? '复杂系统拓扑统计理论及应用北京市重点实验室联系方式与地址。' : 'Contact details and addresses of the laboratory.'}>
-  <PageHeading lang={lang} title={t(ui.contact, lang)} />
+<Base lang={lang} path="/contact/" title={t(ui.contact, lang)} description={zh ? '复杂系统拓扑统计理论及应用北京市重点实验室联系人与地址。' : 'Contacts and addresses of the laboratory.'}>
+  <PageHeading lang={lang} title={t(ui.contact, lang)} lead={zh ? '合作、访学与媒体事宜，请联系以下人员。' : 'For collaboration, visits and media enquiries, please contact:'} />
 
   <section class="section" style="padding-top:clamp(32px,5vw,56px)">
+    <div class="wrap">
+      <ul class="people lead">{assistants.map((p) => <PersonCard person={p} lang={lang} />)}</ul>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="wrap row">
       <div class="main">
+        <h2 class="section-title">{zh ? '地址' : 'Addresses'}</h2>
         <dl class="apps">
           {site.contact.locations.map((loc) => (
             <div>
@@ -28,15 +37,6 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
               </dd>
             </div>
           ))}
-          {(site.contact.email || site.contact.phone) && (
-            <div>
-              <dt>{zh ? '联系方式' : 'Get in touch'}</dt>
-              <dd>
-                {site.contact.email && <>{t(ui.email, lang)}：<a class="link" href={`mailto:${site.contact.email}`}>{site.contact.email}</a><br /></>}
-                {site.contact.phone && <>{t(ui.phone, lang)}：<a class="link" href={`tel:${site.contact.phone.replace(/\s/g, '')}`}>{site.contact.phone}</a></>}
-              </dd>
-            </div>
-          )}
         </dl>
       </div>
     </div>

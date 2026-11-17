@@ -24,10 +24,12 @@ All content lives in `src/data/`. Each file is plain data with Chinese and Engli
 | 要改什么 | 文件 |
 |---|---|
 | 联系邮箱、电话、地址、ICP/公安备案号、统计代码、是否显示招聘页 | `src/data/site.ts` |
-| 团队成员（姓名、照片、职务、主页） | `src/data/people.ts` |
+| 组织架构（主任、副主任、助理、成员）与学术委员会 | `src/data/people.ts` |
 | 研究方向、应用领域 | `src/data/research.ts` |
-| 论文（新论文加在最前面） | `src/data/publications.ts` |
+| 论文（自动按年份、核心成员优先排序；`lab` 里列出的作者会加粗） | `src/data/publications.ts` |
+| 专利 | `src/data/patents.ts` |
 | 新闻、学术活动 | `src/data/news.ts` |
+| 访学成员（在实验室期间与后续发展） | `src/data/visitors.ts` |
 | 招聘信息 | `src/data/join.ts` |
 
 Optional fields (e.g. a member's `title`, `homepage`, `email`) only appear on the site once filled in. Publications automatically show up under "研究进展" on the news page and on the related research direction.
@@ -49,11 +51,17 @@ public/        static files: portraits (people/portraits/*.webp), favicon, og-im
 scripts/       check-links.mjs
 ```
 
-Routing: Chinese at `/…/`, English at `/en/…/`. The header language switch goes to the same page in the other language. The old `/team.html` URL redirects to `/team/`.
+Pages: `/about/` (介绍、组织架构、学术委员会), `/research/`, `/publications/` (论文、专利), `/news/`, `/events/`, `/visitors/`, `/contact/`.
+
+Routing: Chinese at `/…/`, English at `/en/…/`. The header language switch goes to the same page in the other language. Old `/team.html` and `/team/` URLs redirect to `/about/#organization`.
 
 ## 上线前待办 · Before / after launch
 
 **Needs input from the lab**
+
+- [ ] Patent list → `src/data/patents.ts`
+- [ ] Visitors / former members with their period at the lab and later positions → `src/data/visitors.ts`
+- [ ] Email for 陈天翮; Chinese names for Zhong Wang and Thomas Tulu; member portraits
 
 - [ ] Official contact email and phone → `src/data/site.ts`
 - [ ] Approved logo to replace the provisional mark (`src/components/LabMark.astro`, `public/favicon.svg`, `public/og-image.jpg`)
