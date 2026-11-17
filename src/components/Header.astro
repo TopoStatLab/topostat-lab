@@ -15,6 +15,16 @@ const zh = lang === 'zh'
 
 const navItems = [
   {
+    label: t(ui.overview, lang),
+    href: L('/about/'),
+    match: ['/about/'],
+    children: [
+      [t(ui.intro, lang), L('/about/#intro')],
+      [t(ui.organization, lang), L('/about/#organization')],
+      [t(ui.committee, lang), L('/about/#committee')],
+    ],
+  },
+  {
     label: t(ui.research, lang),
     href: L('/research/'),
     match: ['/research/'],
@@ -23,9 +33,18 @@ const navItems = [
       [t(ui.demo, lang), L('/research/#demo')],
     ],
   },
-  { label: t(ui.publications, lang), href: L('/publications/'), match: ['/publications/'] },
-  { label: t(ui.team, lang), href: L('/team/'), match: ['/team/'] },
-  { label: zh ? '动态' : 'News', href: L('/news/'), match: ['/news/'] },
+  {
+    label: t(ui.publications, lang),
+    href: L('/publications/'),
+    match: ['/publications/'],
+    children: [
+      [t(ui.papers, lang), L('/publications/#papers')],
+      [t(ui.patents, lang), L('/publications/#patents')],
+    ],
+  },
+  { label: t(ui.news, lang), href: L('/news/'), match: ['/news/'] },
+  { label: t(ui.events, lang), href: L('/events/'), match: ['/events/'] },
+  { label: t(ui.visitors, lang), href: L('/visitors/'), match: ['/visitors/'] },
   ...(site.showJoinPage ? [{ label: t(ui.join, lang), href: L('/join/'), match: ['/join/'] }] : []),
   { label: t(ui.contact, lang), href: L('/contact/'), match: ['/contact/'] },
 ] as { label: string; href: string; match: string[]; children?: [string, string][] }[]

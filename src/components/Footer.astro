@@ -31,10 +31,12 @@ const year = new Date().getFullYear()
     <div>
       <h2>{zh ? '站内' : 'On this site'}</h2>
       <p>
+        <a href={L('/about/')}>{t(ui.overview, lang)}</a><br />
         <a href={L('/research/')}>{t(ui.research, lang)}</a><br />
         <a href={L('/publications/')}>{t(ui.publications, lang)}</a><br />
-        <a href={L('/team/')}>{t(ui.team, lang)}</a><br />
-        <a href={L('/news/')}>{zh ? '动态' : 'News'}</a><br />
+        <a href={L('/news/')}>{t(ui.news, lang)}</a><br />
+        <a href={L('/events/')}>{t(ui.events, lang)}</a><br />
+        <a href={L('/visitors/')}>{t(ui.visitors, lang)}</a><br />
         <a href={L('/contact/')}>{t(ui.contact, lang)}</a>
       </p>
       <h2 style="margin-top:20px">{zh ? '相关机构' : 'Institutions'}</h2>

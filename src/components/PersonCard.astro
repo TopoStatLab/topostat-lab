@@ -1,0 +1,30 @@
+---
+import Portrait from './Portrait.astro'
+import type { Person } from '../data/people'
+import { t, type Lang } from '../i18n'
+
+interface Props {
+  person: Person
+  lang: Lang
+  showRole?: boolean
+  eager?: boolean
+}
+const { person: p, lang, showRole = true, eager = false } = Astro.props
+const zh = lang === 'zh'
+const other = zh ? p.name.en : p.name.zh
+---
+<li class="person" id={p.id}>
+  <Portrait person={p} lang={lang} eager={eager} />
+  <p class="person-name">{p.name[lang]}</p>
+  <p class="person-meta">
+    {showRole && p.role && <span class="person-role">{t(p.role, lang)}</span>}
+    {p.title && <span>{t(p.title, lang)}</span>}
+    {other !== p.name[lang] && <span lang={zh ? 'en' : 'zh-CN'}>{other}</span>}
+  </p>
+  {(p.homepage || p.email) && (
+    <p class="person-links">
+      {p.homepage && <a class="link" href={p.homepage} target="_blank" rel="noopener">{zh ? '主页' : 'Profile'}</a>}
+      {p.email && <a class="link" href={`mailto:${p.email}`}>{zh ? '邮箱' : 'Email'}</a>}
+    </p>
+  )}
+</li>

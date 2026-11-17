@@ -1,24 +1,24 @@
 ---
-import { formatDate, newsCategories, type NewsItem } from '../data/news'
+import { formatDate, formatRange, eventKinds, type NewsItem, type EventItem } from '../data/news'
 import { t, type Lang } from '../i18n'
 
 interface Props {
-  items: NewsItem[]
+  items: (NewsItem | EventItem)[]
   lang: Lang
-  showKind?: boolean
   showSummary?: boolean
 }
-const { items, lang, showKind = true, showSummary = false } = Astro.props
-const kind = (c: NewsItem['category']) => t(newsCategories.find((n) => n.id === c)!.title, lang)
+const { items, lang, showSummary = true } = Astro.props
+const isEvent = (i: NewsItem | EventItem): i is EventItem => 'place' in i
 ---
-<ol class="timeline" reversed>
+<ol class="timeline">
   {items.map((item) => (
     <li>
-      <time datetime={item.date}>{formatDate(item.date, lang)}</time>
+      <time datetime={item.date}>{isEvent(item) ? formatRange(item.date, item.until, lang) : formatDate(item.date, lang)}</time>
       <div>
-        {showKind && <span class="kind">{kind(item.category)}</span>}
+        {isEvent(item) && <span class="kind">{t(eventKinds[item.kind], lang)}{lang === 'zh' ? '，' : ', '}{t(item.place, lang)}</span>}
         <h3>{item.href ? <a href={item.href} target="_blank" rel="noopener">{t(item.title, lang)}</a> : t(item.title, lang)}</h3>
-        {showSummary && item.summary && <p>{t(item.summary, lang)}</p>}
+        {showSummary && isEvent(item) && item.people && <p>{t(item.people, lang)}</p>}
+        {showSummary && !isEvent(item) && item.summary && <p>{t(item.summary, lang)}</p>}
       </div>
     </li>
   ))}

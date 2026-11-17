@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
 import PersistenceDemo from '../components/PersistenceDemo.astro'
 import { researchDirections, applications } from '../data/research'
-import { publications, doiUrl } from '../data/publications'
+import { sortedPublications, paperUrl } from '../data/publications'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -27,7 +27,7 @@ const zh = lang === 'zh'
 
   <section class="section" aria-label={t(ui.directions, lang)} style="padding-top:0;border-top:0">
     {researchDirections.map((d) => {
-      const papers = publications.filter((p) => p.directions.includes(d.id))
+      const papers = sortedPublications.filter((p) => p.directions.includes(d.id)).slice(0, 4)
       return (
         <div class="wrap row">
           <article class="main direction" id={d.id}>
@@ -40,7 +40,7 @@ const zh = lang === 'zh'
             {papers.length ? (
               <ul>
                 {papers.map((p) => (
-                  <li><a href={doiUrl(p.doi)} target="_blank" rel="noopener">{p.title}</a><br /><i>{p.journal}</i>, {p.year}</li>
+                  <li><a href={paperUrl(p)} target="_blank" rel="noopener">{p.title}</a><br /><i>{p.journal}</i>, {p.year}</li>
                 ))}
               </ul>
             ) : (
