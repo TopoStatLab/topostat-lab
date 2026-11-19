@@ -74,6 +74,8 @@ Routing: Chinese at `/…/`, English at `/en/…/`. The header language switch g
 `src/data/papers-all.json` (every paper, with lab authors marked) and
 `src/data/people-names.json` are generated from the BIMSA roster spreadsheet;
 `src/data/publications.ts` holds the hand-curated selected papers with summaries.
+Only list work that acknowledges the key laboratory; the Chemical Reviews 2026
+review on TDA in materials science was removed at the lab's request.
 
 **Hosting & compliance**
 
