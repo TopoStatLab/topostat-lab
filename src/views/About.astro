@@ -29,6 +29,7 @@ const jsonLd = [
   },
 ]
 const memberCount = members.length
+const leaders = new Set([director, ...deputies, ...assistants].map((p) => p.id))
 const elsewhere = new Set([director, ...deputies, ...assistants, committeeChair, ...committeeMembers].map((p) => p.id))
 ---
 
@@ -112,7 +113,7 @@ const elsewhere = new Set([director, ...deputies, ...assistants, committeeChair,
       </div>
       <div class="tier">
         <h3 class="tier-label">{zh ? '委员' : 'Members'}</h3>
-        <ul class="people">{committeeMembers.map((p) => <PersonCard person={p} lang={lang} showRole={false} />)}</ul>
+        <ul class="people">{committeeMembers.map((p) => <PersonCard person={p} lang={lang} showRole={false} anchor={!leaders.has(p.id)} />)}</ul>
       </div>
     </div>
   </section>
