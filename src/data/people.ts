@@ -66,23 +66,32 @@ export const assistants: Person[] = [
 ]
 
 // ---------- Academic committee ----------
+// Source: the lab's committee list (2026-11), in that order.
+const U = {
+  bimsa: { zh: '北京雁栖湖应用数学研究院', en: 'BIMSA' },
+  ruc: { zh: '中国人民大学', en: 'Renmin University of China' },
+}
 export const committeeChair: Person = {
   id: 'yau-shingtung',
   name: { zh: '丘成桐', en: 'Shing-Tung Yau' },
   role: { zh: '学术委员会主任', en: 'Chair of the Academic Committee' },
+  title: U.bimsa,
   photo: P('yau-shingtung'),
   core: true,
 }
 
 export const committeeMembers: Person[] = [
-  { id: 'liu-jun', name: { zh: '刘军', en: 'Jun Liu' }, photo: P('liu-jun') },
-  { id: 'fang-fuquan', name: { zh: '方复全', en: 'Fuquan Fang' }, photo: P('fang-fuquan') },
-  { id: 'rao-yi', name: { zh: '饶毅', en: 'Yi Rao' }, photo: P('rao-yi') },
-  { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, photo: P('qiu-chengdong') },
-  { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, photo: P('zhu-liping') },
-  { id: 'liu-jingyuan', name: { zh: '刘婧媛', en: 'Jingyuan Liu' }, photo: P('liu-jingyuan') },
-  { id: 'yang-fan', name: { zh: '杨帆', en: 'Fan Yang' }, photo: P('yang-fan') },
-  { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' }, photo: P('cui-yuehua') },
+  { id: 'liu-jingyuan', name: { zh: '刘婧媛', en: 'Jingyuan Liu' }, title: { zh: '厦门大学', en: 'Xiamen University' }, photo: P('liu-jingyuan') },
+  { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' }, title: { zh: '美国密西根州立大学', en: 'Michigan State University' }, photo: P('cui-yuehua') },
+  { id: 'liu-jun', name: { zh: '刘军', en: 'Jun Liu' }, title: { zh: '哈佛大学', en: 'Harvard University' }, photo: P('liu-jun') },
+  { id: 'fang-fuquan', name: { zh: '方复全', en: 'Fuquan Fang' }, title: { zh: '首都师范大学', en: 'Capital Normal University' }, photo: P('fang-fuquan') },
+  { id: 'rao-yi', name: { zh: '饶毅', en: 'Yi Rao' }, title: { zh: '首都医科大学', en: 'Capital Medical University' }, photo: P('rao-yi') },
+  { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, title: U.ruc, photo: P('zhu-liping') },
+  { id: 'yang-fan', name: { zh: '杨帆', en: 'Fan Yang' }, title: { zh: '清华大学', en: 'Tsinghua University' }, photo: P('yang-fan') },
+  { id: 'wu-jie', name: { zh: '吴杰', en: 'Jie Wu' }, title: U.bimsa, photo: P('wu-jie') },
+  { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, title: U.bimsa, photo: P('qiu-chengdong') },
+  { id: 'gong-xinqi', name: { zh: '龚新奇', en: 'Xinqi Gong' }, title: U.ruc, photo: P('gong-xinqi') },
+  { id: 'wu-rongling', name: { zh: '邬荣领', en: 'Rongling Wu' }, title: U.bimsa, photo: P('wu-rongling') },
 ].map((p): Person => ({ ...p, role: { zh: '委员', en: 'Member' } }))
 
 // ---------- Members ----------
