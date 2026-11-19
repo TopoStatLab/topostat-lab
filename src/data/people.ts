@@ -66,7 +66,8 @@ export const assistants: Person[] = [
 ]
 
 // ---------- Academic committee ----------
-// Source: the lab's committee list (2026-11), in that order.
+// Source: the lab's committee list (2026-11), in that order. 吴杰 is not on the
+// committee (confirmed by the lab), although the list document includes him.
 const U = {
   bimsa: { zh: '北京雁栖湖应用数学研究院', en: 'BIMSA' },
   ruc: { zh: '中国人民大学', en: 'Renmin University of China' },
@@ -88,7 +89,6 @@ export const committeeMembers: Person[] = [
   { id: 'rao-yi', name: { zh: '饶毅', en: 'Yi Rao' }, title: { zh: '首都医科大学', en: 'Capital Medical University' }, photo: P('rao-yi') },
   { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, title: U.ruc, photo: P('zhu-liping') },
   { id: 'yang-fan', name: { zh: '杨帆', en: 'Fan Yang' }, title: { zh: '清华大学', en: 'Tsinghua University' }, photo: P('yang-fan') },
-  { id: 'wu-jie', name: { zh: '吴杰', en: 'Jie Wu' }, title: U.bimsa, photo: P('wu-jie') },
   { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, title: U.bimsa, photo: P('qiu-chengdong') },
   { id: 'gong-xinqi', name: { zh: '龚新奇', en: 'Xinqi Gong' }, title: U.ruc, photo: P('gong-xinqi') },
   { id: 'wu-rongling', name: { zh: '邬荣领', en: 'Rongling Wu' }, title: U.bimsa, photo: P('wu-rongling') },
