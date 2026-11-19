@@ -16,7 +16,7 @@ const zh = lang === 'zh'
   <PageHeading
     lang={lang}
     title={t(ui.visitors, lang)}
-    lead={zh ? '曾在实验室访学、学习或工作的成员，以及他们在实验室期间的工作和后续发展。' : 'Visiting scholars, students and former members: what they worked on here and where they went next.'}
+    lead={zh ? `曾在实验室工作、访问和学习的 ${visitors.length} 位成员，他们在实验室期间的研究方向和后续发展。` : `${visitors.length} former members, visiting scholars and students: what they worked on here and where they went next.`}
   />
   <section class="section" style="padding-top:clamp(32px,5vw,56px)">
     <div class="wrap row">
@@ -30,7 +30,7 @@ const zh = lang === 'zh'
                   <h2 class="visitor-name">{v.homepage ? <a href={v.homepage} target="_blank" rel="noopener">{v.name[lang]}</a> : v.name[lang]}</h2>
                   <p class="visitor-period">{v.period}{zh ? '，' : ', '}{t(v.role, lang)}</p>
                   <dl class="visitor-path">
-                    {v.atLab && <><dt>{zh ? '在实验室' : 'At the lab'}</dt><dd>{t(v.atLab, lang)}</dd></>}
+                    {v.atLab && <><dt>{zh ? '研究方向' : 'Research'}</dt><dd>{t(v.atLab, lang)}</dd></>}
                     {v.now && <><dt>{zh ? '现在' : 'Now'}</dt><dd>{t(v.now, lang)}</dd></>}
                   </dl>
                 </div>

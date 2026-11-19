@@ -5,6 +5,8 @@ import BibItem from '../components/BibItem.astro'
 import { sortedPublications as pubs, paperUrl } from '../data/publications'
 import { sortedPatents as patents } from '../data/patents'
 import { researchDirections } from '../data/research'
+import allPapers from '../data/papers-all.json'
+import names from '../data/people-names.json'
 import { ui, t, type Lang } from '../i18n'
 
 interface Props {
@@ -13,6 +15,17 @@ interface Props {
 const { lang } = Astro.props
 const zh = lang === 'zh'
 const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a)
+
+// Full list (every paper by every member, from the lab's roster).
+type Row = { y: number; t: string; a: [string, number][]; v: string; m: string[]; k?: string; pre?: number }
+const rows = allPapers as Row[]
+const allYears = [...new Set(rows.map((r) => r.y))].sort((a, b) => b - a)
+const nameMap = names as Record<string, { zh: string; en: string }>
+const counts = new Map<string, number>()
+rows.forEach((r) => r.m.forEach((id) => counts.set(id, (counts.get(id) ?? 0) + 1)))
+const authorOptions = [...counts.entries()]
+  .filter(([id]) => nameMap[id])
+  .sort((a, b) => b[1] - a[1] || nameMap[a[0]].en.localeCompare(nameMap[b[0]].en))
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -43,7 +56,7 @@ const jsonLd = [
   <section class="section" id="papers" aria-labelledby="h-papers" style="padding-top:clamp(32px,5vw,56px)">
     <div class="wrap row">
       <div class="main">
-        <h2 class="section-title" id="h-papers">{t(ui.papers, lang)}</h2>
+        <h2 class="section-title" id="h-papers">{zh ? '代表性论文' : 'Selected papers'}</h2>
         <div class="chips pub-filter" role="group" aria-label={zh ? '按研究方向筛选' : 'Filter by research direction'}>
           <button type="button" class="chip" data-filter="all" aria-pressed="true">{zh ? '全部' : 'All'}</button>
           {researchDirections.map((d) => (
@@ -61,7 +74,50 @@ const jsonLd = [
         <p class="pub-empty muted" hidden>{zh ? '这个方向暂无论文。' : 'No papers in this direction yet.'}</p>
       </div>
       <aside class="note">
-        <p>{zh ? `共 ${pubs.length} 篇。加粗的作者是实验室成员。` : `${pubs.length} papers. Laboratory members are set in bold.`}</p>
+        <p>{zh ? `${pubs.length} 篇代表作，附研究方向与简介。加粗的作者是实验室成员。` : `${pubs.length} selected papers with research directions and summaries. Laboratory members are set in bold.`}</p>
+        <p><a class="link" href="#all-papers">{zh ? `全部论文（${rows.length} 篇）` : `All papers (${rows.length})`}</a></p>
+      </aside>
+    </div>
+  </section>
+
+
+  <section class="section" id="all-papers" aria-labelledby="h-all">
+    <div class="wrap row">
+      <div class="main">
+        <h2 class="section-title" id="h-all">{zh ? '全部论文' : 'All papers'}</h2>
+        <div class="all-filter">
+          <label for="author-filter">{zh ? '按成员筛选' : 'Filter by member'}</label>
+          <select id="author-filter">
+            <option value="">{zh ? `全部成员（${rows.length} 篇）` : `All members (${rows.length})`}</option>
+            {authorOptions.map(([id, n]) => <option value={id}>{nameMap[id][lang]}（{n}）</option>)}
+          </select>
+          <p class="all-count muted" aria-live="polite"></p>
+        </div>
+        {allYears.map((year) => (
+          <div class="all-year-group">
+            <h3 class="year-head">{year}</h3>
+            <ol class="bib bib-compact">
+              {rows.filter((r) => r.y === year).map((r) => (
+                <li class="bib-item" data-m={r.m.join(' ')}>
+                  <div>
+                    <h3 class="bib-title">{r.t}</h3>
+                    {r.a.length > 0 && <p class="bib-authors">{r.a.map(([n, lab], i) => {
+                      const text = n + (i < r.a.length - 1 ? ', ' : '')
+                      return lab ? <b>{text}</b> : text
+                    })}</p>}
+                    <p class="bib-meta"><i>{r.v}</i>, {r.y}.
+                      {r.k === 'book' && <span class="bib-tag">{zh ? '著作' : 'Book'}</span>}
+                      {r.pre && <span class="bib-tag">{zh ? '预印本' : 'Preprint'}</span>}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+      <aside class="note">
+        <p>{zh ? '收录实验室全体成员（含已离开的成员）2025 年以来的论文和著作，按年份排列，由成员自行申报。加粗的作者是实验室成员。' : 'Papers and books since 2025 by all laboratory members, including former members, as reported by the members. Laboratory members are set in bold.'}</p>
       </aside>
     </div>
   </section>
@@ -81,8 +137,9 @@ const jsonLd = [
                     return p.lab?.includes(n.trim()) ? <b>{text}</b> : text
                   })}</p>
                   <p class="bib-meta">
-                    {p.status === 'granted' ? (zh ? '发明专利授权' : 'Granted') : zh ? '发明专利公开' : 'Published application'}，{p.year}.
+                    {p.status === 'granted' ? (zh ? '发明专利授权' : 'Granted patent') : zh ? '发明专利申请公开' : 'Published application'}{zh ? '，' : ', '}{p.year}.
                     {p.number && <span class="bib-doi"> {p.number}</span>}
+                    {p.note && <span>{zh ? p.note : ''}</span>}
                   </p>
                 </div>
               </li>
@@ -124,4 +181,34 @@ const jsonLd = [
   )
   const initial = new URLSearchParams(location.search).get('direction')
   if (initial && [...buttons].some((b) => b.dataset.filter === initial)) apply(initial)
+
+  // Full list: filter by member.
+  const select = document.querySelector<HTMLSelectElement>('#author-filter')!
+  const count = document.querySelector<HTMLElement>('.all-count')!
+  const zh = document.documentElement.lang.startsWith('zh')
+  const applyAuthor = (id: string) => {
+    let shown = 0
+    document.querySelectorAll<HTMLElement>('.all-year-group').forEach((group) => {
+      let visible = 0
+      group.querySelectorAll<HTMLElement>('.bib-item').forEach((row) => {
+        const ok = !id || (row.dataset.m ?? '').split(' ').includes(id)
+        row.hidden = !ok
+        if (ok) visible++
+      })
+      group.hidden = visible === 0
+      shown += visible
+    })
+    count.textContent = id ? (zh ? `${shown} 篇` : `${shown} papers`) : ''
+  }
+  select.addEventListener('change', () => {
+    applyAuthor(select.value)
+    const url = new URL(location.href)
+    select.value ? url.searchParams.set('member', select.value) : url.searchParams.delete('member')
+    history.replaceState(null, '', url)
+  })
+  const member = new URLSearchParams(location.search).get('member')
+  if (member && [...select.options].some((o) => o.value === member)) {
+    select.value = member
+    applyAuthor(member)
+  }
 </script>

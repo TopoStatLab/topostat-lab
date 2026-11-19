@@ -59,16 +59,21 @@ Routing: Chinese at `/…/`, English at `/en/…/`. The header language switch g
 
 **Needs input from the lab**
 
-- [ ] Patent list → `src/data/patents.ts`
-- [ ] Visitors / former members with their period at the lab and later positions → `src/data/visitors.ts`
-- [ ] Email for 陈天翮; Chinese names for Zhong Wang and Thomas Tulu; member portraits
+- [x] Member roster, former members, papers and patents from the BIMSA roster (2026-11)
+- [ ] Current positions of former members (only 3 of 17 found publicly) → `now` in `src/data/visitors.ts`
+- [ ] Email for 陈天翮; member portraits (most members show their initial)
 
 - [ ] Official contact email and phone → `src/data/site.ts`
 - [ ] Approved logo to replace the provisional mark (`src/components/LabMark.astro`, `public/favicon.svg`, `public/og-image.jpg`)
 - [ ] Portrait for 崔跃华 (the old photo files were corrupt) → add `public/people/portraits/cui-yuehua.webp` (square, 288×288 px, WebP) and set `photo` in `src/data/people.ts`
 - [ ] Member titles, affiliations and homepages → `src/data/people.ts`
 - [ ] Recruitment details → `src/data/join.ts`, then set `showJoinPage: true`
-- [ ] Full publication list
+
+**Updating papers from a new roster export**
+
+`src/data/papers-all.json` (every paper, with lab authors marked) and
+`src/data/people-names.json` are generated from the BIMSA roster spreadsheet;
+`src/data/publications.ts` holds the hand-curated selected papers with summaries.
 
 **Hosting & compliance**
 

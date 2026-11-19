@@ -8,12 +8,14 @@ interface Props {
   lang: Lang
   showRole?: boolean
   eager?: boolean
+  /** Set false when the same person is already on the page with this id. */
+  anchor?: boolean
 }
-const { person: p, lang, showRole = true, eager = false } = Astro.props
+const { person: p, lang, showRole = true, eager = false, anchor = true } = Astro.props
 const zh = lang === 'zh'
 const other = zh ? p.name.en : p.name.zh
 ---
-<li class="person" id={p.id}>
+<li class="person" id={anchor ? p.id : undefined}>
   <Portrait person={p} lang={lang} eager={eager} />
   <p class="person-name">{p.name[lang]}</p>
   <p class="person-meta">

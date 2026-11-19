@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
 import PersonCard from '../components/PersonCard.astro'
-import { director, deputies, assistants, committeeChair, committeeMembers, teams, type Person } from '../data/people'
+import { director, deputies, assistants, committeeChair, committeeMembers, members, tiers, type Person } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -12,7 +12,9 @@ interface Props {
 const { lang } = Astro.props
 const zh = lang === 'zh'
 
-const everyone: Person[] = [director, ...deputies, ...assistants, committeeChair, ...committeeMembers, ...teams.flatMap((x) => x.members)]
+const everyone: Person[] = [director, ...deputies, ...assistants, committeeChair, ...committeeMembers, ...members].filter(
+  (p, i, all) => all.findIndex((q) => q.id === p.id) === i,
+)
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -26,7 +28,8 @@ const jsonLd = [
     })),
   },
 ]
-const memberCount = new Set(teams.flatMap((x) => x.members.map((m) => m.id))).size
+const memberCount = members.length
+const elsewhere = new Set([director, ...deputies, ...assistants, committeeChair, ...committeeMembers].map((p) => p.id))
 ---
 
 <Base
@@ -86,12 +89,15 @@ const memberCount = new Set(teams.flatMap((x) => x.members.map((m) => m.id))).si
       <div class="tier">
         <h3 class="tier-label">{zh ? '成员' : 'Members'}<small>{zh ? `${memberCount} 人` : `${memberCount} people`}</small></h3>
         <div>
-          {teams.map((team) => (
-            <div class="team-block" id={`team-${team.id}`}>
-              <h4 class="team-name">{t(team.name, lang)}<span>{t(team.lead, lang)}</span></h4>
-              <ul class="people">{team.members.map((p) => <PersonCard person={p} lang={lang} showRole={false} />)}</ul>
-            </div>
-          ))}
+          {tiers.map((tier) => {
+            const list = members.filter((m) => m.tier === tier.id)
+            return list.length > 0 && (
+              <div class="team-block" id={`tier-${tier.id}`}>
+                <h4 class="team-name">{t(tier.label, lang)}<span>{zh ? `${list.length} 人` : list.length}</span></h4>
+                <ul class="people">{list.map((p) => <PersonCard person={p} lang={lang} showRole={false} anchor={!elsewhere.has(p.id)} />)}</ul>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
