@@ -1,46 +1,81 @@
 ---
 import Base from '../layouts/Base.astro'
-import PageHeading from '../components/PageHeading.astro'
-import Portrait from '../components/Portrait.astro'
+import PortraitCloud, { type CloudPerson } from '../components/PortraitCloud.astro'
 import { sortedVisitors as visitors } from '../data/visitors'
-import { ui, t, type Lang } from '../i18n'
+import { director, deputies, members, tiers } from '../data/people'
+import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
   lang: Lang
 }
 const { lang } = Astro.props
 const zh = lang === 'zh'
+const other = (n: { zh: string; en: string }) => (zh ? n.en : n.zh)
+
+// Everyone who is or has been part of the lab: former members first in the
+// card text, current members with their tier and start date.
+const former: CloudPerson[] = visitors.map((v) => ({
+  id: v.id ?? v.name.en,
+  name: v.name[lang],
+  other: other(v.name),
+  photo: v.photo,
+  status: zh ? '曾在实验室' : 'Former member',
+  facts: [
+    [zh ? '在实验室' : 'At the lab', `${v.period}${zh ? '，' : ', '}${t(v.role, lang)}`],
+    ...(v.atLab ? [[zh ? '研究方向' : 'Research', t(v.atLab, lang)] as [string, string]] : []),
+    ...(v.now ? [[zh ? '现在' : 'Now', t(v.now, lang)] as [string, string]] : []),
+  ],
+  homepage: v.homepage,
+}))
+const current: CloudPerson[] = [director, ...deputies, ...members].map((p) => {
+  const tier = 'tier' in p ? tiers.find((x) => x.id === (p as { tier: string }).tier) : undefined
+  return {
+    id: p.id,
+    name: p.name[lang],
+    other: other(p.name),
+    photo: p.photo,
+    status: p.role ? t(p.role, lang) : p.title ? t(p.title, lang) : tier ? t(tier.label, lang) : undefined,
+    facts: 'since' in p && p.since ? [[zh ? '加入' : 'Joined', String(p.since)]] : [],
+    homepage: p.homepage,
+  }
+})
+const people = [...former, ...current].filter((p, i, all) => all.findIndex((q) => q.id === p.id) === i)
 ---
 
 <Base lang={lang} path="/visitors/" title={t(ui.visitors, lang)} description={zh ? '曾在实验室访学或工作的成员，他们在实验室期间的工作与后续发展。' : 'Visiting scholars and former members: their work at the laboratory and where they went next.'}>
-  <PageHeading
-    lang={lang}
-    title={t(ui.visitors, lang)}
-    lead={zh ? `曾在实验室工作、访问和学习的 ${visitors.length} 位成员，他们在实验室期间的研究方向和后续发展。` : `${visitors.length} former members, visiting scholars and students: what they worked on here and where they went next.`}
-  />
-  <section class="section" style="padding-top:clamp(32px,5vw,56px)">
-    <div class="wrap row">
-      <div class="main">
-        {visitors.length ? (
-          <ol class="visitors">
-            {visitors.map((v) => (
-              <li class="visitor">
-                <Portrait person={{ id: v.name.en, name: v.name, photo: v.photo }} lang={lang} />
-                <div>
-                  <h2 class="visitor-name">{v.homepage ? <a href={v.homepage} target="_blank" rel="noopener">{v.name[lang]}</a> : v.name[lang]}</h2>
-                  <p class="visitor-period">{v.period}{zh ? '，' : ', '}{t(v.role, lang)}</p>
-                  <dl class="visitor-path">
-                    {v.atLab && <><dt>{zh ? '研究方向' : 'Research'}</dt><dd>{t(v.atLab, lang)}</dd></>}
-                    {v.now && <><dt>{zh ? '现在' : 'Now'}</dt><dd>{t(v.now, lang)}</dd></>}
-                  </dl>
-                </div>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p class="empty-state">{zh ? '访学成员名单正在整理，近期公布。' : 'The list of visitors is being compiled and will be published soon.'}</p>
-        )}
-      </div>
+  <header class="page-head-compact">
+    <div class="wrap">
+      <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {t(ui.visitors, lang)}</p>
+      <h1>{t(ui.visitors, lang)}</h1>
+      <p>{zh ? `在实验室工作、访问和学习过的 ${people.length} 位成员。点击头像，看看他们在这里做了什么、后来去了哪里。` : `${people.length} people who have worked, visited or studied at the lab. Click a portrait to see what they did here and where they went next.`}</p>
+    </div>
+  </header>
+
+  <PortraitCloud people={people} lang={lang} label={zh ? '成员头像墙' : 'Portraits of lab members'} />
+
+  <section class="section" aria-labelledby="h-alumni" style="padding-top:clamp(40px,6vw,64px)">
+    <div class="wrap">
+      <h2 class="section-title" id="h-alumni">{zh ? '历届成员' : 'Former members'}<small class="muted" style="font-size:var(--t-sm);margin-left:12px">{visitors.length}</small></h2>
+      <ul class="alumni">
+        {former.map((p) => {
+          const v = visitors.find((x) => (x.id ?? x.name.en) === p.id)!
+          return (
+            <li>
+              <button type="button" data-open-person={p.id}>
+                <span class="alumni-face" aria-hidden="true">{p.photo ? <img src={p.photo} alt="" loading="lazy" decoding="async" /> : p.name.slice(0, 1)}</span>
+                <span>
+                  <span class="alumni-name">{p.name}</span>
+                  <span class="alumni-meta">{v.period}{zh ? '，' : ', '}{t(v.role, lang)}</span>
+                  {v.now && <span class="alumni-now">{zh ? '现在：' : 'Now: '}{t(v.now, lang)}</span>}
+                </span>
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+      <p class="muted" style="margin-top:28px;font-size:var(--t-sm)">
+        {zh ? <>在职成员见<a class="link" href={localizedPath('/about/', lang) + '#organization'}>组织架构</a>。</> : <>Current members are listed under <a class="link" href={localizedPath('/about/', lang) + '#organization'}>Organization</a>.</>}
+      </p>
     </div>
   </section>
 </Base>

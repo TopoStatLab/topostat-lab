@@ -1,0 +1,274 @@
+---
+/**
+ * Floating portrait cloud: circular portraits on an endless, draggable
+ * hexagonal lattice. Positions are virtualised (only cells on screen get a
+ * DOM node) so the layer stays light with any number of people.
+ *
+ * Each person may carry a few labelled facts (period, research, now…) that
+ * show in the detail card when a portrait is clicked.
+ */
+import type { Lang } from '../i18n'
+
+export type CloudPerson = {
+  id: string
+  name: string
+  other?: string
+  photo?: string
+  status?: string
+  facts: [string, string][]
+  homepage?: string
+}
+
+interface Props {
+  people: CloudPerson[]
+  lang: Lang
+  label: string
+}
+const { people, lang, label } = Astro.props
+const zh = lang === 'zh'
+---
+
+<div class="cloud" data-cloud aria-label={label} role="region">
+  <div class="cloud-layer" aria-hidden="true"></div>
+  <p class="cloud-hint" aria-hidden="true">{zh ? '拖动浏览，点击头像查看经历' : 'Drag to explore, click a portrait for details'}</p>
+  <script type="application/json" data-cloud-people set:html={JSON.stringify(people)} />
+
+  <aside class="cloud-card" role="dialog" aria-modal="false" aria-labelledby="cloud-card-name" hidden>
+    <button type="button" class="cloud-card-close" aria-label={zh ? '关闭' : 'Close'}>
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.4" /></svg>
+    </button>
+    <div class="cloud-card-face"></div>
+    <h2 class="cloud-card-name" id="cloud-card-name"></h2>
+    <p class="cloud-card-other"></p>
+    <p class="cloud-card-status"></p>
+    <dl class="cloud-card-facts"></dl>
+    <a class="cloud-card-link link" target="_blank" rel="noopener" hidden>{zh ? 'BIMSA 主页' : 'BIMSA profile'}</a>
+  </aside>
+</div>
+
+<script>
+  type P = { id: string; name: string; other?: string; photo?: string; status?: string; facts: [string, string][]; homepage?: string }
+
+  const root = document.querySelector<HTMLElement>('[data-cloud]')!
+  const layer = root.querySelector<HTMLElement>('.cloud-layer')!
+  const people: P[] = JSON.parse(root.querySelector('[data-cloud-people]')!.textContent!)
+  const card = root.querySelector<HTMLElement>('.cloud-card')!
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // Deterministic pseudo-random so the arrangement is stable between visits.
+  let seed = 7
+  const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
+  const order = people.map((_, i) => i)
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1))
+    ;[order[i], order[j]] = [order[j], order[i]]
+  }
+  // People with photos first so the opening view is full of faces.
+  order.sort((a, b) => Number(!!people[b].photo) - Number(!!people[a].photo))
+
+  // Tile: C columns × R rows (R even so the hex offset wraps cleanly).
+  const N = people.length
+  const C = Math.max(4, Math.ceil(Math.sqrt(N * 1.8)))
+  let R = Math.ceil(N / C)
+  if (R % 2) R++
+  // Spread the photo-first order across the tile instead of filling row by row.
+  const tile: number[] = new Array(C * R)
+  const cells = [...Array(C * R).keys()].sort((a, b) => {
+    const da = Math.hypot((a % C) - C / 2, Math.floor(a / C) - R / 2)
+    const db = Math.hypot((b % C) - C / 2, Math.floor(b / C) - R / 2)
+    return da - db
+  })
+  cells.forEach((cell, k) => (tile[cell] = order[k % N]))
+  const scale = Array.from({ length: C * R }, () => 0.74 + rand() * 0.26)
+  const phase = Array.from({ length: C * R }, () => rand() * Math.PI * 2)
+
+  let D = 132, dx = 0, dy = 0, W = 0, H = 0
+  const measure = () => {
+    W = root.clientWidth
+    H = root.clientHeight
+    D = W < 560 ? 92 : W < 1000 ? 112 : 136
+    dx = D * 1.16
+    dy = dx * 0.88
+  }
+  measure()
+
+  // Camera: target follows input, view eases toward target (soft spring).
+  let tx = W / 2 - (C * dx) / 2, ty = H / 2 - (R * dy) / 2
+  let vx = 0, vy = 0
+  let x = tx + (reduced ? 0 : 40), y = ty + (reduced ? 0 : 24)
+
+  const pool = new Map<string, HTMLElement>()
+  const spare: HTMLElement[] = []
+  const make = () => {
+    const el = document.createElement('div')
+    el.className = 'bubble'
+    el.innerHTML = '<div class="bubble-face"></div><span class="bubble-name"></span>'
+    layer.appendChild(el)
+    return el
+  }
+  const fill = (el: HTMLElement, cell: number) => {
+    const p = people[tile[cell]]
+    if (el.dataset.person === p.id) return
+    el.dataset.person = p.id
+    const face = el.firstElementChild as HTMLElement
+    face.innerHTML = p.photo
+      ? `<img src="${p.photo}" alt="" loading="lazy" decoding="async" draggable="false">`
+      : `<span class="bubble-initial">${p.name.slice(0, 1)}</span>`
+    ;(el.lastElementChild as HTMLElement).textContent = p.name
+  }
+
+  const mod = (a: number, n: number) => ((a % n) + n) % n
+  let last = performance.now()
+  const frame = (now: number) => {
+    const dt = Math.min(48, now - last) / 16.67
+    last = now
+    if (!dragging) {
+      tx += vx * dt
+      ty += vy * dt
+      const f = Math.pow(0.93, dt)
+      vx *= f
+      vy *= f
+      if (Math.abs(vx) < 0.01) vx = 0
+      if (Math.abs(vy) < 0.01) vy = 0
+    }
+    const k = reduced ? 1 : 1 - Math.pow(1 - 0.2, dt)
+    x += (tx - x) * k
+    y += (ty - y) * k
+
+    const i0 = Math.floor(-x / dx) - 1, i1 = Math.ceil((W - x) / dx) + 1
+    const j0 = Math.floor(-y / dy) - 1, j1 = Math.ceil((H - y) / dy) + 1
+    const seen = new Set<string>()
+    const t = now / 1000
+    for (let j = j0; j <= j1; j++) {
+      for (let i = i0; i <= i1; i++) {
+        const key = i + ',' + j
+        seen.add(key)
+        const cell = mod(j, R) * C + mod(i, C)
+        let el = pool.get(key)
+        if (!el) {
+          el = spare.pop() ?? make()
+          el.style.display = ''
+          pool.set(key, el)
+        }
+        fill(el, cell)
+        const s = scale[cell]
+        const ph = phase[cell]
+        const fx = reduced ? 0 : Math.sin(t * 0.45 + ph) * 3.2
+        const fy = reduced ? 0 : Math.cos(t * 0.38 + ph * 1.3) * 4
+        const px = x + i * dx + (mod(j, 2) ? dx / 2 : 0) + fx
+        const py = y + j * dy + fy
+        const size = D * s
+        el.style.width = el.style.height = size + 'px'
+        el.style.transform = `translate3d(${px - size / 2}px, ${py - size / 2}px, 0)`
+      }
+    }
+    for (const [key, el] of pool) {
+      if (!seen.has(key)) {
+        pool.delete(key)
+        el.style.display = 'none'
+        spare.push(el)
+      }
+    }
+    requestAnimationFrame(frame)
+  }
+  requestAnimationFrame(frame)
+
+  // ---------- drag with inertia ----------
+  let dragging = false, moved = 0, lastX = 0, lastY = 0, lastT = 0, pid = -1
+  root.addEventListener('pointerdown', (e) => {
+    if ((e.target as HTMLElement).closest('.cloud-card')) return
+    pid = e.pointerId
+    dragging = true
+    moved = 0
+    vx = vy = 0
+    lastX = e.clientX
+    lastY = e.clientY
+    lastT = e.timeStamp
+  })
+  window.addEventListener('pointermove', (e) => {
+    if (!dragging || e.pointerId !== pid) return
+    const ddx = e.clientX - lastX, ddy = e.clientY - lastY
+    moved += Math.abs(ddx) + Math.abs(ddy)
+    if (moved > 6 && !root.classList.contains('is-dragging')) {
+      root.classList.add('is-dragging')
+      root.setPointerCapture?.(pid)
+    }
+    tx += ddx
+    ty += ddy
+    const dtm = Math.max(1, e.timeStamp - lastT) / 16.67
+    vx = vx * 0.6 + (ddx / dtm) * 0.4
+    vy = vy * 0.6 + (ddy / dtm) * 0.4
+    lastX = e.clientX
+    lastY = e.clientY
+    lastT = e.timeStamp
+  })
+  const end = (e: PointerEvent) => {
+    if (!dragging || e.pointerId !== pid) return
+    dragging = false
+    root.classList.remove('is-dragging')
+    if (e.timeStamp - lastT > 80) vx = vy = 0 // held still before release
+    if (moved <= 6) {
+      const hit = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>('.bubble')
+      if (hit?.dataset.person) open(hit.dataset.person, hit)
+      else if (!card.hidden) close()
+    }
+  }
+  window.addEventListener('pointerup', end)
+  window.addEventListener('pointercancel', end)
+  root.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) && !e.shiftKey) return
+    e.preventDefault()
+    tx -= e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX
+    ty -= e.shiftKey ? 0 : e.deltaY
+  }, { passive: false })
+  addEventListener('resize', () => {
+    const cx = (W / 2 - tx) / dx, cy = (H / 2 - ty) / dy
+    measure()
+    tx = W / 2 - cx * dx
+    ty = H / 2 - cy * dy
+  })
+
+  // ---------- detail card ----------
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!)
+  let lastFocus: Element | null = null
+  const open = (id: string, _from?: HTMLElement) => {
+    const p = people.find((q) => q.id === id)
+    if (!p) return
+    lastFocus = document.activeElement
+    card.querySelector('.cloud-card-face')!.innerHTML = p.photo
+      ? `<img src="${p.photo}" alt="">`
+      : `<span class="bubble-initial">${esc(p.name.slice(0, 1))}</span>`
+    card.querySelector('.cloud-card-name')!.textContent = p.name
+    card.querySelector('.cloud-card-other')!.textContent = p.other ?? ''
+    card.querySelector('.cloud-card-status')!.textContent = p.status ?? ''
+    card.querySelector('.cloud-card-facts')!.innerHTML = p.facts
+      .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`)
+      .join('')
+    const link = card.querySelector<HTMLAnchorElement>('.cloud-card-link')!
+    link.hidden = !p.homepage
+    if (p.homepage) link.href = p.homepage
+    root.querySelectorAll('.bubble.is-active').forEach((b) => b.classList.remove('is-active'))
+    layer.querySelectorAll<HTMLElement>(`.bubble[data-person="${id}"]`).forEach((b) => b.classList.add('is-active'))
+    root.classList.add('has-card')
+    card.hidden = false
+    requestAnimationFrame(() => card.classList.add('is-open'))
+    card.querySelector<HTMLElement>('.cloud-card-close')!.focus({ preventScroll: true })
+  }
+  const close = () => {
+    card.classList.remove('is-open')
+    root.classList.remove('has-card')
+    root.querySelectorAll('.bubble.is-active').forEach((b) => b.classList.remove('is-active'))
+    setTimeout(() => { if (!card.classList.contains('is-open')) card.hidden = true }, reduced ? 0 : 320)
+    ;(lastFocus as HTMLElement | null)?.focus?.({ preventScroll: true })
+  }
+  card.querySelector('.cloud-card-close')!.addEventListener('click', close)
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !card.hidden) close() })
+
+  // The accessible list below the cloud opens the same card.
+  document.querySelectorAll<HTMLButtonElement>('[data-open-person]').forEach((b) =>
+    b.addEventListener('click', () => {
+      root.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
+      open(b.dataset.openPerson!)
+    }),
+  )
+</script>
