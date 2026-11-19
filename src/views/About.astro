@@ -113,7 +113,11 @@ const elsewhere = new Set([director, ...deputies, ...assistants, committeeChair,
       </div>
       <div class="tier">
         <h3 class="tier-label">{zh ? '委员' : 'Members'}</h3>
-        <ul class="people">{committeeMembers.map((p) => <PersonCard person={p} lang={lang} showRole={false} anchor={!leaders.has(p.id)} />)}</ul>
+        <ul class="people lead">{committeeMembers.filter((p) => p.id === 'wu-rongling').map((p) => <PersonCard person={{ ...p, title: { zh: '实验室主任', en: 'Director of the Laboratory' } }} lang={lang} showRole={false} anchor={false} />)}</ul>
+      </div>
+      <div class="tier tier-continued">
+        <h3 class="tier-label" aria-hidden="true"></h3>
+        <ul class="people">{committeeMembers.filter((p) => p.id !== 'wu-rongling').map((p) => <PersonCard person={p} lang={lang} showRole={false} anchor={!leaders.has(p.id)} />)}</ul>
       </div>
     </div>
   </section>

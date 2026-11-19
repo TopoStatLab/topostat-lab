@@ -539,3 +539,4 @@ button { font: inherit; color: inherit; }
 .alumni-meta { display: block; font-size: var(--t-sm); color: var(--ink-3); }
 .alumni-now { display: block; margin-top: 2px; font-size: var(--t-sm); color: var(--ink); }
 .cloud-card-facts:empty { display: none; }
+.tier-continued { border-top: 0; padding-top: 0; }
