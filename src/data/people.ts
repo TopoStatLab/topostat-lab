@@ -78,7 +78,6 @@ export const committeeMembers: Person[] = [
   { id: 'liu-jun', name: { zh: '刘军', en: 'Jun Liu' }, photo: P('liu-jun') },
   { id: 'fang-fuquan', name: { zh: '方复全', en: 'Fuquan Fang' }, photo: P('fang-fuquan') },
   { id: 'rao-yi', name: { zh: '饶毅', en: 'Yi Rao' }, photo: P('rao-yi') },
-  { id: 'wu-jie', name: { zh: '吴杰', en: 'Jie Wu' }, photo: P('wu-jie'), core: true },
   { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, photo: P('qiu-chengdong') },
   { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, photo: P('zhu-liping') },
   { id: 'liu-jingyuan', name: { zh: '刘婧媛', en: 'Jingyuan Liu' }, photo: P('liu-jingyuan') },
@@ -103,7 +102,7 @@ export const tiers: { id: Tier; label: L10n }[] = [
 
 export const members: Member[] = [
   { id: 'zhang-xiaoming', tier: 'professor', name: { zh: "张晓明", en: "Xiaoming Zhang" }, photo: P('zhang-xiaoming'), title: { zh: "研究员", en: "Professor" }, since: '2020.08' },
-  { id: 'wu-jie', tier: 'professor', name: { zh: "吴杰", en: "Jie Wu" }, title: { zh: "研究员", en: "Professor" }, photo: P('wu-jie'), since: '2021.12' },
+  { id: 'wu-jie', tier: 'professor', name: { zh: "吴杰", en: "Jie Wu" }, title: { zh: "研究员", en: "Professor" }, photo: P('wu-jie'), since: '2021.12', core: true },
   { id: 'han-liyan', tier: 'professor', name: { zh: "韩立岩", en: "Liyan Han" }, photo: P('han-liyan'), title: { zh: "研究员", en: "Professor" }, since: '2022.05' },
   { id: 'long-fei', tier: 'professor', name: { zh: "龙飞", en: "Fei Long" }, photo: P('long-fei'), title: { zh: "研究员", en: "Professor" }, since: '2022.05' },
   { id: 'sergei-ivanov', tier: 'professor', name: { zh: "谢尔盖·伊万诺夫", en: "Sergei Ivanov" }, photo: P('sergei-ivanov'), title: { zh: "研究员", en: "Professor" }, since: '2022.10' },

@@ -56,13 +56,7 @@ export const publications: Publication[] = [
     journal: 'Nature Communications', where: '17(1):4708',
     doi: '10.1038/s41467-026-70070-6',
   },
-  {
-    year: 2026, core: true, directions: [ST],
-    title: 'Topological methods in material science: principles, machine learning integration and application landscapes',
-    authors: 'Zheng S, Wang B, Zhang M, Tan J, Lv H, Liu R, Shi Z, Li X, Wang R, Zhang S, Li J, Zhao Y, Wu J, Li J, Yau ST, Pan F',
-    lab: ['Zhang M', 'Wu J', 'Yau ST'],
-    journal: 'Chemical Reviews',
-  },
+
   {
     year: 2026, core: true, directions: [SP],
     title: 'A statistical mechanics model to decode tissue crosstalk during graft formation',
