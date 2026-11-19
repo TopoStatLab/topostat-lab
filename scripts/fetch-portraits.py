@@ -1,38 +1,29 @@
-"""Fetch member portraits from BIMSA profile listings (run in CI)."""
-import json, re, io, os, sys, urllib.request
+"""Download member portraits from BIMSA (run in CI; bimsa.cn is slow from abroad)."""
+import json, re, io, os, subprocess
 from PIL import Image, ImageOps
-UA={'User-Agent':'Mozilla/5.0'}
-def get(u):
-    try: return urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=30).read()
-    except Exception as e: print('ERR',u,e); return b''
-want=json.load(open('scripts/portrait-want.json'))
-have={f[:-5] for f in os.listdir('public/people/portraits')}
-found={}
-def scan(html):
-    for m in re.finditer(r'href="https://www\.bimsa\.cn/zh-CN/detail/([^"]+)\.html"[^>]*>\s*<div class="img_box">\s*<img class="lazy" data-original="([^"]+)" alt="([^"]+)"',html):
-        found.setdefault(m[3].strip(),(m[1],m[2]))
-for base in ['people/index','postdoc/index']:
-    for i in range(1,40):
-        h=get(f'https://www.bimsa.cn/zh-CN/{base.split("/")[0]}/page_{i}.html' if i>1 else f'https://www.bimsa.cn/zh-CN/{base}.html').decode('utf8','ignore')
-        n=len(found); scan(h)
-        if i>1 and len(found)==n: break
-print('listed',len(found))
-slugs=json.load(open('scripts/portrait-slugs.json'))
-out={}
-for pid,nm in want.items():
+def curl(u, out):
+    r = subprocess.run(['curl', '-sSL', '--retry', '6', '--retry-all-errors', '--retry-delay', '5', '--max-time', '120',
+                        '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130 Safari/537.36',
+                        '-e', 'https://www.bimsa.cn/', '-o', out, u], capture_output=True, text=True)
+    return r.returncode == 0
+urls = json.load(open('scripts/portrait-urls.json'))
+slugs = json.load(open('scripts/portrait-slugs.json'))
+have = {f[:-5] for f in os.listdir('public/people/portraits')}
+for pid, slug in slugs.items():
+    if pid in urls or pid in have: continue
+    if curl(f'https://www.bimsa.cn/zh-CN/detail/{slug}.html', 'p.html'):
+        m = re.search(r'https://www\.bimsa\.cn/upload/img/avatar[^"\' )]+\.(?:jpe?g|png|webp)', open('p.html', errors='ignore').read(), re.I)
+        if m: urls[pid] = m[0]
+        else: print('NOIMG', pid)
+    else: print('NOPAGE', pid)
+for pid, u in urls.items():
     if pid in have: continue
-    src=None
-    if nm['zh'] in found: src=found[nm['zh']][1]
-    elif pid in slugs:
-        h=get(f'https://www.bimsa.cn/zh-CN/detail/{slugs[pid]}.html').decode('utf8','ignore')
-        m=re.search(r'https://www\.bimsa\.cn/upload/img/avatar[^"\' )]+\.(?:jpg|jpeg|png|webp)',h)
-        if m: src=m[0]
-    if not src: print('MISS',pid,nm['zh']); continue
-    b=get(src)
-    try: im=Image.open(io.BytesIO(b)); im=ImageOps.exif_transpose(im).convert('RGB')
-    except Exception as e: print('BAD',pid,src,e); continue
-    w,h=im.size; s=min(w,h); top=0 if h>w else 0; top=int(min(h-s,(h-s)*0.25))
-    im=im.crop(((w-s)//2,top,(w-s)//2+s,top+s)).resize((288,288),Image.LANCZOS)
-    im.save(f'public/people/portraits/{pid}.webp','WEBP',quality=80,method=6)
-    out[pid]=src; print('OK',pid,nm['zh'],w,h)
-json.dump(out,open('scripts/portrait-sources.json','w'),ensure_ascii=False,indent=1)
+    if not curl(u, 'img'): print('FAIL', pid, u); continue
+    try:
+        im = ImageOps.exif_transpose(Image.open('img')).convert('RGB')
+    except Exception as e:
+        print('BAD', pid, os.path.getsize('img'), open('img', 'rb').read(80)); continue
+    w, h = im.size; s = min(w, h); top = int((h - s) * 0.2)
+    im = im.crop(((w - s) // 2, top, (w - s) // 2 + s, top + s)).resize((288, 288), Image.LANCZOS)
+    im.save(f'public/people/portraits/{pid}.webp', 'WEBP', quality=80, method=6)
+    print('OK', pid, w, h)
