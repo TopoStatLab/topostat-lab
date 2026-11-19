@@ -48,8 +48,8 @@ export const visitors: Visitor[] = [
     start: '2022-11',
     role: { zh: "研究员", en: "Professor" },
     atLab: { zh: "数理逻辑与计算理论", en: "Mathematical logic and theory of computation" },
-    now: { zh: "日本东北大学名誉教授", en: "Professor Emeritus, Tohoku University" },
-    homepage: 'https://www.bimsa.cn/zh-CN/detail/tanaka.html',
+    homepage: 'https://sendailogic.com/tanaka.html',
+    photo: '/people/portraits/kazuyuki-tanaka.webp',
     id: 'kazuyuki-tanaka',
   },
   {
@@ -58,7 +58,8 @@ export const visitors: Visitor[] = [
     start: '2024-01',
     role: { zh: "研究员", en: "Professor" },
     atLab: { zh: "自然向量方法与生物信息", en: "Natural vector methods and bioinformatics" },
-    homepage: 'https://www.bimsa.cn/zh-CN/detail/drhu.html',
+    now: { zh: "河套数学与交叉学科研究院教授", en: "Professor, Hetao Institute of Mathematics and Interdisciplinary Sciences" },
+    photo: '/people/portraits/hu-guoqing.webp',
     id: 'hu-guoqing',
   },
   {
@@ -68,6 +69,7 @@ export const visitors: Visitor[] = [
     role: { zh: "助理研究员", en: "Assistant Professor" },
     atLab: { zh: "机器学习与统计学习", en: "Machine learning and statistical learning" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/congweisong.html',
+    photo: '/people/portraits/song-congwei.webp',
     id: 'song-congwei',
   },
   {
@@ -76,6 +78,7 @@ export const visitors: Visitor[] = [
     start: '2022-12',
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "环面拓扑与同伦论", en: "Toric topology and homotopy theory" },
+    photo: '/people/portraits/fu-xin.webp',
     id: 'fu-xin',
   },
   {
@@ -85,6 +88,7 @@ export const visitors: Visitor[] = [
     role: { zh: "博士后 → 助理研究员", en: "Postdoc → Assistant Professor" },
     atLab: { zh: "非线性滤波与物理信息机器学习", en: "Nonlinear filtering and physics-informed machine learning" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/xpjiao.html',
+    photo: '/people/portraits/jiao-xiaopei.webp',
     id: 'jiao-xiaopei',
   },
   {
@@ -93,7 +97,9 @@ export const visitors: Visitor[] = [
     start: '2023-07',
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "代数拓扑", en: "Algebraic topology" },
+    now: { zh: "河套数学与交叉学科研究院", en: "Hetao Institute of Mathematics and Interdisciplinary Sciences" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/yyruan.html',
+    photo: '/people/portraits/ruan-yangyang.webp',
     id: 'ruan-yangyang',
   },
   {
@@ -101,6 +107,7 @@ export const visitors: Visitor[] = [
     period: '2023.10–2024.12',
     start: '2023-10',
     role: { zh: "助理研究员", en: "Assistant Professor" },
+    photo: '/people/portraits/menzies-max.webp',
     id: 'menzies-max',
   },
   {
@@ -111,6 +118,7 @@ export const visitors: Visitor[] = [
     atLab: { zh: "控制、非线性滤波与机器学习", en: "Control, nonlinear filtering and machine learning" },
     now: { zh: "河套数学与交叉学科研究院助理教授（2025 年 11 月起）", en: "Assistant Professor, Hetao Institute of Mathematics and Interdisciplinary Sciences (since Nov 2025)" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/JiayiKang.html',
+    photo: '/people/portraits/kang-jiayi.webp',
     id: 'kang-jiayi',
   },
   {
@@ -120,6 +128,7 @@ export const visitors: Visitor[] = [
     role: { zh: "实习 → 博士后", en: "Intern → Postdoc" },
     atLab: { zh: "有向图同伦与 GLMY 理论", en: "Digraph homotopy and GLMY theory" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/mengmengzhang.html',
+    photo: '/people/portraits/zhang-mengmeng.webp',
     id: 'zhang-mengmeng',
   },
   {
@@ -128,7 +137,9 @@ export const visitors: Visitor[] = [
     start: '2022-04',
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "拓扑数据分析", en: "Topological data analysis" },
+    now: { zh: "山东大学", en: "Shandong University" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/ypzi.html',
+    photo: '/people/portraits/zi-yunpeng.webp',
     id: 'zi-yunpeng',
   },
   {
@@ -138,6 +149,7 @@ export const visitors: Visitor[] = [
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "生物数学与机器学习", en: "Mathematical biology and machine learning" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/NanSun.html',
+    photo: '/people/portraits/sun-nan.webp',
     id: 'sun-nan',
   },
   {
@@ -155,6 +167,7 @@ export const visitors: Visitor[] = [
     start: '2023-10',
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "复杂网络建模", en: "Modelling of complex networks" },
+    photo: '/people/portraits/li-zhifan.webp',
     id: 'li-zhifan',
   },
   {
@@ -163,6 +176,7 @@ export const visitors: Visitor[] = [
     start: '2024-06',
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "统计建模", en: "Statistical modelling" },
+    photo: '/people/portraits/thomas-wetere-tulu.webp',
     id: 'thomas-wetere-tulu',
   },
   {
@@ -171,6 +185,8 @@ export const visitors: Visitor[] = [
     start: '2022-12',
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "有向图同调与应用拓扑", en: "Digraph homology and applied topology" },
+    now: { zh: "河套数学与交叉学科研究院", en: "Hetao Institute of Mathematics and Interdisciplinary Sciences" },
+    photo: '/people/portraits/matthew-burfitt.webp',
     id: 'matthew-burfitt',
   },
   {
@@ -180,6 +196,7 @@ export const visitors: Visitor[] = [
     role: { zh: "博士后", en: "Postdoc" },
     atLab: { zh: "多复变与复几何", en: "Several complex variables and complex geometry" },
     homepage: 'https://www.bimsa.cn/zh-CN/detail/GenglongLin.html',
+    photo: '/people/portraits/lin-genglong.webp',
     id: 'lin-genglong',
   },
 ]
