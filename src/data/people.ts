@@ -60,6 +60,7 @@ export const assistants: Person[] = [
     id: 'chen-tianhe',
     name: { zh: '陈天翮', en: 'Tianhe Chen' },
     role: { zh: '实验室助理', en: 'Laboratory Assistant' },
+    photo: P('chen-tianhe'),
     // TODO(lab): add a public email for 陈天翮.
   },
 ]
@@ -82,8 +83,7 @@ export const committeeMembers: Person[] = [
   { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, photo: P('zhu-liping') },
   { id: 'liu-jingyuan', name: { zh: '刘婧媛', en: 'Jingyuan Liu' }, photo: P('liu-jingyuan') },
   { id: 'yang-fan', name: { zh: '杨帆', en: 'Fan Yang' }, photo: P('yang-fan') },
-  // TODO(lab): portrait for 崔跃华 (the repo's old photo files were corrupt).
-  { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' } },
+  { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' }, photo: P('cui-yuehua') },
 ].map((p): Person => ({ ...p, role: { zh: '委员', en: 'Member' } }))
 
 // ---------- Members ----------
@@ -130,8 +130,8 @@ export const members: Member[] = [
   { id: 'qin-shuo', tier: 'assistant', name: { zh: "秦硕", en: "Shuo Qin" }, photo: P('qin-shuo'), title: { zh: "陈省身冠名讲师", en: "Chern Instructor" }, since: '2024.06' },
   { id: 'deng-manyao', tier: 'postdoc', name: { zh: "邓曼瑶", en: "Manyao Deng" }, photo: P('deng-manyao'), title: { zh: "博士后", en: "Postdoc" }, since: '2022.10' },
   { id: 'liu-zhiwen', tier: 'postdoc', name: { zh: "刘志文", en: "Zhiwen Liu" }, photo: P('liu-zhiwen'), title: { zh: "博士后", en: "Postdoc" }, since: '2024.07' },
-  { id: 'zhang-ping', tier: 'student', name: { zh: "张萍", en: "Ping Zhang" }, title: { zh: "研究助理", en: "Research Assistant" }, since: '2020.09' },
-  { id: 'hu-yuzhong', tier: 'student', name: { zh: "胡煜中", en: "Yuzhong Hu" }, title: { zh: "博士研究生", en: "PhD student" }, since: '2021.03' },
+  { id: 'zhang-ping', tier: 'student', name: { zh: "张萍", en: "Ping Zhang" }, photo: P('zhang-ping'), title: { zh: "研究助理", en: "Research Assistant" }, since: '2020.09' },
+  { id: 'hu-yuzhong', tier: 'student', name: { zh: "胡煜中", en: "Yuzhong Hu" }, photo: P('hu-yuzhong'), title: { zh: "博士研究生", en: "PhD student" }, since: '2021.03' },
   // Not in the 2026-11 BIMSA roster, kept at the lab's request.
   { id: 'lei-fengchun', tier: 'professor', name: { zh: '雷逢春', en: 'Fengchun Lei' }, photo: P('lei-fengchun'), title: { zh: '研究员', en: 'Professor' } },
   { id: 'bai-hao', tier: 'postdoc', name: { zh: '柏浩', en: 'Hao Bai' }, photo: P('bai-hao'), title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('hbai') },

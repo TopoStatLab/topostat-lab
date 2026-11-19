@@ -6,10 +6,10 @@ def curl(u, out):
                         '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130 Safari/537.36',
                         '-e', 'https://www.bimsa.cn/', '-o', out, u], capture_output=True, text=True)
     return r.returncode == 0
-urls = json.load(open('scripts/portrait-urls.json'))
+urls = json.load(open('scripts/portrait-urls2.json'))
 slugs = json.load(open('scripts/portrait-slugs.json'))
 have = {f[:-5] for f in os.listdir('public/people/portraits')}
-for pid, slug in slugs.items():
+for pid, slug in ({} if True else slugs).items():
     if pid in urls or pid in have: continue
     if curl(f'https://www.bimsa.cn/zh-CN/detail/{slug}.html', 'p.html'):
         m = re.search(r'https://www\.bimsa\.cn/upload/img/avatar[^"\' )]+\.(?:jpe?g|png|webp)', open('p.html', errors='ignore').read(), re.I)
