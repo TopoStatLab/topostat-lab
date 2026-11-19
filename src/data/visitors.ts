@@ -146,6 +146,7 @@ export const visitors: Visitor[] = [
     start: '2023-11',
     role: { zh: "实习 → 博士后", en: "Intern → Postdoc" },
     atLab: { zh: "复杂网络与统计遗传", en: "Complex networks and statistical genetics" },
+    photo: '/people/portraits/wang-yu.webp',
     id: 'wang-yu',
   },
   {

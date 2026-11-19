@@ -338,7 +338,7 @@ button { font: inherit; color: inherit; }
   .nav-link { height: auto; padding: 14px 0; font-size: var(--t-md); color: var(--ink); }
   .nav-link.active::after { display: none; }
   .nav-caret { display: none; }
-  .nav-dropdown { position: static; opacity: 1; visibility: visible; transform: none; border: 0; box-shadow: none; background: none; padding: 0 0 10px; min-width: 0; }
+  .nav-dropdown { position: static; opacity: 1; visibility: inherit; transform: none; border: 0; box-shadow: none; background: none; padding: 0 0 10px; min-width: 0; }
   .nav-dropdown a { padding: 6px 0 6px 14px; }
   .lang { border-left: 0; padding-left: 0; }
   .brand-sub { display: none; }
