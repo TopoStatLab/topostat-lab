@@ -1,6 +1,6 @@
 /**
- * Laboratory people: leadership, academic committee, research teams.
- * Sources: tsa.bimsa.cn (organization, research teams) and BIMSA profile pages.
+ * Laboratory people: leadership, academic committee, members.
+ * Sources: tsa.bimsa.cn, the lab's BIMSA roster (2026-11) and BIMSA profile pages.
  *
  * Portraits live in public/people/portraits/<id>.webp: square crops,
  * 288×288 px, WebP quality ~80 (each ~5–10 KB). People without a photo show
@@ -85,34 +85,54 @@ export const committeeMembers: Person[] = [
   { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' } },
 ].map((p): Person => ({ ...p, role: { zh: '委员', en: 'Member' } }))
 
-// ---------- Research teams (members) ----------
-export type Team = { id: string; name: L10n; lead: L10n; members: Person[] }
+// ---------- Members ----------
+// Source: BIMSA roster supplied by the lab (2026-11). People whose BIMSA
+// contract is still running are listed here; former members are in
+// src/data/visitors.ts. The director appears above and is not repeated.
+export type Tier = 'professor' | 'associate' | 'assistant' | 'postdoc' | 'student'
+export type Member = Person & { tier: Tier }
 
-export const teams: Team[] = [
-  {
-    id: 'statistics',
-    name: { zh: '应用统计与数据科学', en: 'Applied Statistics and Data Science' },
-    lead: { zh: '负责人：邬荣领', en: 'Led by Rongling Wu' },
-    members: [
-      { id: 'zhong-wang', name: { zh: 'Zhong Wang', en: 'Zhong Wang' }, title: { zh: '研究员', en: 'Professor' } },
-      { id: 'dong-ang', name: { zh: '董昂', en: 'Ang Dong' }, title: { zh: '助理研究员', en: 'Assistant Professor' }, homepage: bimsa('ddaa') },
-      { id: 'yang-dengcheng', name: { zh: '杨登程', en: 'Dengcheng Yang' }, title: { zh: '助理研究员', en: 'Assistant Professor' }, homepage: bimsa('yangdengcheng') },
-      { id: 'wu-shuang', name: { zh: '吴双', en: 'Shuang Wu' }, title: { zh: '助理研究员', en: 'Assistant Professor' }, homepage: bimsa('wushuang') },
-      { id: 'bai-hao', name: { zh: '柏浩', en: 'Hao Bai' }, title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('hbai') },
-      { id: 'gong-huiying', name: { zh: '龚慧莹', en: 'Huiying Gong' }, title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('hygong') },
-      { id: 'wang-yu', name: { zh: '王宇', en: 'Yu Wang' }, title: { zh: '博士研究生', en: 'PhD student' }, homepage: bimsa('ywang') },
-      { id: 'thomas-tulu', name: { zh: 'Thomas Tulu', en: 'Thomas Tulu' } },
-    ],
-  },
-  {
-    id: 'topology',
-    name: { zh: '代数拓扑及其应用', en: 'Algebraic Topology and its Applications' },
-    lead: { zh: '负责人：吴杰', en: 'Led by Jie Wu' },
-    members: [
-      { id: 'lei-fengchun', name: { zh: '雷逢春', en: 'Fengchun Lei' }, title: { zh: '研究员', en: 'Professor' } },
-      { id: 'li-jingyan', name: { zh: '李京艳', en: 'Jingyan Li' }, title: { zh: '副研究员', en: 'Associate Professor' }, homepage: bimsa('jingyanli') },
-      { id: 'ruan-yangyang', name: { zh: '阮洋洋', en: 'Yangyang Ruan' }, title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('yyruan') },
-      { id: 'zhang-mengmeng', name: { zh: '张蒙蒙', en: 'Mengmeng Zhang' }, title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('mengmengzhang') },
-    ],
-  },
+export const tiers: { id: Tier; label: L10n }[] = [
+  { id: 'professor', label: { zh: '研究员', en: 'Professors' } },
+  { id: 'associate', label: { zh: '副研究员', en: 'Associate professors' } },
+  { id: 'assistant', label: { zh: '助理研究员', en: 'Assistant professors' } },
+  { id: 'postdoc', label: { zh: '博士后', en: 'Postdocs' } },
+  { id: 'student', label: { zh: '研究助理与博士生', en: 'Research assistants and students' } },
+]
+
+export const members: Member[] = [
+  { id: 'zhang-xiaoming', tier: 'professor', name: { zh: "张晓明", en: "Xiaoming Zhang" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'wu-jie', tier: 'professor', name: { zh: "吴杰", en: "Jie Wu" }, title: { zh: "研究员", en: "Professor" }, photo: P('wu-jie') },
+  { id: 'han-liyan', tier: 'professor', name: { zh: "韩立岩", en: "Liyan Han" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'long-fei', tier: 'professor', name: { zh: "龙飞", en: "Fei Long" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'sergei-ivanov', tier: 'professor', name: { zh: "谢尔盖·伊万诺夫", en: "Sergei Ivanov" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'tadahisa-funaki', tier: 'professor', name: { zh: "舟木 直久", en: "Tadahisa Funaki" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'wang-zhong', tier: 'professor', name: { zh: "王忠", en: "Zhong Wang" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'niu-yishuai', tier: 'professor', name: { zh: "牛一帅", en: "Yi-Shuai Niu" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'yuval-peres', tier: 'professor', name: { zh: "尤瓦尔·佩雷斯", en: "Yuval Peres" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'feng-qi', tier: 'professor', name: { zh: "冯琦", en: "Qi Feng" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'cai-yunfeng', tier: 'professor', name: { zh: "蔡云峰", en: "Yunfeng Cai" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'sun-mingming', tier: 'professor', name: { zh: "孙明明", en: "Mingming Sun" }, title: { zh: "研究员", en: "Professor" } },
+  { id: 'li-jingyan', tier: 'associate', name: { zh: "李京艳", en: "Jingyan Li" }, title: { zh: "副研究员", en: "Associate Professor" }, homepage: bimsa('jingyanli') },
+  { id: 'xie-haihua', tier: 'associate', name: { zh: "谢海华", en: "Haihua Xie" }, title: { zh: "副研究员", en: "Associate Professor" } },
+  { id: 'wu-qi', tier: 'associate', name: { zh: "吴琦", en: "Qi Wu" }, title: { zh: "副研究员", en: "Associate Professor" } },
+  { id: 'zhao-xin', tier: 'associate', name: { zh: "赵鑫", en: "Xin Zhao" }, title: { zh: "副研究员", en: "Associate Professor" } },
+  { id: 'he-miao', tier: 'assistant', name: { zh: "何苗", en: "Miao He" }, title: { zh: "助理研究员", en: "Assistant Professor" } },
+  { id: 'li-wenjuan', tier: 'assistant', name: { zh: "李文娟", en: "Wenjuan Li" }, title: { zh: "助理研究员", en: "Assistant Professor" } },
+  { id: 'li-zhen', tier: 'assistant', name: { zh: "李振", en: "Zhen Li" }, title: { zh: "助理研究员", en: "Assistant Professor" } },
+  { id: 'gao-ruize', tier: 'assistant', name: { zh: "高瑞泽", en: "Ruize Gao" }, title: { zh: "助理研究员", en: "Assistant Professor" } },
+  { id: 'dong-ang', tier: 'assistant', name: { zh: "董昂", en: "Ang Dong" }, title: { zh: "助理研究员", en: "Assistant Professor" }, homepage: bimsa('ddaa') },
+  { id: 'song-jiebo', tier: 'assistant', name: { zh: "宋洁博", en: "Jiebo Song" }, title: { zh: "助理研究员", en: "Assistant Professor" } },
+  { id: 'bai-shuliang', tier: 'assistant', name: { zh: "白淑亮", en: "Shuliang Bai" }, title: { zh: "助理研究员", en: "Assistant Professor" } },
+  { id: 'wu-shuang', tier: 'assistant', name: { zh: "吴双", en: "Shuang Wu" }, title: { zh: "助理研究员", en: "Assistant Professor" }, homepage: bimsa('wushuang') },
+  { id: 'yang-dengcheng', tier: 'assistant', name: { zh: "杨登程", en: "Dengcheng Yang" }, title: { zh: "助理研究员", en: "Assistant Professor" }, homepage: bimsa('yangdengcheng') },
+  { id: 'qin-shuo', tier: 'assistant', name: { zh: "秦硕", en: "Shuo Qin" }, title: { zh: "Chern Instructor", en: "Chern Instructor" } },
+  { id: 'deng-manyao', tier: 'postdoc', name: { zh: "邓曼瑶", en: "Manyao Deng" }, title: { zh: "博士后", en: "Postdoc" } },
+  { id: 'liu-zhiwen', tier: 'postdoc', name: { zh: "刘志文", en: "Zhiwen Liu" }, title: { zh: "博士后", en: "Postdoc" } },
+  { id: 'zhang-ping', tier: 'student', name: { zh: "张萍", en: "Ping Zhang" }, title: { zh: "研究助理", en: "Research Assistant" } },
+  { id: 'hu-yuzhong', tier: 'student', name: { zh: "胡煜中", en: "Yuzhong Hu" }, title: { zh: "博士研究生", en: "PhD student" } },
+  // Not in the 2026-11 BIMSA roster, kept at the lab's request.
+  { id: 'lei-fengchun', tier: 'professor', name: { zh: '雷逢春', en: 'Fengchun Lei' }, title: { zh: '研究员', en: 'Professor' } },
+  { id: 'bai-hao', tier: 'postdoc', name: { zh: '柏浩', en: 'Hao Bai' }, title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('hbai') },
+  { id: 'gong-huiying', tier: 'postdoc', name: { zh: '龚慧莹', en: 'Huiying Gong' }, title: { zh: '博士后', en: 'Postdoc' }, homepage: bimsa('hygong') },
 ]

@@ -424,3 +424,21 @@ button { font: inherit; color: inherit; }
   .two-col { grid-template-columns: minmax(0, 1fr); }
   .visitor { grid-template-columns: 72px minmax(0, 1fr); }
 }
+
+/* ---------- v5: full paper list ---------- */
+.all-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 28px; font-size: var(--t-sm); }
+.all-filter label { color: var(--ink-2); }
+.all-filter select {
+  font: inherit; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--rule); border-radius: 2px; padding: 6px 30px 6px 10px; max-width: 100%;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 55%, calc(100% - 10px) 55%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.all-filter select:focus-visible { outline: 2px solid var(--prussian); outline-offset: 2px; }
+.all-count { margin: 0; }
+.bib-compact .bib-item { padding-block: 14px; }
+.bib-compact .bib-title { font-size: var(--t-md, 1.0625rem); }
+.bib-compact .bib-authors { margin-top: 4px; }
+.all-year-group + .all-year-group { margin-top: 36px; }
+.visitor-path dd.pending { color: var(--ink-3); }
