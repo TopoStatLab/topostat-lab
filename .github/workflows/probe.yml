@@ -6,10 +6,14 @@ jobs:
     steps:
       - run: |
           UA="Mozilla/5.0"
-          curl -sL -A "$UA" https://www.bimsa.cn/zh-CN/detail/NanSun.html -o p.html; echo "size $(wc -c < p.html)"
-          grep -oE '<img[^>]+>' p.html | head -20
-          for u in https://www.bimsa.cn/zh-CN/people/faculty.html https://www.bimsa.cn/people/faculty.html https://www.bimsa.cn/zh-CN/people/postdoc.html https://www.bimsa.cn/people/postdocs.html https://www.bimsa.cn/zh-CN/people.html; do
-            code=$(curl -sL -A "$UA" -o l.html -w '%{http_code}' "$u"); echo "== $u $code $(wc -c < l.html)"
-            grep -oE 'href="[^"]*detail/[^"]+"' l.html | head -5
+          for s in NanSun jingyanli ddaa; do curl -sL -A "$UA" https://www.bimsa.cn/zh-CN/detail/$s.html -o p.html; echo "== $s"; grep -oE '[^ "'"'"'(]*upload[^ "'"'"')]*' p.html | grep -v institution | head -5; done
+          for u in https://www.bimsa.cn/zh-CN/people/index.html https://www.bimsa.cn/zh-CN/postdoc/index.html; do
+            curl -sL -A "$UA" -o l.html "$u"; echo "== $u $(wc -c < l.html)"
+            grep -oE 'detail/[^"]+\.html' l.html | sort -u | wc -l
+            grep -oE 'page_[0-9]+\.html|\?page=[0-9]+' l.html | sort -u | head
+            python3 - <<'PY'
+          import re
+          s=open('l.html').read()
+          i=s.find('detail/'); print(s[max(0,i-1500):i+600])
+          PY
           done
-          grep -oE 'href="[^"]*(people|faculty|postdoc)[^"]*"' p.html | sort -u | head -30
