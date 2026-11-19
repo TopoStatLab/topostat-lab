@@ -1,0 +1,15 @@
+name: probe
+on: { push: { branches: [photo-probe] } }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="Mozilla/5.0"
+          curl -sL -A "$UA" https://www.bimsa.cn/zh-CN/detail/NanSun.html -o p.html; echo "size $(wc -c < p.html)"
+          grep -oE '<img[^>]+>' p.html | head -20
+          for u in https://www.bimsa.cn/zh-CN/people/faculty.html https://www.bimsa.cn/people/faculty.html https://www.bimsa.cn/zh-CN/people/postdoc.html https://www.bimsa.cn/people/postdocs.html https://www.bimsa.cn/zh-CN/people.html; do
+            code=$(curl -sL -A "$UA" -o l.html -w '%{http_code}' "$u"); echo "== $u $code $(wc -c < l.html)"
+            grep -oE 'href="[^"]*detail/[^"]+"' l.html | head -5
+          done
+          grep -oE 'href="[^"]*(people|faculty|postdoc)[^"]*"' p.html | sort -u | head -30
