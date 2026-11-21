@@ -7,6 +7,9 @@
  * to its main source page. Only events after the lab's founding (2025-02) are listed.
  */
 import type { L10n } from '../i18n'
+import { media, type Media } from './media'
+
+const venueBIMSA = { ...media.campusAerial, alt: { zh: '活动举办地：BIMSA 园区', en: 'Venue: BIMSA campus' } }
 
 export type NewsItem = {
   date: string // YYYY, YYYY-MM or YYYY-MM-DD
@@ -15,6 +18,7 @@ export type NewsItem = {
   href?: string
   /** Press release about a published paper (研究进展). */
   research?: true
+  image?: Media
 }
 
 export type EventItem = NewsItem & {
@@ -37,6 +41,7 @@ export const news: NewsItem[] = [
     summary: { zh: '研究成果发表于 The Innovation。', en: 'Published in The Innovation.' },
     research: true,
     href: 'https://www.bimsa.cn/news/info/Yau-Yau%20nonlinear%20filter.html',
+    image: media.yauyau,
   },
   {
     date: '2026-01',
@@ -69,6 +74,7 @@ export const news: NewsItem[] = [
       en: 'Hosted by BIMSA and co-built with Renmin University; Shing-Tung Yau chairs the Academic Committee and Rongling Wu is Director.',
     },
     href: 'https://kw.beijing.gov.cn/xwdt/kcyx/xwdtscyqld/202502/t20250214_4010193.html',
+    image: media.campusSign,
   },
 ]
 
@@ -87,6 +93,7 @@ export const events: EventItem[] = [
     people: { zh: '邬荣领作学术报告，实验室多名成员参会', en: 'Talk by Rongling Wu; several lab members attended' },
     report: true,
     href: 'https://www.imnu.edu.cn/info/1301/118501.htm',
+    image: media.meiliGroup,
   },
   {
     date: '2026-05-18', kind: 'workshop',
@@ -95,6 +102,7 @@ export const events: EventItem[] = [
     people: { zh: '邬荣领参加圆桌论坛', en: 'Rongling Wu joined the round-table discussion' },
     report: true,
     href: 'https://www.au.tsinghua.edu.cn/info/1133/4527.htm',
+    image: media.greatwallGroup,
   },
   {
     date: '2026-05-16', until: '2026-05-17', kind: 'workshop',
@@ -108,6 +116,7 @@ export const events: EventItem[] = [
     place: { zh: '三亚，清华三亚国际数学论坛', en: 'Tsinghua Sanya International Mathematics Forum, Sanya' },
     people: { zh: '组织者：邬荣领、魏国卫、吴杰；实验室学生和研究人员报告成果', en: 'Organized by Rongling Wu, Guowei Wei and Jie Wu; lab students and researchers presented their work' },
     href: 'https://tsimf.cn/meeting/detail?id=439',
+    image: media.tsimf,
   },
   {
     date: '2026-01-16', kind: 'workshop',
@@ -115,6 +124,7 @@ export const events: EventItem[] = [
     place: { zh: '北京，BIMSA', en: 'BIMSA, Beijing' },
     people: { zh: '胡国庆、李京艳、阮洋洋组织并报告', en: 'Organized by Guoqing Hu, Jingyan Li and Yangyang Ruan, who also spoke' },
     href: 'https://www.bimsa.cn/research_detail/BITDA.html',
+    image: venueBIMSA,
   },
   {
     date: '2025-12-18', kind: 'workshop',
@@ -129,6 +139,7 @@ export const events: EventItem[] = [
     place: { zh: '北京，BIMSA', en: 'BIMSA, Beijing' },
     people: { zh: '董昂、龚慧莹、邬荣领、杨登程组织；邬荣领作报告', en: 'Organized by Ang Dong, Huiying Gong, Rongling Wu and Dengcheng Yang; talk by Rongling Wu' },
     href: 'https://www.bimsa.cn/zh-CN/research_detail/MathMed.html',
+    image: venueBIMSA,
   },
   {
     date: '2025-10-10', until: '2025-10-12', kind: 'conference',
@@ -145,6 +156,7 @@ export const events: EventItem[] = [
     people: { zh: '邬荣领报告药物反应的统计物理模型', en: 'Rongling Wu spoke on statistical physics models of drug response' },
     report: true,
     href: 'https://news.tju.edu.cn/info/1012/562129.htm',
+    image: media.tjuHall,
   },
   {
     date: '2025-09-19', kind: 'talk',
@@ -167,11 +179,13 @@ export const events: EventItem[] = [
     place: { zh: '北京，BIMSA', en: 'BIMSA, Beijing' },
     people: { zh: '董昂、邬荣领、吴双组织；关永涛、汪作蘅、吴琦、杨登程等报告', en: 'Organized by Ang Dong, Rongling Wu and Shuang Wu; talks by Yongtao Guan, Zuoheng Wang, Qi Wu, Dengcheng Yang and others' },
     href: 'https://www.bimsa.cn/zh-CN/research_detail/StatGene.html',
+    image: venueBIMSA,
   },
   {
     date: '2025-07-03', until: '2025-07-04', kind: 'workshop',
     title: { zh: '拓扑人工智能及应用研讨会', en: 'Workshop on Topological AI and Applications' },
     place: { zh: '北京，BIMSA（线上线下结合）', en: 'BIMSA, Beijing (hybrid)' },
+    image: venueBIMSA,
   },
   {
     date: '2025-06-20', until: '2025-06-22', kind: 'conference',
@@ -179,6 +193,7 @@ export const events: EventItem[] = [
     place: { zh: '武汉大学', en: 'Wuhan University' },
     people: { zh: '邬荣领任程序委员会委员并作报告，董昂、杨登程等参会', en: 'Rongling Wu served on the programme committee and spoke; Ang Dong, Dengcheng Yang and others attended' },
     href: 'https://ml-stat.github.io/MLSTAT2025/schedule/sessions/wurongling/',
+    image: media.mlstatWhu,
   },
   {
     date: '2025-05-12', until: '2025-05-16', kind: 'conference',
@@ -187,6 +202,7 @@ export const events: EventItem[] = [
     people: { zh: '邬荣领开幕致辞并作报告，吴杰、张蒙蒙等参加交流', en: 'Opening address and talk by Rongling Wu; Jie Wu, Mengmeng Zhang and others took part' },
     report: true,
     href: 'https://news.hebtu.edu.cn/a/2025/05/21/C5F2E9940CFD4499A605229799D899AB.html',
+    image: media.hebtuHall,
   },
   {
     date: '2025-04-11', until: '2025-04-14', kind: 'conference',
@@ -208,6 +224,7 @@ export const events: EventItem[] = [
     place: { zh: '三亚，清华三亚国际数学论坛', en: 'Tsinghua Sanya International Mathematics Forum, Sanya' },
     people: { zh: '组织者：邬荣领、魏国卫、吴杰', en: 'Organized by Rongling Wu, Guowei Wei and Jie Wu' },
     href: 'https://tsimf.tsinghua.edu.cn/info/1132/1358.htm',
+    image: media.tsimf,
   },
 ]
 

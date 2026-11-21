@@ -1,20 +1,36 @@
 ---
 import { ui, t, localizedPath, type Lang } from '../i18n'
+import type { Media } from '../data/media'
 
 interface Props {
   lang: Lang
   title: string
   lead?: string
+  /** Optional photo: renders a full-bleed banner instead of the plain heading. */
+  image?: Media
 }
-const { lang, title, lead } = Astro.props
+const { lang, title, lead, image } = Astro.props
+const zh = lang === 'zh'
 ---
-<header class="page-head">
-  <div class="wrap row">
-    <div class="main">
+{image ? (
+  <header class="page-banner">
+    <img src={image.src} srcset={`${image.sm} 720w, ${image.src} 1600w`} sizes="100vw" alt="" fetchpriority="high" decoding="async" />
+    <div class="wrap">
       <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {title}</p>
-      <h1 class="page-title">{title}</h1>
+      <h1>{title}</h1>
       {lead && <p class="page-lead">{lead}</p>}
     </div>
-    <aside class="note-slot"><slot name="note" /></aside>
-  </div>
-</header>
+    <p class="banner-credit">{zh ? '图片：' : 'Photo: '}{image.credit[lang]}</p>
+  </header>
+) : (
+  <header class="page-head">
+    <div class="wrap row">
+      <div class="main">
+        <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {title}</p>
+        <h1 class="page-title">{title}</h1>
+        {lead && <p class="page-lead">{lead}</p>}
+      </div>
+      <aside class="note-slot"><slot name="note" /></aside>
+    </div>
+  </header>
+)}
