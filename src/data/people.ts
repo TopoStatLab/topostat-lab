@@ -138,7 +138,7 @@ export const members: Member[] = [
   { id: 'deng-manyao', tier: 'postdoc', name: { zh: "邓曼瑶", en: "Manyao Deng" }, photo: P('deng-manyao'), title: { zh: "博士后", en: "Postdoc" }, since: '2022.10' },
   { id: 'liu-zhiwen', tier: 'postdoc', name: { zh: "刘志文", en: "Zhiwen Liu" }, photo: P('liu-zhiwen'), title: { zh: "博士后", en: "Postdoc" }, since: '2024.07' },
   { id: 'zhang-ping', tier: 'student', name: { zh: "张萍", en: "Ping Zhang" }, photo: P('zhang-ping'), title: { zh: "研究助理", en: "Research Assistant" }, since: '2020.09' },
-  { id: 'wang-yu-phd', tier: 'student', name: { zh: '王宇', en: 'Yu Wang' }, title: { zh: '博士研究生（BIMSA–中国人民大学联培）', en: 'PhD student (BIMSA–Renmin University)' } },
+  { id: 'wang-yu-phd', tier: 'student', name: { zh: '王宇', en: 'Yu Wang' }, photo: P('wang-yu-phd'), homepage: bimsa('ywang'), title: { zh: '博士研究生（BIMSA–中国人民大学联培）', en: 'PhD student (BIMSA–Renmin University)' } },
   { id: 'hu-yuzhong', tier: 'student', name: { zh: "胡煜中", en: "Yuzhong Hu" }, photo: P('hu-yuzhong'), title: { zh: "博士研究生", en: "PhD student" }, since: '2021.03' },
   // Not in the 2026-11 BIMSA roster, kept at the lab's request.
   { id: 'lei-fengchun', tier: 'professor', name: { zh: '雷逢春', en: 'Fengchun Lei' }, photo: P('lei-fengchun'), title: { zh: '研究员', en: 'Professor' } },

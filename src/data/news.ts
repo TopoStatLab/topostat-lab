@@ -12,6 +12,8 @@ export type NewsItem = {
   title: L10n
   summary?: L10n
   href?: string
+  /** Press release about a published paper (研究进展). */
+  research?: true
 }
 
 export type EventItem = NewsItem & {
@@ -20,6 +22,8 @@ export type EventItem = NewsItem & {
   place: L10n
   kind: 'conference' | 'talk' | 'workshop'
   people?: L10n
+  /** The link is a news report about the event; also listed on the news page. */
+  report?: true
 }
 
 export const news: NewsItem[] = [
@@ -30,6 +34,7 @@ export const news: NewsItem[] = [
       en: '“Yau–Yau stochastic network” model breaks through noise for precise analysis of complex systems',
     },
     summary: { zh: '研究成果发表于 The Innovation。', en: 'Published in The Innovation.' },
+    research: true,
     href: 'https://tsa.bimsa.cn/?p=516',
   },
   {
@@ -39,6 +44,7 @@ export const news: NewsItem[] = [
       en: 'A graph statistical model reveals gene interactions during plant grafting',
     },
     summary: { zh: '研究成果发表于 Advanced Science。', en: 'Published in Advanced Science.' },
+    research: true,
     href: 'https://tsa.bimsa.cn/?p=514',
   },
   {
@@ -48,6 +54,7 @@ export const news: NewsItem[] = [
       en: 'BIMSA and Beijing Forestry University achieve a major advance in quantitative genetics',
     },
     summary: { zh: '单倍型分辨基因组下的个体化数量遗传图统计理论发表于 PNAS。', en: 'Graph statistics theory of individualized quantitative genetics, published in PNAS.' },
+    research: true,
     href: 'https://tsa.bimsa.cn/?p=503',
   },
   {
@@ -77,6 +84,7 @@ export const events: EventItem[] = [
     title: { zh: '2026 年魅丽数学系列会议：数学与力学专题研讨会', en: '2026 Meili Mathematics Series: Workshop on Mathematics and Mechanics' },
     place: { zh: '呼和浩特，内蒙古师范大学', en: 'Inner Mongolia Normal University, Hohhot' },
     people: { zh: '邬荣领作学术报告，实验室多名成员参会', en: 'Talk by Rongling Wu; several lab members attended' },
+    report: true,
     href: 'https://www.imnu.edu.cn/info/1301/118501.htm',
   },
   {
@@ -84,6 +92,7 @@ export const events: EventItem[] = [
     title: { zh: '长城工程科技会议“人工智能时代的基础研究新范式”专题会', en: 'Great Wall Engineering Forum: New Paradigms for Basic Research in the AI Era' },
     place: { zh: '北京，清华大学', en: 'Tsinghua University, Beijing' },
     people: { zh: '邬荣领参加圆桌论坛', en: 'Rongling Wu joined the round-table discussion' },
+    report: true,
     href: 'https://www.au.tsinghua.edu.cn/info/1133/4527.htm',
   },
   {
@@ -91,6 +100,7 @@ export const events: EventItem[] = [
     title: { zh: '“idopNetwork 与复杂生物系统分析”培训研讨会', en: 'Training workshop on idopNetwork and complex biological systems analysis' },
     place: { zh: '北京林业大学', en: 'Beijing Forestry University' },
     people: { zh: '邬荣领作主旨报告，董昂、吴双、龚慧莹、杨登程、王宇等授课，近 200 人参加', en: 'Keynote by Rongling Wu; lectures by Ang Dong, Shuang Wu, Huiying Gong, Dengcheng Yang, Yu Wang and others; nearly 200 participants' },
+    report: true,
     href: 'https://tsa.bimsa.cn/en/training-workshop-on-idopnetwork-and-complex-biological-systems-analysis-successfully-held-at-beijing-forestry-university/',
   },
   {
@@ -126,6 +136,7 @@ export const events: EventItem[] = [
     title: { zh: '第二十一届全国复杂网络学术会议（CCCN 2025）', en: '21st China Conference on Complex Networks (CCCN 2025)' },
     place: { zh: '杭州', en: 'Hangzhou' },
     people: { zh: '邬荣领作特邀报告', en: 'Invited talk by Rongling Wu' },
+    report: true,
     href: 'https://www.c2.org.cn/h-nd-2281.html',
   },
   {
@@ -133,6 +144,7 @@ export const events: EventItem[] = [
     title: { zh: '2025 代谢药学学术大会（中国医药教育协会代谢药学专委会年会）', en: '2025 Metabolic Pharmacy Conference' },
     place: { zh: '天津大学', en: 'Tianjin University' },
     people: { zh: '邬荣领报告药物反应的统计物理模型', en: 'Rongling Wu spoke on statistical physics models of drug response' },
+    report: true,
     href: 'https://news.tju.edu.cn/info/1012/562129.htm',
   },
   {
@@ -147,6 +159,7 @@ export const events: EventItem[] = [
     title: { zh: '2025 国际数学与人工智能应用大会', en: '2025 International Conference on Mathematics and AI Applications' },
     place: { zh: '太原', en: 'Taiyuan' },
     people: { zh: '邬荣领作主旨演讲', en: 'Keynote by Rongling Wu' },
+    report: true,
     href: 'https://www.cinn.cn/difang/shanxi/2025/07-29/qkNpJxEr.html',
   },
   {
@@ -173,6 +186,7 @@ export const events: EventItem[] = [
     title: { zh: '东亚代数拓扑会议', en: 'East Asian Conference on Algebraic Topology' },
     place: { zh: '石家庄，河北师范大学', en: 'Hebei Normal University, Shijiazhuang' },
     people: { zh: '邬荣领开幕致辞并作报告，吴杰、张蒙蒙等参加交流', en: 'Opening address and talk by Rongling Wu; Jie Wu, Mengmeng Zhang and others took part' },
+    report: true,
     href: 'https://news.hebtu.edu.cn/a/2025/05/21/C5F2E9940CFD4499A605229799D899AB.html',
   },
   {
@@ -201,6 +215,7 @@ export const events: EventItem[] = [
     title: { zh: '2024 中国人工智能大会（CCAI 2024）', en: 'China Conference on Artificial Intelligence (CCAI 2024)' },
     place: { zh: '北京', en: 'Beijing' },
     people: { zh: '邬荣领作为尖峰对话嘉宾，讨论“AI for Math & Math for AI”', en: 'Rongling Wu joined the summit dialogue on AI for Math and Math for AI' },
+    report: true,
     href: 'https://www.cast.org.cn/xw/qgxh/XSJL/art/2024/art_9524e6d2542c41cba955ae6c8c04b1be.html',
   },
   {
@@ -229,6 +244,7 @@ export const events: EventItem[] = [
     title: { zh: '“人大数学时间 I”第二期交流研讨', en: '“RUC Math Time I”, session 2' },
     place: { zh: '北京，中国人民大学', en: 'Renmin University of China, Beijing' },
     people: { zh: '邬荣领、吴杰、龚新奇、葛化彬系列报告', en: 'Talks by Rongling Wu, Jie Wu, Xinqi Gong and Huabin Ge' },
+    report: true,
     href: 'https://se-office.ruc.edu.cn/xwdt/aeef13a0f92a4fc9b0089e2e6e3ca213.htm',
   },
   {
@@ -236,6 +252,7 @@ export const events: EventItem[] = [
     title: { zh: '2024 年人工智能学术研讨会', en: '2024 Symposium on Artificial Intelligence' },
     place: { zh: '呼和浩特，内蒙古师范大学', en: 'Inner Mongolia Normal University, Hohhot' },
     people: { zh: '邬荣领报告《人工智能的统计基础》，吴杰报告《人工智能视角下的代数拓扑学》', en: 'Rongling Wu on the statistical foundations of AI; Jie Wu on algebraic topology from the AI perspective' },
+    report: true,
     href: 'https://mathlab.imnu.edu.cn/info/1046/1090.htm',
   },
   {
