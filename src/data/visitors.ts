@@ -159,7 +159,6 @@ export const visitors: Visitor[] = [
     role: { zh: "实习 → 博士后", en: "Intern → Postdoc" },
     atLab: { zh: "复杂网络与统计遗传", en: "Complex networks and statistical genetics" },
     now: { zh: "河套数学与交叉学科研究院助理教授", en: "Assistant Professor, Hetao Institute of Mathematics and Interdisciplinary Sciences" },
-    photo: '/people/portraits/wang-yu.webp',
     id: 'wang-yu',
   },
   {
