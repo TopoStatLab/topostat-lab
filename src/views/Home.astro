@@ -7,7 +7,7 @@ import Portrait from '../components/Portrait.astro'
 import { researchDirections, applications } from '../data/research'
 import { publications, sortedPublications, paperUrl } from '../data/publications'
 import { news, events } from '../data/news'
-import { director, deputies, assistants, committeeChair, committeeMembers } from '../data/people'
+import { director, deputies, committeeChair, committeeMembers } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -103,7 +103,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
     </div>
     <div class="wrap">
       <ul class="people">
-        {[committeeChair, director, ...deputies, ...assistants].map((p) => (
+        {[committeeChair, director, ...deputies].map((p) => (
           <li class="person">
             <a href={L(`/about/#${p.id}`)}>
               <Portrait person={p} lang={lang} />

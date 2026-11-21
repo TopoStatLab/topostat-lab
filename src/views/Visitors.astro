@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro'
 import PortraitCloud, { type CloudPerson } from '../components/PortraitCloud.astro'
 import { sortedVisitors as visitors } from '../data/visitors'
+import { visitingNow, visitingPast } from '../data/visiting'
 import { director, deputies, members, tiers } from '../data/people'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -21,7 +22,7 @@ const former: CloudPerson[] = visitors.map((v) => ({
   photo: v.photo,
   status: zh ? '曾在实验室' : 'Former member',
   facts: [
-    [zh ? '在实验室' : 'At the lab', `${v.period}${zh ? '，' : ', '}${t(v.role, lang)}`],
+    [zh ? '在实验室' : 'At the lab', v.period ? `${v.period}${zh ? '，' : ', '}${t(v.role, lang)}` : t(v.role, lang)],
     ...(v.atLab ? [[zh ? '研究方向' : 'Research', t(v.atLab, lang)] as [string, string]] : []),
     ...(v.now ? [[zh ? '现在' : 'Now', t(v.now, lang)] as [string, string]] : []),
   ],
@@ -65,7 +66,7 @@ const people = [...former, ...current].filter((p, i, all) => all.findIndex((q) =
                 <span class="alumni-face" aria-hidden="true">{p.photo ? <img src={p.photo} alt="" loading="lazy" decoding="async" /> : p.name.slice(0, 1)}</span>
                 <span>
                   <span class="alumni-name">{p.name}</span>
-                  <span class="alumni-meta">{v.period}{zh ? '，' : ', '}{t(v.role, lang)}</span>
+                  <span class="alumni-meta">{v.period && <>{v.period}{zh ? '，' : ', '}</>}{t(v.role, lang)}</span>
                   {v.now && <span class="alumni-now">{zh ? '现在：' : 'Now: '}{t(v.now, lang)}</span>}
                 </span>
               </button>
@@ -73,6 +74,11 @@ const people = [...former, ...current].filter((p, i, all) => all.findIndex((q) =
           )
         })}
       </ul>
+      <h2 class="section-title" id="h-visiting" style="margin-top:clamp(48px,7vw,80px)">{zh ? '访问学者' : 'Visiting scholars and students'}<small class="muted" style="font-size:var(--t-sm);margin-left:12px">{visitingNow.length + visitingPast.length}</small></h2>
+      <h3 class="visiting-head">{zh ? '在访' : 'Currently visiting'}</h3>
+      <ul class="visiting">{visitingNow.map((v) => <li><span class="visiting-name">{v.name}</span>{v.note && <span class="visiting-note">{v.note}</span>}</li>)}</ul>
+      <h3 class="visiting-head">{zh ? '往届' : 'Past visitors'}</h3>
+      <ul class="visiting">{visitingPast.map((v) => <li><span class="visiting-name">{v.name}</span>{v.note && <span class="visiting-note">{v.note}</span>}</li>)}</ul>
       <p class="muted" style="margin-top:28px;font-size:var(--t-sm)">
         {zh ? <>在职成员见<a class="link" href={localizedPath('/about/', lang) + '#organization'}>组织架构</a>。</> : <>Current members are listed under <a class="link" href={localizedPath('/about/', lang) + '#organization'}>Organization</a>.</>}
       </p>
