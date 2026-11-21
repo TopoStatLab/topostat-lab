@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
 import PersonCard from '../components/PersonCard.astro'
-import { director, deputies, assistants, committeeChair, committeeMembers, members, tiers, type Person } from '../data/people'
+import { director, deputies, committeeChair, committeeMembers, members, tiers, type Person } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -12,7 +12,7 @@ interface Props {
 const { lang } = Astro.props
 const zh = lang === 'zh'
 
-const everyone: Person[] = [director, ...deputies, ...assistants, committeeChair, ...committeeMembers, ...members].filter(
+const everyone: Person[] = [director, ...deputies, committeeChair, ...committeeMembers, ...members].filter(
   (p, i, all) => all.findIndex((q) => q.id === p.id) === i,
 )
 const jsonLd = [
@@ -29,8 +29,8 @@ const jsonLd = [
   },
 ]
 const memberCount = members.length
-const leaders = new Set([director, ...deputies, ...assistants].map((p) => p.id))
-const elsewhere = new Set([director, ...deputies, ...assistants, committeeChair, ...committeeMembers].map((p) => p.id))
+const leaders = new Set([director, ...deputies].map((p) => p.id))
+const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMembers].map((p) => p.id))
 ---
 
 <Base
@@ -81,10 +81,6 @@ const elsewhere = new Set([director, ...deputies, ...assistants, committeeChair,
         <div>
           <h3 class="tier-label">{zh ? '副主任' : 'Deputy director'}</h3>
           <ul class="people">{deputies.map((p) => <PersonCard person={p} lang={lang} showRole={false} />)}</ul>
-        </div>
-        <div>
-          <h3 class="tier-label">{zh ? '助理' : 'Assistants'}</h3>
-          <ul class="people">{assistants.map((p) => <PersonCard person={p} lang={lang} />)}</ul>
         </div>
       </div>
       <div class="tier">

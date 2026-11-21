@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
-import PersonCard from '../components/PersonCard.astro'
 import { assistants } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, type Lang } from '../i18n'
@@ -19,7 +18,15 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
 
   <section class="section" style="padding-top:clamp(32px,5vw,56px)">
     <div class="wrap">
-      <ul class="people lead">{assistants.map((p) => <PersonCard person={p} lang={lang} />)}</ul>
+      <dl class="contacts">
+        {assistants.map((p) => (
+          <div>
+            <dt>{p.name[lang]}</dt>
+            <dd>{p.role && t(p.role, lang)}{zh ? '、' : ', '}{p.title && t(p.title, lang)}</dd>
+            <dd class="contacts-email">{p.email}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   </section>
 
