@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
+import { media } from '../data/media'
 import PersistenceDemo from '../components/PersistenceDemo.astro'
 import { researchDirections, applications } from '../data/research'
 import { sortedPublications, paperUrl } from '../data/publications'
@@ -21,6 +22,7 @@ const zh = lang === 'zh'
 >
   <PageHeading
     lang={lang}
+    image={media.yauyauDiagram}
     title={t(ui.research, lang)}
     lead={zh ? '围绕复杂系统的结构、动力学与高阶互作，从理论创新到计算方法，再到真实应用。' : 'The structure, dynamics and higher-order interactions of complex systems — from theory to computation to real applications.'}
   />

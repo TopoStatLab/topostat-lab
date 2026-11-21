@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
+import { media } from '../data/media'
 import BibItem from '../components/BibItem.astro'
 import { sortedPublications as pubs, paperUrl } from '../data/publications'
 import { sortedPatents as patents } from '../data/patents'
@@ -49,6 +50,7 @@ const jsonLd = [
 >
   <PageHeading
     lang={lang}
+    image={media.yauyau}
     title={t(ui.publications, lang)}
     lead={zh ? '实验室全体成员（含曾在实验室工作和学习的成员）的论文与专利，近两年优先，每年内实验室核心成员的成果排在前面。' : 'Papers and patents by all laboratory members, past and present. Recent years first; within each year, work by core members comes first.'}
   />

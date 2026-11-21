@@ -1,0 +1,42 @@
+---
+/** A news or event card with a photo (or a tinted placeholder when there is none). */
+import { formatDate, formatRange, eventKinds, type NewsItem, type EventItem } from '../data/news'
+import { t, type Lang } from '../i18n'
+
+interface Props {
+  item: NewsItem | EventItem
+  lang: Lang
+  feature?: boolean
+  label?: string
+  /** Show the people / summary line for events. */
+  detail?: boolean
+}
+const { item, lang, feature = false, label, detail = false } = Astro.props
+const zh = lang === 'zh'
+const isEvent = 'place' in item
+const date = isEvent ? formatRange(item.date, (item as EventItem).until, lang) : formatDate(item.date, lang)
+const kind = label ?? (isEvent ? t(eventKinds[(item as EventItem).kind], lang) : item.research ? (zh ? '研究进展' : 'Research') : zh ? '新闻' : 'News')
+const tone = isEvent ? (item as EventItem).kind : item.research ? 'research' : 'news'
+const Tag = item.href ? 'a' : 'div'
+---
+<article class={`mcard${feature ? ' mcard-feature' : ''}`}>
+  <Tag class="mcard-link" href={item.href} target={item.href ? '_blank' : undefined} rel={item.href ? 'noopener' : undefined}>
+    <div class={`mcard-media tone-${tone}`}>
+      {item.image ? (
+        <img src={feature ? item.image.src : item.image.sm} alt={item.image.alt[lang]} loading="lazy" decoding="async" />
+      ) : (
+        <span class="mcard-ph" aria-hidden="true">{item.date.slice(0, 4)}</span>
+      )}
+      <span class="mcard-kind">{kind}</span>
+    </div>
+    <div class="mcard-body">
+      <time datetime={item.date}>{date}</time>
+      <h3>{t(item.title, lang)}</h3>
+      {feature && 'summary' in item && item.summary && <p>{t(item.summary, lang)}</p>}
+      {isEvent && <p class="mcard-place">{t((item as EventItem).place, lang)}</p>}
+      {detail && isEvent && (item as EventItem).people && <p>{t((item as EventItem).people!, lang)}</p>}
+      {detail && !isEvent && !feature && item.summary && <p>{t(item.summary, lang)}</p>}
+    </div>
+  </Tag>
+  {item.image && <p class="mcard-credit">{zh ? '图片：' : 'Photo: '}{item.image.credit[lang]}</p>}
+</article>

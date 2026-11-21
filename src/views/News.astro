@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
-import Timeline from '../components/Timeline.astro'
+import MediaCard from '../components/MediaCard.astro'
 import { news, events } from '../data/news'
+import { media } from '../data/media'
 import { ui, t, type Lang } from '../i18n'
 
 interface Props {
@@ -16,15 +17,17 @@ const feed = [...news.filter((n) => !n.research), ...events.filter((e) => e.repo
 ---
 
 <Base lang={lang} path="/news/" title={t(ui.news, lang)} description={zh ? '复杂系统拓扑统计理论及应用北京市重点实验室新闻。' : 'News from the laboratory.'}>
-  <PageHeading lang={lang} title={t(ui.news, lang)} lead={zh ? '实验室新闻、重要通知与研究成果报道。' : 'Laboratory news, announcements and research highlights.'} />
-  <section class="section" style="padding-top:clamp(32px,5vw,56px)">
-    <div class="wrap row">
-      <div class="main">
-        <h2 class="section-title">{zh ? '研究进展' : 'Research highlights'}</h2>
-        <Timeline items={research} lang={lang} />
-        <h2 class="section-title" style="margin-top:clamp(48px,7vw,80px)">{zh ? '新闻动态' : 'News'}</h2>
-        <Timeline items={feed} lang={lang} />
-      </div>
+  <PageHeading lang={lang} image={media.campusSign} title={t(ui.news, lang)} lead={zh ? '实验室新闻、学术活动报道与研究成果。' : 'Laboratory news, event reports and research highlights.'} />
+  <section class="section section-white" aria-labelledby="h-research">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="section-title" id="h-research">{zh ? '研究进展' : 'Research highlights'}</h2></div>
+      <div class="mgrid">{research.map((n) => <MediaCard item={n} lang={lang} detail />)}</div>
+    </div>
+  </section>
+  <section class="section section-tint" aria-labelledby="h-feed">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="section-title" id="h-feed">{zh ? '新闻动态' : 'News'}</h2></div>
+      <div class="mgrid">{feed.map((n) => <MediaCard item={n} lang={lang} label={'place' in n ? (zh ? '活动报道' : 'Event report') : undefined} detail />)}</div>
     </div>
   </section>
 </Base>

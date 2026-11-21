@@ -1,13 +1,17 @@
 ---
 import Base from '../layouts/Base.astro'
-import HeroFigure from '../components/HeroFigure.astro'
+import HeroCarousel, { type Slide } from '../components/HeroCarousel.astro'
+import MediaCard from '../components/MediaCard.astro'
 import BibItem from '../components/BibItem.astro'
 import Timeline from '../components/Timeline.astro'
 import Portrait from '../components/Portrait.astro'
 import { researchDirections, applications } from '../data/research'
 import { publications, sortedPublications, paperUrl } from '../data/publications'
 import { news, events } from '../data/news'
-import { director, deputies, committeeChair, committeeMembers } from '../data/people'
+import { director, deputies, committeeChair, committeeMembers, members } from '../data/people'
+import { media } from '../data/media'
+import papersAll from '../data/papers-all.json'
+import { formatDate, formatRange } from '../data/news'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -17,81 +21,117 @@ interface Props {
 const { lang } = Astro.props
 const L = (p: string) => localizedPath(p, lang)
 const zh = lang === 'zh'
+const fmt = (d: string, u?: string) => (u ? formatRange(d, u, lang) : formatDate(d, lang))
+const find = (zhTitle: string) => [...news, ...events].find((x) => x.title.zh.includes(zhTitle))!
+const slideFrom = (item: ReturnType<typeof find>, kicker: string, summary?: string): Slide => ({
+  image: item.image!,
+  kicker: `${kicker}${zh ? '　' : ' · '}${fmt(item.date, 'until' in item ? item.until : undefined)}`,
+  title: t(item.title, lang),
+  summary,
+  href: item.href,
+  external: true,
+})
+const slides: Slide[] = [
+  slideFrom(find('魅丽数学'), zh ? '学术活动' : 'Event'),
+  slideFrom(find('长城工程科技会议'), zh ? '学术活动' : 'Event'),
+  slideFrom(find('Yau–Yau'), zh ? '研究进展' : 'Research', zh ? '将 Yau–Yau 非线性滤波与随机网络理论结合，从高噪声数据中重建复杂系统的内在互作机制。' : 'Combining the Yau–Yau nonlinear filter with stochastic network theory to recover interaction mechanisms from noisy data.'),
+  slideFrom(find('东亚代数拓扑'), zh ? '学术活动' : 'Event'),
+  slideFrom(find('正式挂牌成立'), zh ? '实验室新闻' : 'Lab news', zh ? '依托北京雁栖湖应用数学研究院建设，与中国人民大学数学学院联合共建。' : 'Hosted by BIMSA and co-built with the School of Mathematics, Renmin University of China.'),
+]
+const latest = [...news, ...events.filter((e) => e.report || e.image)].sort((a, b) => b.date.localeCompare(a.date))
+const feature = latest.find((x) => x.image)!
+const restNews = latest.filter((x) => x !== feature).slice(0, 4)
+const upcoming = events.slice(0, 6)
+const art = [
+  'M10 90 Q40 10 90 60 T170 40 M20 150 Q70 90 120 140 T190 120',
+  'M100 100 m-70 0 a70 70 0 1 0 140 0 a70 70 0 1 0 -140 0 M100 100 m-40 0 a40 40 0 1 0 80 0 a40 40 0 1 0 -80 0',
+  'M20 170 L70 60 L120 140 L170 30 M70 60 L170 30 M20 170 L120 140',
+]
 const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComponent(q)}&city=110000`
 ---
 
 <Base lang={lang} path="/">
-  <HeroFigure lang={lang} />
+  <HeroCarousel slides={slides} lang={lang} />
 
-  <section class="section" id="research" aria-labelledby="h-research">
-    <div class="wrap row">
-      <div class="main">
+  <section class="band" aria-labelledby="h-intro">
+    <div class="wrap band-grid">
+      <div>
+        <h2 id="h-intro">{zh ? '复杂系统拓扑统计理论及应用北京市重点实验室' : 'Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems'}</h2>
+        <p>{zh ? '依托北京雁栖湖应用数学研究院（BIMSA）建设，与中国人民大学数学学院联合共建。实验室把拓扑学引入统计推断，研究网络、流形与高阶互作中的“形状”，并把它用于生物医学、人工智能与真实世界的复杂系统。' : 'Hosted by BIMSA and co-built with Renmin University of China. We bring topology into statistical inference — the shape of networks, manifolds and higher-order interactions — and apply it to biomedicine, AI and real-world complex systems.'}</p>
+        <a class="btn-light" href={L('/about/')}>{zh ? '了解实验室' : 'About the lab'}</a>
+      </div>
+      <div class="stats">
+        <div><b>2025</b><span>{zh ? '挂牌成立' : 'Established'}</span></div>
+        <div><b>{members.length + 2}</b><span>{zh ? '研究人员与学生' : 'Researchers and students'}</span></div>
+        <div><b>{papersAll.length}</b><span>{zh ? '2025 年以来论文' : 'Papers since 2025'}</span></div>
+        <div><b>{events.length}</b><span>{zh ? '学术活动' : 'Academic events'}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-white" id="news" aria-labelledby="h-news">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="section-title" id="h-news">{zh ? '科研动态' : 'News'}</h2>
+        <a href={L('/news/')}>{zh ? '全部新闻' : 'All news'}</a>
+      </div>
+      <div class="mgrid mgrid-news">
+        <MediaCard item={feature} lang={lang} feature />
+        {restNews.map((x) => <MediaCard item={x} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint" id="research" aria-labelledby="h-research">
+    <div class="wrap">
+      <div class="sec-head">
         <h2 class="section-title" id="h-research">{zh ? '研究方向' : 'Research'}</h2>
-        <p class="section-lead">
-          {zh
-            ? '传统统计在欧氏空间中寻找规律，而现代复杂系统天然表现为网络、流形与高阶结构。我们把这些“形状”本身纳入统计推断。'
-            : 'Classical statistics looks for patterns in Euclidean space; modern complex systems come as networks, manifolds and higher-order structures. We make that shape part of statistical inference.'}
-        </p>
+        <a href={L('/research/')}>{zh ? '查看研究方向' : 'Research directions'}</a>
       </div>
-    </div>
-    {researchDirections.map((d) => {
-      const papers = sortedPublications.filter((p) => p.core && p.directions.includes(d.id)).slice(0, 3)
-      return (
-        <div class="wrap row">
-          <article class="main direction">
-            <h3><a href={L(`/research/#${d.id}`)}>{t(d.title, lang)}</a></h3>
+      <div class="dir-grid">
+        {researchDirections.map((d, i) => (
+          <a class="dir-tile" href={L(`/research/#${d.id}`)}>
+            <svg class="dir-art" viewBox="0 0 200 200" aria-hidden="true"><path d={art[i % art.length]} fill="none" stroke="#fff" stroke-width="2" /></svg>
+            <span class="dir-no">{zh ? `方向 ${i + 1}` : `Direction ${i + 1}`}</span>
+            <h3>{t(d.title, lang)}</h3>
             <p>{t(d.body, lang)}</p>
-            <p class="keywords">{d.tags.join(zh ? '，' : ', ')}</p>
-          </article>
-          <aside class="note direction-note">
-            <h4>{zh ? '相关论文' : 'Related papers'}</h4>
-            {papers.length ? (
-              <ul>
-                {papers.map((p) => (
-                  <li><a href={paperUrl(p)} target="_blank" rel="noopener">{p.title}</a><br /><i>{p.journal}</i>, {p.year}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>{zh ? '即将更新。' : 'Coming soon.'}</p>
-            )}
-          </aside>
-        </div>
-      )
-    })}
+            <span class="dir-more">{zh ? '了解更多' : 'Learn more'}</span>
+          </a>
+        ))}
+      </div>
+    </div>
   </section>
 
-  <section class="section" id="publications" aria-labelledby="h-pubs">
-    <div class="wrap row">
-      <div class="main">
-        <h2 class="section-title" id="h-pubs">{zh ? '科技成果' : 'Recent papers'}</h2>
-        <ol class="bib">
-          {sortedPublications.slice(0, 5).map((paper) => <BibItem paper={paper} lang={lang} />)}
+  <section class="section section-white" id="events" aria-labelledby="h-events">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="section-title" id="h-events">{zh ? '学术活动' : 'Events'}</h2>
+        <a href={L('/events/')}>{zh ? '全部学术活动' : 'All events'}</a>
+      </div>
+      <div class="mgrid">
+        {upcoming.map((e) => <MediaCard item={e} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint" id="publications" aria-labelledby="h-pubs">
+    <div class="wrap feature">
+      <figure class="feature-img">
+        <img src={media.yauyau.src} alt={media.yauyau.alt[lang]} loading="lazy" decoding="async" />
+        <figcaption>{zh ? '图片：' : 'Image: '}{media.yauyau.credit[lang]}</figcaption>
+      </figure>
+      <div>
+        <h2 id="h-pubs">{zh ? '科技成果' : 'Research output'}</h2>
+        <p>{zh ? `实验室成员 2025 年以来发表论文与著作 ${papersAll.length} 篇，代表性成果发表于 PNAS、The Innovation、Advanced Science 等期刊。` : `${papersAll.length} papers and books by lab members since 2025, with highlights in PNAS, The Innovation and Advanced Science.`}</p>
+        <ol class="bib bib-compact">
+          {sortedPublications.slice(0, 3).map((paper) => <BibItem paper={paper} lang={lang} />)}
         </ol>
-      </div>
-      <aside class="note">
-        <p>{zh ? `共 ${publications.length} 篇论文，加粗的作者是实验室成员。` : `${publications.length} papers. Laboratory members in bold.`}</p>
-        <a href={L('/publications/')}>{zh ? '全部论文与专利' : 'All papers and patents'}</a>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section" id="applications" aria-labelledby="h-apps">
-    <div class="wrap row">
-      <div class="main">
-        <h2 class="section-title" id="h-apps">{zh ? '用在哪里' : 'Where it applies'}</h2>
-        <dl class="apps">
-          {applications.map((app) => (
-            <div>
-              <dt>{t(app.title, lang)}</dt>
-              <dd>{t(app.body, lang)}</dd>
-            </div>
-          ))}
-        </dl>
+        <p><a class="link" href={L('/publications/')}>{zh ? '全部论文与专利' : 'All papers and patents'}</a></p>
       </div>
     </div>
   </section>
 
-  <section class="section" id="people" aria-labelledby="h-people">
+  <section class="section section-white" id="people" aria-labelledby="h-people">
     <div class="wrap row">
       <div class="main">
         <h2 class="section-title" id="h-people">{zh ? '组织架构' : 'People'}</h2>
@@ -116,24 +156,13 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
     </div>
   </section>
 
-  <section class="section" id="news" aria-labelledby="h-news">
-    <div class="wrap two-col">
-      <div>
-        <h2 class="section-title" id="h-news">{t(ui.news, lang)}</h2>
-        <Timeline items={news.slice(0, 4)} lang={lang} showSummary={false} />
-        <p class="more"><a class="link" href={L('/news/')}>{zh ? '全部新闻' : 'All news'}</a></p>
-      </div>
-      <div>
-        <h2 class="section-title">{t(ui.events, lang)}</h2>
-        <Timeline items={events.slice(0, 4)} lang={lang} showSummary={false} />
-        <p class="more"><a class="link" href={L('/events/')}>{zh ? '全部学术活动' : 'All events'}</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="about" aria-labelledby="h-about">
-    <div class="wrap row">
-      <div class="main about">
+  <section class="section section-tint" id="about" aria-labelledby="h-about">
+    <div class="wrap feature feature-reverse">
+      <figure class="feature-img">
+        <img src={media.campusMountain.src} alt={media.campusMountain.alt[lang]} loading="lazy" decoding="async" />
+        <figcaption>{zh ? '图片：' : 'Photo: '}{media.campusMountain.credit[lang]}</figcaption>
+      </figure>
+      <div class="about">
         <h2 class="section-title" id="h-about">{zh ? '关于实验室' : 'About'}</h2>
         {zh ? (
           <>
@@ -147,8 +176,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
           </>
         )}
         <p><a class="link" href="https://kw.beijing.gov.cn/xwdt/kcyx/xwdtscyqld/202502/t20250214_4010193.html" target="_blank" rel="noopener">{zh ? '北京市科委成立公告' : 'Establishment announcement (in Chinese)'}</a></p>
-      </div>
-      <aside class="note addresses">
+        <div class="addresses addresses-inline">
         {site.contact.locations.map((loc) => (
           <div>
             <h3>{t(loc.name, lang)}</h3>
@@ -157,7 +185,8 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
           </div>
         ))}
         {site.contact.email && <div><h3>{t(ui.email, lang)}</h3><p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p></div>}
-      </aside>
+        </div>
+      </div>
     </div>
   </section>
 </Base>
