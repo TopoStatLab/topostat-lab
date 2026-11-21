@@ -4,7 +4,7 @@
  * News link to press releases where one is online; tsa.bimsa.cn (the old lab
  * site) returns 502, so two research items link to the paper instead.
  * Events come from the activity list compiled by 董昂 (2026-11-17); each links
- * to its main source page.
+ * to its main source page. Only events after the lab's founding (2025-02) are listed.
  */
 import type { L10n } from '../i18n'
 
@@ -208,58 +208,6 @@ export const events: EventItem[] = [
     place: { zh: '三亚，清华三亚国际数学论坛', en: 'Tsinghua Sanya International Mathematics Forum, Sanya' },
     people: { zh: '组织者：邬荣领、魏国卫、吴杰', en: 'Organized by Rongling Wu, Guowei Wei and Jie Wu' },
     href: 'https://tsimf.tsinghua.edu.cn/info/1132/1358.htm',
-  },
-  {
-    date: '2024-12-13', until: '2024-12-15', kind: 'conference',
-    title: { zh: '2024 中国人工智能大会（CCAI 2024）', en: 'China Conference on Artificial Intelligence (CCAI 2024)' },
-    place: { zh: '北京', en: 'Beijing' },
-    people: { zh: '邬荣领作为尖峰对话嘉宾，讨论“AI for Math & Math for AI”', en: 'Rongling Wu joined the summit dialogue on AI for Math and Math for AI' },
-    report: true,
-    href: 'https://www.cast.org.cn/xw/qgxh/XSJL/art/2024/art_9524e6d2542c41cba955ae6c8c04b1be.html',
-  },
-  {
-    date: '2024-11-09', kind: 'workshop',
-    title: { zh: 'Statistical Genetics 专题活动', en: 'Statistical Genetics' },
-    place: { zh: '北京，BIMSA', en: 'BIMSA, Beijing' },
-    people: { zh: '邬荣领开场；张苗苗、法昌健、边洋洋、潘文祺、钱梓善等报告', en: 'Opened by Rongling Wu; talks by Miaomiao Zhang, Changjian Fa, Yangyang Bian, Wenqi Pan, Zishan Qian and others' },
-    href: 'https://www.bimsa.cn/zh-CN/research_detail/StatisticalGenetics.html',
-  },
-  {
-    date: '2024-10-12', until: '2024-10-13', kind: 'workshop',
-    title: { zh: '首届拓扑学学科发展研讨会', en: 'First Symposium on the Development of Topology' },
-    place: { zh: '北京，科学之家', en: 'Home of Science, Beijing' },
-    people: { zh: '吴杰、邬荣领参与组织；邬荣领致辞并介绍拓扑统计学学科构思', en: 'Co-organized by Jie Wu and Rongling Wu; Rongling Wu introduced the plan for topological statistics as a discipline' },
-    href: 'https://www.bimsa.cn/zh-CN/research_detail/TopologyI.html',
-  },
-  {
-    date: '2024-10-05', kind: 'workshop',
-    title: { zh: 'Mini-Workshop on the Yau-Yau Filter and Its Applications', en: 'Mini-Workshop on the Yau-Yau Filter and Its Applications' },
-    place: { zh: '北京，BIMSA', en: 'BIMSA, Beijing' },
-    people: { zh: '邬荣领组织；冯敏立、王宇、胡煜中报告', en: 'Organized by Rongling Wu; talks by Minli Feng, Yu Wang and Yuzhong Hu' },
-    href: 'https://www.bimsa.cn/zh-CN/research_detail/YYFielterWorkshop.html',
-  },
-  {
-    date: '2024-09-25', kind: 'workshop',
-    title: { zh: '“人大数学时间 I”第二期交流研讨', en: '“RUC Math Time I”, session 2' },
-    place: { zh: '北京，中国人民大学', en: 'Renmin University of China, Beijing' },
-    people: { zh: '邬荣领、吴杰、龚新奇、葛化彬系列报告', en: 'Talks by Rongling Wu, Jie Wu, Xinqi Gong and Huabin Ge' },
-    report: true,
-    href: 'https://se-office.ruc.edu.cn/xwdt/aeef13a0f92a4fc9b0089e2e6e3ca213.htm',
-  },
-  {
-    date: '2024-08-06', until: '2024-08-07', kind: 'conference',
-    title: { zh: '2024 年人工智能学术研讨会', en: '2024 Symposium on Artificial Intelligence' },
-    place: { zh: '呼和浩特，内蒙古师范大学', en: 'Inner Mongolia Normal University, Hohhot' },
-    people: { zh: '邬荣领报告《人工智能的统计基础》，吴杰报告《人工智能视角下的代数拓扑学》', en: 'Rongling Wu on the statistical foundations of AI; Jie Wu on algebraic topology from the AI perspective' },
-    report: true,
-    href: 'https://mathlab.imnu.edu.cn/info/1046/1090.htm',
-  },
-  {
-    date: '2024-05-21', until: '2024-05-22', kind: 'workshop',
-    title: { zh: '拓扑与人工智能应用研讨活动', en: 'Workshop on Topology and AI Applications' },
-    place: { zh: '北京，清华大学', en: 'Tsinghua University, Beijing' },
-    people: { zh: '吴杰、邬荣领、李京艳、吴双等参与组织及交流', en: 'Jie Wu, Rongling Wu, Jingyan Li, Shuang Wu and others took part' },
-    href: 'https://www.bimsa.cn/zh-CN/research_detail/topappAI.html',
   },
 ]
 
