@@ -1,9 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import PortraitCloud, { type CloudPerson } from '../components/PortraitCloud.astro'
-import { sortedVisitors as visitors } from '../data/visitors'
-import { visitingNow, visitingPast } from '../data/visiting'
-import { director, deputies, members, tiers } from '../data/people'
+import { visiting } from '../data/visiting'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -11,77 +9,40 @@ interface Props {
 }
 const { lang } = Astro.props
 const zh = lang === 'zh'
-const other = (n: { zh: string; en: string }) => (zh ? n.en : n.zh)
 
-// Everyone who is or has been part of the lab: former members first in the
-// card text, current members with their tier and start date.
-const former: CloudPerson[] = visitors.map((v) => ({
-  id: v.id ?? v.name.en,
-  name: v.name[lang],
-  other: other(v.name),
+const people: CloudPerson[] = visiting.map((v) => ({
+  id: v.id,
+  name: v.name,
   photo: v.photo,
-  status: zh ? '曾在实验室' : 'Former member',
-  facts: [
-    [zh ? '在实验室' : 'At the lab', v.period ? `${v.period}${zh ? '，' : ', '}${t(v.role, lang)}` : t(v.role, lang)],
-    ...(v.atLab ? [[zh ? '研究方向' : 'Research', t(v.atLab, lang)] as [string, string]] : []),
-    ...(v.now ? [[zh ? '现在' : 'Now', t(v.now, lang)] as [string, string]] : []),
-  ],
-  homepage: v.homepage,
+  status: zh ? '往届访问学者' : 'Past visiting scholar',
+  facts: [[zh ? '现在' : 'Now', v.note]],
 }))
-const current: CloudPerson[] = [director, ...deputies, ...members].map((p) => {
-  const tier = 'tier' in p ? tiers.find((x) => x.id === (p as { tier: string }).tier) : undefined
-  return {
-    id: p.id,
-    name: p.name[lang],
-    other: other(p.name),
-    photo: p.photo,
-    status: p.role ? t(p.role, lang) : p.title ? t(p.title, lang) : tier ? t(tier.label, lang) : undefined,
-    facts: 'since' in p && p.since ? [[zh ? '加入' : 'Joined', String(p.since)]] : [],
-    homepage: p.homepage,
-  }
-})
-const people = [...former, ...current].filter((p, i, all) => all.findIndex((q) => q.id === p.id) === i)
 ---
 
-<Base lang={lang} path="/visitors/" title={t(ui.visitors, lang)} description={zh ? '曾在实验室访学或工作的成员，他们在实验室期间的工作与后续发展。' : 'Visiting scholars and former members: their work at the laboratory and where they went next.'}>
+<Base lang={lang} path="/visitors/" title={t(ui.visitors, lang)} description={zh ? '曾在实验室访学的学者与学生，以及他们后来的去向。' : 'Past visiting scholars and students of the laboratory, and where they are now.'}>
   <header class="page-head-compact">
     <div class="wrap">
       <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {t(ui.visitors, lang)}</p>
       <h1>{t(ui.visitors, lang)}</h1>
-      <p>{zh ? `在实验室工作、访问和学习过的 ${people.length} 位成员。点击头像，看看他们在这里做了什么、后来去了哪里。` : `${people.length} people who have worked, visited or studied at the lab. Click a portrait to see what they did here and where they went next.`}</p>
+      <p>{zh ? `曾在实验室访学的 ${visiting.length} 位学者与学生。点击头像查看他们现在的去向。` : `${visiting.length} scholars and students who have visited the laboratory. Click a portrait to see where they are now.`}</p>
     </div>
   </header>
 
-  <PortraitCloud people={people} lang={lang} label={zh ? '成员头像墙' : 'Portraits of lab members'} />
+  <PortraitCloud people={people} lang={lang} label={zh ? '访问学者头像墙' : 'Portraits of past visiting scholars'} />
 
-  <section class="section" aria-labelledby="h-alumni" style="padding-top:clamp(40px,6vw,64px)">
+  <section class="section" aria-labelledby="h-visiting" style="padding-top:clamp(40px,6vw,64px)">
     <div class="wrap">
-      <h2 class="section-title" id="h-alumni">{zh ? '历届成员' : 'Former members'}<small class="muted" style="font-size:var(--t-sm);margin-left:12px">{visitors.length}</small></h2>
-      <ul class="alumni">
-        {former.map((p) => {
-          const v = visitors.find((x) => (x.id ?? x.name.en) === p.id)!
-          return (
-            <li>
-              <button type="button" data-open-person={p.id}>
-                <span class="alumni-face" aria-hidden="true">{p.photo ? <img src={p.photo} alt="" loading="lazy" decoding="async" /> : p.name.slice(0, 1)}</span>
-                <span>
-                  <span class="alumni-name">{p.name}</span>
-                  <span class="alumni-meta">{v.period && <>{v.period}{zh ? '，' : ', '}</>}{t(v.role, lang)}</span>
-                  {v.now && <span class="alumni-now">{zh ? '现在：' : 'Now: '}{t(v.now, lang)}</span>}
-                </span>
-              </button>
-            </li>
-          )
-        })}
+      <h2 class="section-title" id="h-visiting">{zh ? '往届访问学者' : 'Past visiting scholars'}<small class="muted" style="font-size:var(--t-sm);margin-left:12px">{visiting.length}</small></h2>
+      <ul class="visiting">
+        {visiting.map((v) => (
+          <li>
+            <button type="button" class="visiting-btn" data-open-person={v.id}>
+              <span class="visiting-name">{v.name}</span>
+              <span class="visiting-note">{v.note}</span>
+            </button>
+          </li>
+        ))}
       </ul>
-      <h2 class="section-title" id="h-visiting" style="margin-top:clamp(48px,7vw,80px)">{zh ? '访问学者' : 'Visiting scholars and students'}<small class="muted" style="font-size:var(--t-sm);margin-left:12px">{visitingNow.length + visitingPast.length}</small></h2>
-      <h3 class="visiting-head">{zh ? '在访' : 'Currently visiting'}</h3>
-      <ul class="visiting">{visitingNow.map((v) => <li><span class="visiting-name">{v.name}</span>{v.note && <span class="visiting-note">{v.note}</span>}</li>)}</ul>
-      <h3 class="visiting-head">{zh ? '往届' : 'Past visitors'}</h3>
-      <ul class="visiting">{visitingPast.map((v) => <li><span class="visiting-name">{v.name}</span>{v.note && <span class="visiting-note">{v.note}</span>}</li>)}</ul>
-      <p class="muted" style="margin-top:28px;font-size:var(--t-sm)">
-        {zh ? <>在职成员见<a class="link" href={localizedPath('/about/', lang) + '#organization'}>组织架构</a>。</> : <>Current members are listed under <a class="link" href={localizedPath('/about/', lang) + '#organization'}>Organization</a>.</>}
-      </p>
     </div>
   </section>
 </Base>
