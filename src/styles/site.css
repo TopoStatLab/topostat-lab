@@ -550,3 +550,6 @@ button { font: inherit; color: inherit; }
 .visiting li { display: flex; flex-direction: column; padding: 10px 0; border-top: 1px solid var(--rule); }
 .visiting-name { font: 400 var(--t-md, 1.0625rem)/1.35 var(--serif); }
 .visiting-note { font-size: var(--t-sm); color: var(--ink-3); }
+.visiting-btn { display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.visiting-btn:hover .visiting-name { color: var(--prussian); }
+.visiting-btn:focus-visible { outline: 2px solid var(--prussian); outline-offset: 4px; }
