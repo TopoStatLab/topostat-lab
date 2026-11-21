@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: pip install pillow && python3 scripts/harvest.py
+      - run: pip install pillow && python3 scripts/harvest.py r2_
       - run: |
           git config user.name "github-actions"; git config user.email "actions@github.com"
           git add harvest && git commit -m "harvest" && git push || echo nothing

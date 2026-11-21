@@ -8,6 +8,7 @@ def curl(u,out,ref=None):
     if ref: cmd[1:1]=['-e',ref]
     return subprocess.run(cmd,capture_output=True).returncode==0
 os.makedirs('harvest',exist_ok=True)
+import sys; PFX=sys.argv[1] if len(sys.argv)>1 else ''
 log=[]; seen=set()
 for page in open('scripts/harvest-pages.txt').read().split():
     if not curl(page,'p.html'): log.append({'page':page,'err':'fetch'}); continue
@@ -25,9 +26,9 @@ for page in open('scripts/harvest-pages.txt').read().split():
             im=Image.open('img'); w,h=im.size
         except Exception: continue
         if w<500 or h<300 or w/h>3.5 or h/w>1.6: continue
-        n+=1; fn=f'harvest/{key}_{n:02d}.jpg'
+        n+=1; fn=f'harvest/{PFX}{key}_{n:02d}.jpg'
         im=im.convert('RGB'); im.thumbnail((1600,1600)); im.save(fn,'JPEG',quality=82)
         log.append({'file':fn,'page':page,'src':u,'w':w,'h':h})
     log.append({'page':page,'count':n})
-json.dump(log,open('harvest/index.json','w'),ensure_ascii=False,indent=1)
+json.dump(log,open(f'harvest/index{PFX}.json','w'),ensure_ascii=False,indent=1)
 print(sum(1 for l in log if 'file' in l),'images')
