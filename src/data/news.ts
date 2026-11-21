@@ -1,7 +1,8 @@
 /**
  * News (新闻) and academic activities (学术活动), newest first.
  * `href` may point to an external article (e.g. a WeChat post) or be omitted.
- * News link to press releases (not to the papers themselves).
+ * News link to press releases where one is online; tsa.bimsa.cn (the old lab
+ * site) returns 502, so two research items link to the paper instead.
  * Events come from the activity list compiled by 董昂 (2026-11-17); each links
  * to its main source page.
  */
@@ -35,7 +36,7 @@ export const news: NewsItem[] = [
     },
     summary: { zh: '研究成果发表于 The Innovation。', en: 'Published in The Innovation.' },
     research: true,
-    href: 'https://tsa.bimsa.cn/?p=516',
+    href: 'https://www.bimsa.cn/news/info/Yau-Yau%20nonlinear%20filter.html',
   },
   {
     date: '2026-01',
@@ -45,7 +46,7 @@ export const news: NewsItem[] = [
     },
     summary: { zh: '研究成果发表于 Advanced Science。', en: 'Published in Advanced Science.' },
     research: true,
-    href: 'https://tsa.bimsa.cn/?p=514',
+    href: 'https://doi.org/10.1002/advs.202523373',
   },
   {
     date: '2026-04',
@@ -55,7 +56,7 @@ export const news: NewsItem[] = [
     },
     summary: { zh: '单倍型分辨基因组下的个体化数量遗传图统计理论发表于 PNAS。', en: 'Graph statistics theory of individualized quantitative genetics, published in PNAS.' },
     research: true,
-    href: 'https://tsa.bimsa.cn/?p=503',
+    href: 'https://doi.org/10.1073/pnas.2600004123',
   },
   {
     date: '2025-02',
@@ -100,8 +101,6 @@ export const events: EventItem[] = [
     title: { zh: '“idopNetwork 与复杂生物系统分析”培训研讨会', en: 'Training workshop on idopNetwork and complex biological systems analysis' },
     place: { zh: '北京林业大学', en: 'Beijing Forestry University' },
     people: { zh: '邬荣领作主旨报告，董昂、吴双、龚慧莹、杨登程、王宇等授课，近 200 人参加', en: 'Keynote by Rongling Wu; lectures by Ang Dong, Shuang Wu, Huiying Gong, Dengcheng Yang, Yu Wang and others; nearly 200 participants' },
-    report: true,
-    href: 'https://tsa.bimsa.cn/en/training-workshop-on-idopnetwork-and-complex-biological-systems-analysis-successfully-held-at-beijing-forestry-university/',
   },
   {
     date: '2026-02-02', until: '2026-02-06', kind: 'conference',
