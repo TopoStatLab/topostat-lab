@@ -10,6 +10,12 @@ const m = (name: string, alt: Media['alt'], credit: Media['credit']): Media => (
   alt,
   credit,
 })
+/** Responsive sources: AVIF at 480/720/1080/1600w, WebP fallback at 720/1600w. */
+export const avifSet = (x: Media) => {
+  const b = x.src.replace(/\.webp$/, '')
+  return `${b}-xs.avif 480w, ${b}-sm.avif 720w, ${b}-md.avif 1080w, ${b}.avif 1600w`
+}
+export const webpSet = (x: Media) => `${x.sm} 720w, ${x.src} 1600w`
 const BIMSA = { zh: 'BIMSA', en: 'BIMSA' }
 
 export const media = {

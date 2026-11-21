@@ -1,6 +1,7 @@
 ---
 import { ui, t, localizedPath, type Lang } from '../i18n'
 import type { Media } from '../data/media'
+import Picture from './Picture.astro'
 
 interface Props {
   lang: Lang
@@ -14,7 +15,7 @@ const zh = lang === 'zh'
 ---
 {image ? (
   <header class="page-banner">
-    <img src={image.src} srcset={`${image.sm} 720w, ${image.src} 1600w`} sizes="100vw" alt="" fetchpriority="high" decoding="async" />
+    <Picture image={image} sizes="100vw" eager />
     <div class="wrap">
       <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {title}</p>
       <h1>{title}</h1>

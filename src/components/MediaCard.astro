@@ -2,6 +2,7 @@
 /** A news or event card with a photo (or a tinted placeholder when there is none). */
 import { formatDate, formatRange, eventKinds, type NewsItem, type EventItem } from '../data/news'
 import { t, type Lang } from '../i18n'
+import Picture from './Picture.astro'
 
 interface Props {
   item: NewsItem | EventItem
@@ -23,7 +24,7 @@ const Tag = item.href ? 'a' : 'div'
   <Tag class="mcard-link" href={item.href} target={item.href ? '_blank' : undefined} rel={item.href ? 'noopener' : undefined}>
     <div class={`mcard-media tone-${tone}`}>
       {item.image ? (
-        <img src={feature ? item.image.src : item.image.sm} alt={item.image.alt[lang]} loading="lazy" decoding="async" />
+        <Picture image={item.image} alt={item.image.alt[lang]} sizes={feature ? '(max-width: 980px) 100vw, 640px' : '(max-width: 600px) 100vw, (max-width: 980px) 50vw, 400px'} />
       ) : (
         <span class="mcard-ph" aria-hidden="true">{item.date.slice(0, 4)}</span>
       )}

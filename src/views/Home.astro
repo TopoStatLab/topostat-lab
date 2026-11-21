@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import HeroCarousel, { type Slide } from '../components/HeroCarousel.astro'
+import Picture from '../components/Picture.astro'
 import MediaCard from '../components/MediaCard.astro'
 import BibItem from '../components/BibItem.astro'
 import Timeline from '../components/Timeline.astro'
@@ -117,7 +118,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="section section-tint" id="publications" aria-labelledby="h-pubs">
     <div class="wrap feature">
       <figure class="feature-img">
-        <img src={media.yauyau.src} alt={media.yauyau.alt[lang]} loading="lazy" decoding="async" />
+        <Picture image={media.yauyau} alt={media.yauyau.alt[lang]} sizes="(max-width: 860px) 100vw, 640px" />
         <figcaption>{zh ? '图片：' : 'Image: '}{media.yauyau.credit[lang]}</figcaption>
       </figure>
       <div>
@@ -159,7 +160,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="section section-tint" id="about" aria-labelledby="h-about">
     <div class="wrap feature feature-reverse">
       <figure class="feature-img">
-        <img src={media.campusMountain.src} alt={media.campusMountain.alt[lang]} loading="lazy" decoding="async" />
+        <Picture image={media.campusMountain} alt={media.campusMountain.alt[lang]} sizes="(max-width: 860px) 100vw, 640px" />
         <figcaption>{zh ? '图片：' : 'Photo: '}{media.campusMountain.credit[lang]}</figcaption>
       </figure>
       <div class="about">
