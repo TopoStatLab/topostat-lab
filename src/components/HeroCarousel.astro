@@ -1,6 +1,6 @@
 ---
 /** Full-bleed photo carousel for the home page: one slide per story. */
-import type { Media } from '../data/media'
+import { avifSet, webpSet, type Media } from '../data/media'
 import type { Lang } from '../i18n'
 
 export type Slide = { image: Media; kicker: string; title: string; summary?: string; href?: string; external?: boolean }
@@ -14,10 +14,17 @@ const zh = lang === 'zh'
 <section class="hero" aria-roledescription="carousel" aria-label={zh ? '实验室要闻' : 'Highlights'} data-hero>
   {slides.map((s, i) => (
     <article class={`hero-slide${i === 0 ? ' is-on' : ''}`} aria-roledescription="slide" aria-label={`${i + 1} / ${slides.length}`} aria-hidden={i === 0 ? undefined : 'true'}>
-      <picture>
-        <source media="(max-width: 720px)" srcset={s.image.sm} />
-        <img src={s.image.src} alt={s.image.alt[lang]} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
-      </picture>
+      {i === 0 ? (
+        <picture>
+          <source type="image/avif" srcset={avifSet(s.image)} sizes="100vw" />
+          <img src={s.image.sm} srcset={webpSet(s.image)} sizes="100vw" alt={s.image.alt[lang]} fetchpriority="high" decoding="async" />
+        </picture>
+      ) : (
+        <picture data-defer>
+          <source type="image/avif" data-srcset={avifSet(s.image)} sizes="100vw" />
+          <img data-src={s.image.sm} data-srcset={webpSet(s.image)} sizes="100vw" alt={s.image.alt[lang]} decoding="async" />
+        </picture>
+      )}
       <div class="hero-shade"></div>
       <div class="wrap hero-copy">
         <p class="hero-kicker">{s.kicker}</p>
@@ -44,8 +51,19 @@ const zh = lang === 'zh'
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     let i = 0
     let timer = 0
+    // Hidden slides carry their sources in data-* so only the first photo loads with the page.
+    const load = (n: number) => {
+      const pic = slides[(n + slides.length) % slides.length].querySelector<HTMLElement>('picture[data-defer]')
+      if (!pic) return
+      pic.removeAttribute('data-defer')
+      pic.querySelectorAll<HTMLElement>('[data-srcset]').forEach((el) => { el.setAttribute('srcset', el.dataset.srcset!); el.removeAttribute('data-srcset') })
+      const img = pic.querySelector('img')!
+      if (img.dataset.src) { img.src = img.dataset.src; img.removeAttribute('data-src') }
+    }
     const show = (n: number) => {
       i = (n + slides.length) % slides.length
+      load(i)
+      load(i + 1)
       slides.forEach((s, k) => {
         s.classList.toggle('is-on', k === i)
         s.toggleAttribute('aria-hidden', k !== i)
@@ -67,6 +85,9 @@ const zh = lang === 'zh'
     root.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX }, { passive: true })
     root.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) { show(i + (dx < 0 ? 1 : -1)); play() } })
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()))
+    // Fetch the second photo once the page has settled, ahead of the first rotation.
+    const warm = () => setTimeout(() => load(1), 2500)
+    if (document.readyState === 'complete') warm(); else addEventListener('load', warm, { once: true })
     play()
   }
 </script>
