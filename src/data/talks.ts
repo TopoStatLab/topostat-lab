@@ -1,7 +1,8 @@
 /**
  * Invited talks by 邬荣领 (Rongling Wu), lab director, 2022 onwards.
  * Source: his own list (2022–2026) and the summary of his talks at Inner
- * Mongolia Normal University with press links (2026-11). Entries with no
+ * Mongolia Normal University with press links (2026-11), plus the talks in
+ * 董昂's activity sheet (2026-11-17). Entries with no
  * title or venue in the source leave that field out.
  */
 import type { L10n } from '../i18n'
@@ -40,14 +41,71 @@ export const talks: Talk[] = [
   },
   { date: '2024-09', venue: { zh: '求真大讲堂', en: 'Qiuzhen Lecture' } },
   { date: '2024-09', venue: { zh: '上海数学与交叉学科研究院（SIMIS），报告及研讨会', en: 'Shanghai Institute for Mathematics and Interdisciplinary Sciences (SIMIS), talk and workshop' } },
+  {
+    date: '2024-09-25', venue: { zh: '中国人民大学，“人大数学时间 I”第二期交流研讨', en: 'Renmin University of China, “RUC Math Time I” seminar' },
+    href: 'https://se-office.ruc.edu.cn/xwdt/aeef13a0f92a4fc9b0089e2e6e3ca213.htm',
+  },
+  {
+    date: '2024-10-05', title: same('Mini-Workshop on the Yau-Yau Filter and Its Applications（组织并报告）'), venue: same('BIMSA'),
+    href: 'https://www.bimsa.cn/zh-CN/research_detail/YYFielterWorkshop.html',
+  },
+  {
+    date: '2024-10-12', title: { zh: '拓扑统计学学科构思（致辞）', en: 'Topological statistics as a discipline (opening address)' },
+    venue: { zh: '首届拓扑学学科发展研讨会，北京科学之家', en: 'First Symposium on the Development of Topology, Beijing' },
+    href: 'https://www.bimsa.cn/zh-CN/research_detail/TopologyI.html',
+  },
   { date: '2024-10', venue: { zh: '北京天坛医院', en: 'Beijing Tiantan Hospital' } },
+  {
+    date: '2024-12-13', title: { zh: 'AI for Math & Math for AI（尖峰对话嘉宾）', en: 'AI for Math & Math for AI (panel)' },
+    venue: { zh: '2024 中国人工智能大会（CCAI 2024），北京', en: 'China Conference on Artificial Intelligence (CCAI 2024), Beijing' },
+    href: 'https://www.cast.org.cn/xw/qgxh/XSJL/art/2024/art_9524e6d2542c41cba955ae6c8c04b1be.html',
+  },
   { date: '2025-01', venue: { zh: '北京生命科学研究所', en: 'National Institute of Biological Sciences, Beijing' } },
   { date: '2025-02', venue: { zh: '北京林业大学草业科学国际会议', en: 'Beijing Forestry University, International Conference on Grassland Science' } },
+  {
+    date: '2025-03-03', title: same('Statistics at a crossroads: How it can revolutionize artificial intelligence'),
+    venue: { zh: 'BIMSA–HSE 数据分析与拓扑联合讨论班（线上）', en: 'BIMSA–HSE joint seminar on data analysis and topology (online)' },
+    href: 'https://www.bimsa.cn/zh-CN/talk/18534.html',
+  },
+  {
+    date: '2025-05-12', title: { zh: '开幕致辞及学术报告', en: 'Opening address and talk' },
+    venue: { zh: '东亚代数拓扑会议，河北师范大学', en: 'East Asian Conference on Algebraic Topology, Hebei Normal University' },
+    href: 'https://news.hebtu.edu.cn/a/2025/05/21/C5F2E9940CFD4499A605229799D899AB.html',
+  },
   { date: '2025-06', venue: { zh: '北京林业大学草业科学研讨会', en: 'Beijing Forestry University, Grassland Science Seminar' } },
+  {
+    date: '2025-06-22', title: same('Statistics at a crossroads: How it can revolutionize artificial intelligence'),
+    venue: { zh: '第三届机器学习与统计学国际会议（MLSTAT 2025），武汉大学', en: 'MLSTAT 2025, Wuhan University' },
+    href: 'https://ml-stat.github.io/MLSTAT2025/schedule/sessions/wurongling/',
+  },
+  {
+    date: '2025-07-27', title: { zh: '主旨演讲', en: 'Keynote' },
+    venue: { zh: '2025 国际数学与人工智能应用大会，太原', en: '2025 International Conference on Mathematics and AI Applications, Taiyuan' },
+    href: 'https://www.cinn.cn/difang/shanxi/2025/07-29/qkNpJxEr.html',
+  },
+  {
+    date: '2025-09-19', title: same('Matrix learning of high-order dynamical interactome networks from big static data'),
+    venue: { zh: '天津大学应用数学中心', en: 'Center for Applied Mathematics, Tianjin University' },
+    href: 'https://cam.tju.edu.cn/newsDetail.php?id=1063',
+  },
+  {
+    date: '2025-09-19', title: { zh: '药物反应的统计物理模型', en: 'Statistical physics models of drug response' },
+    venue: { zh: '2025 代谢药学学术大会，天津大学', en: '2025 Metabolic Pharmacy Conference, Tianjin University' },
+    href: 'https://news.tju.edu.cn/info/1012/562129.htm',
+  },
   { date: '2025-09', venue: { zh: '北京科技大学，报告及研讨会', en: 'University of Science and Technology Beijing, talk and workshop' } },
   { date: '2025-09', venue: { zh: '北京大学国际数学研究中心', en: 'Beijing International Center for Mathematical Research, Peking University' } },
   { date: '2025-09', title: { zh: '数学生命科学', en: 'Mathematical life sciences' }, venue: { zh: '中国人民大学', en: 'Renmin University of China' } },
   { date: '2025-10', venue: { zh: 'Cell 出版社三亚会议', en: 'Cell Press conference, Sanya' } },
+  {
+    date: '2025-10-10', title: same('The Graph Representation Theory of Statistics（特邀报告）'),
+    venue: { zh: '第二十一届全国复杂网络学术会议（CCCN 2025），杭州', en: 'CCCN 2025, Hangzhou' },
+    href: 'https://www.c2.org.cn/h-nd-2281.html',
+  },
+  {
+    date: '2025-11-02', venue: { zh: '数学与医学交叉论坛，BIMSA', en: 'Interdisciplinary forum: How mathematics is merged into medicine, BIMSA' },
+    href: 'https://www.bimsa.cn/zh-CN/research_detail/MathMed.html',
+  },
   { date: '2025-11', venue: { zh: '厦门大学天元基金', en: 'Tianyuan Mathematics Fund, Xiamen University' } },
   { date: '2025-11', venue: { zh: '洛阳林草会议', en: 'Forestry and grassland conference, Luoyang' } },
   { date: '2025-11', venue: { zh: '植物空间组会议，北京', en: 'Plant spatial omics meeting, Beijing' } },
@@ -71,10 +129,14 @@ export const talks: Talk[] = [
     title: { zh: '个体化数量遗传学理论的创立：重塑林木改良的范式', en: 'Establishing the theory of individualized quantitative genetics: reshaping the paradigm of forest tree improvement' },
     venue: { zh: '未来农业与生物技术前沿专题活动，长沙', en: 'Frontiers of Future Agriculture and Biotechnology, Changsha' },
   },
-  { date: '2026-11', venue: { zh: '中国科学院大学', en: 'University of Chinese Academy of Sciences' } },
+  { date: '2026-11', title: { zh: '图统计学专题报告', en: 'Graph statistics' }, venue: { zh: '中国科学院大学', en: 'University of Chinese Academy of Sciences' } },
   { date: '2026-11', title: same('A Topological Framework for Decoding Individualized Omnigenic Interactomes of Complex Traits') },
   { date: '2026-11', title: { zh: '图医学', en: 'Graph medicine' } },
-  { date: '2026-11', title: { zh: '图统计学', en: 'Graph statistics' }, venue: { zh: 'HIMIS 研讨会，深圳', en: 'HIMIS workshop, Shenzhen' } },
+  {
+    date: '2026-11-13', title: { zh: '图统计学', en: 'Graph statistics' },
+    venue: { zh: '河套数学与交叉学科研究院（HIMIS）“生物医学中的数学智能”研讨会，深圳', en: 'HIMIS workshop “Mathematical Intelligence in Biomedicine”, Shenzhen' },
+    href: 'https://www.himis-sz.cn/huiyi_47/199.html',
+  },
   { date: '2026-11', venue: { zh: '中国林业科学研究院', en: 'Chinese Academy of Forestry' } },
   { date: '2026-11', venue: { zh: '中华医生协会', en: 'Chinese physicians’ association meeting' } },
   { date: '2026-11', venue: { zh: '南方医科大学', en: 'Southern Medical University' } },
