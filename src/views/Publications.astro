@@ -18,7 +18,7 @@ const zh = lang === 'zh'
 const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a)
 
 // Full list (every paper by every member, from the lab's roster).
-type Row = { y: number; t: string; a: [string, number][]; v: string; m: string[]; k?: string; pre?: number }
+type Row = { y: number; t: string; a: [string, number][]; v: string; m: string[]; k?: string; pre?: number; ack?: number }
 const rows = allPapers as Row[]
 const allYears = [...new Set(rows.map((r) => r.y))].sort((a, b) => b - a)
 const nameMap = names as Record<string, { zh: string; en: string }>
@@ -52,13 +52,13 @@ const jsonLd = [
     lang={lang}
     image={media.yauyau}
     title={t(ui.publications, lang)}
-    lead={zh ? '实验室全体成员（含曾在实验室工作和学习的成员）的论文与专利，近两年优先，每年内实验室核心成员的成果排在前面。' : 'Papers and patents by all laboratory members, past and present. Recent years first; within each year, work by core members comes first.'}
+    lead={zh ? '署名本实验室的论文、实验室成员的全部论文与专利。' : 'Papers acknowledging the laboratory, plus all papers and patents by its members, past and present.'}
   />
 
   <section class="section" id="papers" aria-labelledby="h-papers" style="padding-top:clamp(32px,5vw,56px)">
     <div class="wrap row">
       <div class="main">
-        <h2 class="section-title" id="h-papers">{zh ? '代表性论文' : 'Selected papers'}</h2>
+        <h2 class="section-title" id="h-papers">{zh ? '实验室署名论文' : 'Papers acknowledging the laboratory'}</h2>
         <div class="chips pub-filter" role="group" aria-label={zh ? '按研究方向筛选' : 'Filter by research direction'}>
           <button type="button" class="chip" data-filter="all" aria-pressed="true">{zh ? '全部' : 'All'}</button>
           {researchDirections.map((d) => (
@@ -76,7 +76,7 @@ const jsonLd = [
         <p class="pub-empty muted" hidden>{zh ? '这个方向暂无论文。' : 'No papers in this direction yet.'}</p>
       </div>
       <aside class="note">
-        <p>{zh ? `${pubs.length} 篇代表作，附研究方向与简介。加粗的作者是实验室成员。` : `${pubs.length} selected papers with research directions and summaries. Laboratory members are set in bold.`}</p>
+        <p>{zh ? `${pubs.length} 篇作者单位中署名本实验室的论文（据实验室 2026 年成果核对）。加粗的作者是实验室成员。` : `${pubs.length} papers whose author affiliations name the laboratory (checked against the lab's 2026 achievement report). Laboratory members are set in bold.`}</p>
         <p><a class="link" href="#all-papers">{zh ? `全部论文（${rows.length} 篇）` : `All papers (${rows.length})`}</a></p>
       </aside>
     </div>
@@ -110,6 +110,7 @@ const jsonLd = [
                     <p class="bib-meta"><i>{r.v}</i>, {r.y}.
                       {r.k === 'book' && <span class="bib-tag">{zh ? '著作' : 'Book'}</span>}
                       {r.pre && <span class="bib-tag">{zh ? '预印本' : 'Preprint'}</span>}
+                      {r.ack && <span class="bib-tag bib-tag-lab">{zh ? '署名实验室' : 'Lab affiliation'}</span>}
                     </p>
                   </div>
                 </li>
@@ -139,7 +140,7 @@ const jsonLd = [
                     return p.lab?.includes(n.trim()) ? <b>{text}</b> : text
                   })}</p>
                   <p class="bib-meta">
-                    {p.status === 'granted' ? (zh ? '发明专利授权' : 'Granted patent') : zh ? '发明专利申请公开' : 'Published application'}{zh ? '，' : ', '}{p.year}.
+                    {p.status === 'granted' ? (zh ? '发明专利授权' : 'Granted patent') : p.status === 'filed' ? (zh ? '发明专利申请' : 'Patent application') : zh ? '发明专利申请公开' : 'Published application'}{zh ? '，' : ', '}{p.year}.
                     {p.number && <span class="bib-doi"> {p.number}</span>}
                     {p.note && <span>{zh ? p.note : ''}</span>}
                   </p>

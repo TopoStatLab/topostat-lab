@@ -96,6 +96,15 @@ export const events: EventItem[] = [
     image: media.meiliGroup,
   },
   {
+    date: '2026-06-05', until: '2026-06-07', kind: 'workshop',
+    title: { zh: '2026 年数学与人工智能交叉应用研讨会', en: '2026 Workshop on Mathematics and AI Applications' },
+    place: { zh: '呼和浩特，内蒙古师范大学', en: 'Inner Mongolia Normal University, Hohhot' },
+    people: { zh: '邬荣领作主旨报告《复杂系统的 idopNetwork 网络建模及其应用》', en: 'Keynote by Rongling Wu on idopNetwork modelling of complex systems' },
+    report: true,
+    href: 'https://www.imnu.edu.cn/info/1301/116041.htm',
+    image: media.meiliHall,
+  },
+  {
     date: '2026-05-18', kind: 'workshop',
     title: { zh: '长城工程科技会议“人工智能时代的基础研究新范式”专题会', en: 'Great Wall Engineering Forum: New Paradigms for Basic Research in the AI Era' },
     place: { zh: '北京，清华大学', en: 'Tsinghua University, Beijing' },

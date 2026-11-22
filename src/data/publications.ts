@@ -1,5 +1,8 @@
 /**
- * Papers by laboratory people (from 丘成桐 down to students and former members).
+ * Papers that acknowledge the laboratory (affiliation "Beijing Key Laboratory of
+ * Topological Statistics and Applications for Complex Systems"), as confirmed in
+ * the lab's achievement report (董昂, 2026). Papers that do not acknowledge the
+ * lab are not listed here; they stay in papers-all.json (the full member list).
  * Source: tsa.bimsa.cn publication list and BIMSA profile pages, checked 2026-11.
  *
  * Add new papers anywhere; the page sorts by year, then lists papers with
@@ -79,13 +82,6 @@ export const publications: Publication[] = [
     title: 'Multi-task learning of complex networks via nonlinear ordinary differential equations',
     journal: 'Communications Physics',
     doi: '10.1038/s42005-026-02687-4',
-  },
-  {
-    year: 2026, core: true, directions: [ST],
-    title: 'On singular homology theories of digraphs and quivers',
-    authors: 'Li J, Muranov Y, Wu J, Yau ST',
-    lab: ['Li J', 'Wu J', 'Yau ST'],
-    journal: 'Journal of Combinatorics', where: '17(1):89–120',
   },
   {
     year: 2026, core: true, directions: [SP],
@@ -233,14 +229,6 @@ export const publications: Publication[] = [
     journal: 'arXiv:2505.03240',
     doi: '10.48550/arXiv.2505.03240',
   },
-  {
-    year: 2025, directions: [ST], preprint: true,
-    title: 'Cohomology of classifying spaces of rank 3 Kac-Moody groups',
-    authors: 'Ruan Y, Zhao X',
-    lab: ['Ruan Y'],
-    journal: 'arXiv:2502.06169',
-    doi: '10.48550/arXiv.2502.06169',
-  },
 
   // ---------- 2024 ----------
   {
@@ -257,6 +245,126 @@ export const publications: Publication[] = [
     authors: 'Lin X, Zi Y, Li F, Li J',
     journal: 'arXiv:2405.14370',
     doi: '10.48550/arXiv.2405.14370',
+  },
+  // ---------- added from the lab's 2026 achievement report (confirmed lab acknowledgement) ----------
+  {
+    year: 2025, directions: [TS, ST],
+    title: "Topology in Artificial Intelligence and Complex Systems",
+    authors: "Liu R, Wu J, Zhang M",
+    lab: ["Wu J", "Zhang M"],
+    journal: "Chinese Journal of Contemporary Mathematics",
+  },
+  {
+    year: 2026, directions: [SP, TS],
+    title: "Quasi-dynamic reconstruction of directed physiological networks from cross-sectional data using idopNetwork and path homology",
+    authors: "Wang J, Wang Y, Tang X, Luo X, Yan H, An W, Li J, Xu J, Wu R, Liang H",
+    lab: ["Wang Y", "Wu R"],
+    journal: "Computers in Biology and Medicine",
+    doi: '10.1016/j.compbiomed.2026.111910',
+  },
+  {
+    year: 2025, directions: [SP],
+    title: "idopNetwork Analysis of Salt-Responsive Transcriptomes Reveals Hub Regulatory Modules and Genes in Populus euphratica",
+    authors: "Wu S, Pan W, Dong A",
+    lab: ["Wu S", "Dong A"],
+    journal: "International Journal of Molecular Sciences",
+    doi: '10.3390/ijms26094091',
+  },
+  {
+    year: 2026, directions: [SP],
+    title: "IdopNetwork as a tool to reveal microbial interaction shifts in colorectal adenoma development",
+    authors: "Yan X, Ma S, Pan W, Li X, Che J",
+    lab: [],
+    journal: "Statistics Innovation",
+    doi: '10.48130/stati-0026-0011',
+  },
+  {
+    year: 2025, directions: [SP],
+    title: "Towards a better understanding of structural-functional relationships in the forest soil microbiota. Reply to comments on “Topological change of soil microbiota networks for forest resilience under global warming”",
+    authors: "Gong H, Wang Y, Wang H, Sun X, Zhang S, Yau ST, Wu R",
+    lab: ["Gong H", "Wang Y", "Yau ST", "Wu R"],
+    journal: "Physics of Life Reviews",
+    doi: '10.1016/j.plrev.2025.07.017',
+  },
+  {
+    year: 2026, directions: [ST],
+    title: "Calculating higher digraph homotopy groups",
+    authors: "Theriault S, Wu J, Yau ST, Zhang M",
+    lab: ["Wu J", "Yau ST", "Zhang M"],
+    journal: "Science China Mathematics",
+    doi: '10.1007/s11425-025-2575-8',
+  },
+  {
+    year: 2026, directions: [ST],
+    title: "Computing singular simplicial homologies of digraphs and quivers",
+    authors: "Burfitt M, Wu J, Yau SS-T, Yau ST",
+    lab: ["Burfitt M", "Wu J", "Yau SS-T", "Yau ST"],
+    journal: "Beijing Journal of Pure and Applied Mathematics",
+    doi: '10.4310/bpam.260903011802',
+  },
+  {
+    year: 2025, directions: [ST],
+    title: "On homology of circuits",
+    authors: "Li J, Muranov YV, Wu J, Yau ST",
+    lab: ["Li J", "Wu J", "Yau ST"],
+    journal: "Beijing Journal of Pure and Applied Mathematics",
+    doi: '10.4310/bpam.250908174104',
+  },
+  {
+    year: 2025, directions: [ST],
+    title: "On the homotopy groups of the suspended quaternionic projective plane and applications",
+    authors: "Yang J, Mukai J, Wu J",
+    lab: ["Wu J"],
+    journal: "Algebraic & Geometric Topology",
+    doi: '10.2140/agt.2025.25.2981',
+  },
+  {
+    year: 2026, directions: [ST],
+    title: "On diagonal digraphs, Koszul algebras and triangulations of homology spheres",
+    authors: "Ivanov SO, Mukoseev L",
+    lab: ["Ivanov SO"],
+    journal: "Advances in Mathematics",
+    doi: '10.1016/j.aim.2026.111163',
+  },
+  {
+    year: 2026, directions: [ST],
+    title: "Limits via relations",
+    authors: "Ivanov SO, Mikhailov RV, Pavutnitskiy F",
+    lab: ["Ivanov SO"],
+    journal: "Homology Homotopy and Applications",
+    doi: '10.4310/hha.2026.v28.n1.a10',
+  },
+  {
+    year: 2026, directions: [TS, ST],
+    title: "On ℓp-Vietoris-Rips complexes",
+    authors: "Ivanov SO, Xu X",
+    lab: ["Ivanov SO"],
+    journal: "Journal of Applied and Computational Topology",
+    doi: '10.1007/s41468-026-00247-x',
+  },
+  {
+    year: 2025, directions: [SP],
+    title: "A new alignment-free method: K-mer Subsequence Natural Vector (K-mer SNV) for classification of fungi",
+    authors: "He L, Huang M, Yiming G, Zhu YZ, Liu R, Chen J, Yau SS-T",
+    lab: ["Yau SS-T"],
+    journal: "BMC Bioinformatics",
+    doi: '10.1186/s12859-025-06152-x',
+  },
+  {
+    year: 2026, directions: [SP],
+    title: "mwHIT: accelerated and accurate histone modification imputation using multi-scale window attention",
+    authors: "Zhang Z, Jia L, Fan X, He Z, Wang YX, Wang Z",
+    lab: [],
+    journal: "Frontiers in Genetics",
+    doi: '10.3389/fgene.2026.1896629',
+  },
+  {
+    year: 2025, directions: [SP],
+    title: "Evo2-Virus: Ultra-Short Viral Sequence Identification with EVO2",
+    authors: "Xu Z, Yang H, Fan X, Wang Z",
+    lab: ["Wang Z"],
+    journal: "IEEE International Conference on Bioinformatics and Biomedicine (BIBM)",
+    doi: '10.1109/bibm66473.2025.11356134',
   },
 ]
 

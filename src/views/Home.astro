@@ -64,7 +64,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
       <div class="stats">
         <div><b>2025</b><span>{zh ? '挂牌成立' : 'Established'}</span></div>
         <div><b>{members.length + 2}</b><span>{zh ? '研究人员与学生' : 'Researchers and students'}</span></div>
-        <div><b>{papersAll.length}</b><span>{zh ? '2025 年以来论文' : 'Papers since 2025'}</span></div>
+        <div><b>{sortedPublications.length}</b><span>{zh ? '署名实验室论文' : 'Papers acknowledging the lab'}</span></div>
         <div><b>{events.length}</b><span>{zh ? '学术活动' : 'Academic events'}</span></div>
       </div>
     </div>
@@ -123,7 +123,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
       </figure>
       <div>
         <h2 id="h-pubs">{zh ? '科技成果' : 'Research output'}</h2>
-        <p>{zh ? `实验室成员 2025 年以来发表论文与著作 ${papersAll.length} 篇，代表性成果发表于 PNAS、The Innovation、Advanced Science 等期刊。` : `${papersAll.length} papers and books by lab members since 2025, with highlights in PNAS, The Innovation and Advanced Science.`}</p>
+        <p>{zh ? `署名本实验室的论文 ${sortedPublications.length} 篇，发表于 PNAS、Nature Communications、The Innovation、Advanced Science 等期刊；实验室成员 2025 年以来的论文与著作共 ${papersAll.length} 篇。` : `${sortedPublications.length} papers acknowledge the laboratory, in journals including PNAS, Nature Communications, The Innovation and Advanced Science; lab members have published ${papersAll.length} papers and books since 2025.`}</p>
         <ol class="bib bib-compact">
           {sortedPublications.slice(0, 3).map((paper) => <BibItem paper={paper} lang={lang} />)}
         </ol>

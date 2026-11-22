@@ -11,7 +11,7 @@
  *   inventors: '邬荣领, 董昂, ……',
  *   lab: ['邬荣领', '董昂'],
  *   number: 'CN 1xxxxxxxx B',
- *   status: 'granted',          // 'granted' 授权 | 'published' 已公开
+ *   status: 'granted',          // 'granted' 授权 | 'published' 已公开 | 'filed' 已受理
  *   core: true,
  * },
  */
@@ -21,7 +21,7 @@ export type Patent = {
   inventors: string
   lab?: string[]
   number?: string
-  status: 'granted' | 'published'
+  status: 'granted' | 'published' | 'filed'
   core?: boolean
   url?: string
   /** e.g. （与北医三院合作） */
@@ -29,6 +29,37 @@ export type Patent = {
 }
 
 export const patents: Patent[] = [
+  // From the lab's 2026 achievement report (董昂).
+  {
+    year: 2026, core: true,
+    title: '面向个体遗传学的等位基因特异性表达分析方法及装置、计算机程序产品',
+    inventors: '邬荣领, 董昂, 边洋洋, 孙丽丹, 丘成桐',
+    lab: ['邬荣领', '董昂', '丘成桐'],
+    number: 'CN122050491A',
+    status: 'published',
+  },
+  {
+    year: 2026, core: true,
+    title: '动态复杂网络的拓扑结构分析方法、装置和存储介质',
+    inventors: '孟依晗, 董昂, 丘成栋, 丘成桐, 邬荣领',
+    lab: ['董昂', '丘成栋', '丘成桐', '邬荣领'],
+    number: '申请号 202610352312.1',
+    status: 'filed',
+  },
+  {
+    year: 2026, core: true,
+    title: '一种堆积发酵微生物功能聚类算法',
+    inventors: '董昂, 邬荣领, 吴双, 王玉, 龙飞',
+    lab: ['董昂', '邬荣领', '吴双', '王玉', '龙飞'],
+    status: 'filed',
+  },
+  {
+    year: 2026, core: true,
+    title: '一种堆积发酵微生物互作网络建立及核心微生物确定方法',
+    inventors: '董昂, 邬荣领, 龙飞, 吴杰, 张晓明',
+    lab: ['董昂', '邬荣领', '龙飞', '吴杰', '张晓明'],
+    status: 'filed',
+  },
   {
     year: 2026,
     title: "一种基于静态超声图像向超声视频迁移建模的甲状腺滤泡性肿瘤分层识别方法",
