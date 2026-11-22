@@ -686,3 +686,18 @@ a.mcard-link:hover h3 { color: var(--prussian); }
 .addresses-inline h3 { margin: 0 0 4px; font: 600 var(--t-sm)/1.5 var(--sans); }
 .addresses-inline p { margin: 0; color: var(--ink-2); }
 .about .section-title { margin-bottom: 20px; }
+
+.bib-tag-lab { background: var(--tint); color: var(--navy); border-color: transparent; }
+
+/* Talks list (events page) */
+.talk-year + .talk-year { margin-top: 28px; }
+.talks { list-style: none; margin: 0; padding: 0; }
+.talks li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 16px; padding: 12px 0; border-top: 1px solid var(--rule); }
+.talks time { color: var(--ink-2); font-size: var(--t-sm); padding-top: 2px; }
+.talks p { margin: 0; }
+.talk-title { font-weight: 500; }
+.talk-title a, .talk-venue a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+.talk-title a:hover { text-decoration-color: currentColor; }
+.talk-venue { color: var(--ink-2); font-size: var(--t-sm); margin-top: 2px !important; }
+.talks .bib-tag { margin-left: 0; margin-top: 6px; display: inline-block; }
+@media (max-width: 600px) { .talks li { grid-template-columns: 5.5em minmax(0, 1fr); gap: 10px; } }

@@ -4,6 +4,7 @@ import PageHeading from '../components/PageHeading.astro'
 import MediaCard from '../components/MediaCard.astro'
 import { events } from '../data/news'
 import { media } from '../data/media'
+import { talks } from '../data/talks'
 import { ui, t, type Lang } from '../i18n'
 
 interface Props {
@@ -13,6 +14,12 @@ const { lang } = Astro.props
 const zh = lang === 'zh'
 const sorted = [...events].sort((a, b) => b.date.localeCompare(a.date))
 const years = [...new Set(sorted.map((e) => e.date.slice(0, 4)))]
+const talkList = [...talks].sort((a, b) => b.date.localeCompare(a.date))
+const talkYears = [...new Set(talkList.map((x) => x.date.slice(0, 4)))]
+const fmt = (d: string) => {
+  const [y, m, day] = d.split('-')
+  return zh ? `${Number(m)} 月${day ? ` ${Number(day)} 日` : ''}` : new Date(`${y}-${m}-${day ?? '01'}`).toLocaleDateString('en-GB', day ? { day: 'numeric', month: 'short' } : { month: 'short' })
+}
 ---
 
 <Base lang={lang} path="/events/" title={t(ui.events, lang)} description={zh ? '实验室主办的学术会议、研讨会，以及成员在各大院校的学术交流与报告。' : 'Conferences and workshops organized by the laboratory, and talks by its members at other institutions.'}>
@@ -32,4 +39,30 @@ const years = [...new Set(sorted.map((e) => e.date.slice(0, 4)))]
       </div>
     </section>
   ))}
+  <section class={`section ${years.length % 2 ? 'section-tint' : 'section-white'}`} id="talks" aria-labelledby="h-talks">
+    <div class="wrap row">
+      <div class="main">
+        <h2 class="section-title" id="h-talks">{zh ? '邬荣领教授学术报告' : 'Talks by Rongling Wu'}</h2>
+        {talkYears.map((y) => (
+          <div class="talk-year">
+            <h3 class="year-head">{y}</h3>
+            <ol class="talks">
+              {talkList.filter((x) => x.date.startsWith(y)).map((x) => (
+                <li>
+                  <time datetime={x.date}>{fmt(x.date)}</time>
+                  <div>
+                    {x.title && <p class="talk-title">{x.href ? <a href={x.href} target="_blank" rel="noopener">{t(x.title, lang)}</a> : t(x.title, lang)}</p>}
+                    {x.venue && <p class={x.title ? 'talk-venue' : 'talk-title'}>{!x.title && x.href ? <a href={x.href} target="_blank" rel="noopener">{t(x.venue, lang)}</a> : t(x.venue, lang)}</p>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+      <aside class="note">
+        <p>{zh ? `实验室主任邬荣领教授 2022 年以来在高校、研究机构和学术会议所作的报告，共 ${talks.length} 场。带链接的条目可查看报道。` : `${talks.length} talks given by lab director Rongling Wu at universities, institutes and conferences since 2022. Linked entries open a report.`}</p>
+      </aside>
+    </div>
+  </section>
 </Base>
