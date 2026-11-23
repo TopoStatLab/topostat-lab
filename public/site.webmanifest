@@ -1,0 +1,11 @@
+{
+  "name": "复杂系统拓扑统计理论及应用北京市重点实验室",
+  "short_name": "拓扑统计实验室",
+  "icons": [
+    { "src": "/brand/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/brand/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#0b2545",
+  "background_color": "#ffffff",
+  "display": "browser"
+}
