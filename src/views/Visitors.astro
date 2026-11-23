@@ -1,45 +1,29 @@
 ---
 import Base from '../layouts/Base.astro'
-import PortraitCloud, { type CloudPerson } from '../components/PortraitCloud.astro'
+import PageHeading from '../components/PageHeading.astro'
 import { visiting } from '../data/visiting'
-import { ui, t, localizedPath, type Lang } from '../i18n'
+import { ui, t, type Lang } from '../i18n'
 
 interface Props {
   lang: Lang
 }
 const { lang } = Astro.props
 const zh = lang === 'zh'
-
-const people: CloudPerson[] = visiting.map((v) => ({
-  id: v.id,
-  name: v.name,
-  photo: v.photo,
-  status: zh ? '往届访问学者' : 'Past visiting scholar',
-  facts: [[zh ? '现在' : 'Now', v.note]],
-}))
+// The portrait wall (components/PortraitCloud.astro) is hidden for now at the
+// lab's request; it can come back once most scholars have photos.
 ---
 
 <Base lang={lang} path="/visitors/" title={t(ui.visitors, lang)} description={zh ? '曾在实验室访学的学者与学生，以及他们后来的去向。' : 'Past visiting scholars and students of the laboratory, and where they are now.'}>
-  <header class="page-head-compact">
-    <div class="wrap">
-      <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a> / {t(ui.visitors, lang)}</p>
-      <h1>{t(ui.visitors, lang)}</h1>
-      <p>{zh ? `曾在实验室访学的 ${visiting.length} 位学者与学生。点击头像查看他们现在的去向。` : `${visiting.length} scholars and students who have visited the laboratory. Click a portrait to see where they are now.`}</p>
-    </div>
-  </header>
+  <PageHeading lang={lang} title={t(ui.visitors, lang)} lead={zh ? `曾在实验室访学的 ${visiting.length} 位学者与学生，以及他们现在的去向。` : `${visiting.length} scholars and students who have visited the laboratory, and where they are now.`} />
 
-  <PortraitCloud people={people} lang={lang} label={zh ? '访问学者头像墙' : 'Portraits of past visiting scholars'} />
-
-  <section class="section" aria-labelledby="h-visiting" style="padding-top:clamp(40px,6vw,64px)">
+  <section class="section" aria-label={zh ? '往届访问学者' : 'Past visiting scholars'} style="padding-top:clamp(40px,6vw,64px);border-top:0">
     <div class="wrap">
-      <h2 class="section-title" id="h-visiting">{zh ? '往届访问学者' : 'Past visiting scholars'}<small class="muted" style="font-size:var(--t-sm);margin-left:12px">{visiting.length}</small></h2>
+      <h2 class="section-title">{zh ? '往届访问学者' : 'Past visiting scholars'}</h2>
       <ul class="visiting">
         {visiting.map((v) => (
           <li>
-            <button type="button" class="visiting-btn" data-open-person={v.id}>
-              <span class="visiting-name">{v.name}</span>
-              <span class="visiting-note">{v.note}</span>
-            </button>
+            <span class="visiting-name">{v.name}</span>
+            <span class="visiting-note">{v.note}</span>
           </li>
         ))}
       </ul>
