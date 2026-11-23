@@ -131,14 +131,17 @@ export const talks: Talk[] = [
   },
   { date: '2026-11', title: { zh: '图统计学专题报告', en: 'Graph statistics' }, venue: { zh: '中国科学院大学', en: 'University of Chinese Academy of Sciences' } },
   { date: '2026-11', title: same('A Topological Framework for Decoding Individualized Omnigenic Interactomes of Complex Traits') },
-  { date: '2026-11', title: { zh: '图医学', en: 'Graph medicine' } },
   {
     date: '2026-11-13', title: { zh: '图统计学', en: 'Graph statistics' },
     venue: { zh: '河套数学与交叉学科研究院（HIMIS）“生物医学中的数学智能”研讨会，深圳', en: 'HIMIS workshop “Mathematical Intelligence in Biomedicine”, Shenzhen' },
-    href: 'https://www.himis-sz.cn/huiyi_47/199.html',
+    href: '/news/himis-biomedicine-2026/',
   },
   { date: '2026-11', venue: { zh: '中国林业科学研究院', en: 'Chinese Academy of Forestry' } },
   { date: '2026-11', venue: { zh: '中华医生协会', en: 'Chinese physicians’ association meeting' } },
-  { date: '2026-11', venue: { zh: '南方医科大学', en: 'Southern Medical University' } },
+  {
+    date: '2026-11-12', title: { zh: '图医学：一个复杂疾病机制解析的新范式', en: 'Graph medicine: a new paradigm for understanding the mechanisms of complex disease' },
+    venue: { zh: '南方医科大学深圳医院，2026 年前海医学学术讲堂第七讲', en: 'Shenzhen Hospital of Southern Medical University, seventh Qianhai Medical Lecture' },
+    href: '/news/qianhai-lecture-2026/',
+  },
   { date: '2026-12', venue: { zh: '香港', en: 'Hong Kong' } },
 ]

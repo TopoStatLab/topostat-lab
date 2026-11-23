@@ -1,7 +1,7 @@
 ---
 /** A news or event card with a photo (or a tinted placeholder when there is none). */
 import { formatDate, formatRange, eventKinds, type NewsItem, type EventItem } from '../data/news'
-import { t, type Lang } from '../i18n'
+import { t, localizedPath, type Lang } from '../i18n'
 import Picture from './Picture.astro'
 
 interface Props {
@@ -19,9 +19,11 @@ const date = isEvent ? formatRange(item.date, (item as EventItem).until, lang) :
 const kind = label ?? (isEvent ? t(eventKinds[(item as EventItem).kind], lang) : item.research ? (zh ? '研究进展' : 'Research') : zh ? '新闻' : 'News')
 const tone = isEvent ? (item as EventItem).kind : item.research ? 'research' : 'news'
 const Tag = item.href ? 'a' : 'div'
+const internal = item.href?.startsWith('/')
+const linkProps = !item.href ? {} : internal ? { href: localizedPath(item.href, lang) } : { href: item.href, target: '_blank', rel: 'noopener' }
 ---
 <article class={`mcard${feature ? ' mcard-feature' : ''}`}>
-  <Tag class="mcard-link" href={item.href} target={item.href ? '_blank' : undefined} rel={item.href ? 'noopener' : undefined}>
+  <Tag class="mcard-link" {...linkProps}>
     <div class={`mcard-media tone-${tone}`}>
       {item.image ? (
         <Picture image={item.image} alt={item.image.alt[lang]} sizes={feature ? '(max-width: 980px) 100vw, 640px' : '(max-width: 600px) 100vw, (max-width: 980px) 50vw, 400px'} />
