@@ -17,7 +17,7 @@ const other = zh ? p.name.en : p.name.zh
 ---
 <li class="person" id={anchor ? p.id : undefined}>
   <Portrait person={p} lang={lang} eager={eager} />
-  <p class="person-name">{p.name[lang]}</p>
+  <p class="person-name">{p.homepage ? <a href={p.homepage} target="_blank" rel="noopener">{p.name[lang]}</a> : p.name[lang]}</p>
   <p class="person-meta">
     {showRole && p.role && <span class="person-role">{t(p.role, lang)}</span>}
     {p.title && <span>{t(p.title, lang)}</span>}
