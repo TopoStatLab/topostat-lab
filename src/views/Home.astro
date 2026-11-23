@@ -1,18 +1,13 @@
 ---
 import Base from '../layouts/Base.astro'
-import HeroCarousel, { type Slide } from '../components/HeroCarousel.astro'
+import Contours from '../components/Contours.astro'
 import Picture from '../components/Picture.astro'
-import MediaCard from '../components/MediaCard.astro'
-import BibItem from '../components/BibItem.astro'
-import Timeline from '../components/Timeline.astro'
 import Portrait from '../components/Portrait.astro'
-import { researchDirections, applications } from '../data/research'
-import { publications, sortedPublications, paperUrl } from '../data/publications'
-import { news, events } from '../data/news'
-import { director, deputies, committeeChair, committeeMembers, members } from '../data/people'
+import { researchDirections } from '../data/research'
+import { sortedPublications, paperUrl } from '../data/publications'
+import { news, events, formatDate, formatRange, type NewsItem, type EventItem } from '../data/news'
+import { director, deputies, committeeChair, members } from '../data/people'
 import { media } from '../data/media'
-import papersAll from '../data/papers-all.json'
-import { formatDate, formatRange } from '../data/news'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -22,172 +17,150 @@ interface Props {
 const { lang } = Astro.props
 const L = (p: string) => localizedPath(p, lang)
 const zh = lang === 'zh'
-const fmt = (d: string, u?: string) => (u ? formatRange(d, u, lang) : formatDate(d, lang))
-const find = (zhTitle: string) => [...news, ...events].find((x) => x.title.zh.includes(zhTitle))!
-const slideFrom = (item: ReturnType<typeof find>, kicker: string, summary?: string): Slide => ({
-  image: item.image!,
-  kicker: `${kicker}${zh ? '　' : ' · '}${fmt(item.date, 'until' in item ? item.until : undefined)}`,
-  title: t(item.title, lang),
-  summary,
-  href: item.href,
-  external: true,
-})
-const slides: Slide[] = [
-  slideFrom(find('魅丽数学'), zh ? '学术活动' : 'Event'),
-  slideFrom(find('长城工程科技会议'), zh ? '学术活动' : 'Event'),
-  slideFrom(find('Yau–Yau'), zh ? '研究进展' : 'Research', zh ? '将 Yau–Yau 非线性滤波与随机网络理论结合，从高噪声数据中重建复杂系统的内在互作机制。' : 'Combining the Yau–Yau nonlinear filter with stochastic network theory to recover interaction mechanisms from noisy data.'),
-  slideFrom(find('东亚代数拓扑'), zh ? '学术活动' : 'Event'),
-  slideFrom(find('正式挂牌成立'), zh ? '实验室新闻' : 'Lab news', zh ? '依托北京雁栖湖应用数学研究院建设，与中国人民大学数学学院联合共建。' : 'Hosted by BIMSA and co-built with the School of Mathematics, Renmin University of China.'),
-]
-const latest = [...news, ...events.filter((e) => e.report || e.image)].sort((a, b) => b.date.localeCompare(a.date))
-const feature = latest.find((x) => x.image)!
-const restNews = latest.filter((x) => x !== feature).slice(0, 4)
-const upcoming = events.slice(0, 6)
-const art = [
-  'M10 90 Q40 10 90 60 T170 40 M20 150 Q70 90 120 140 T190 120',
-  'M100 100 m-70 0 a70 70 0 1 0 140 0 a70 70 0 1 0 -140 0 M100 100 m-40 0 a40 40 0 1 0 80 0 a40 40 0 1 0 -80 0',
-  'M20 170 L70 60 L120 140 L170 30 M70 60 L170 30 M20 170 L120 140',
+/** Internal links stay in the site (and its language); others open a new tab. */
+const go = (h?: string) => (!h ? {} : h.startsWith('/') ? { href: L(h) } : { href: h, target: '_blank', rel: 'noopener' })
+const when = (x: NewsItem | EventItem) => ('until' in x && x.until ? formatRange(x.date, x.until, lang) : formatDate(x.date, lang))
+
+const latest = [...news, ...events.filter((e) => e.report)].sort((a, b) => b.date.localeCompare(a.date))
+const lead = latest.find((x) => x.image)!
+const headlines = latest.slice(0, 6)
+const recentEvents = events.slice(0, 6)
+const papers = sortedPublications.slice(0, 3)
+const leaders = [committeeChair, director, ...deputies]
+const marks = [
+  '<g stroke="currentColor" stroke-width="1" fill="none"><path d="M30 90 90 40 150 80 210 30 270 85 150 80 90 40"/></g><g fill="currentColor"><circle cx="30" cy="90" r="3.5"/><circle cx="90" cy="40" r="3.5"/><circle cx="210" cy="30" r="3.5"/><circle cx="270" cy="85" r="3.5"/></g><circle cx="150" cy="80" r="6" fill="var(--red)"/>',
+  '<g fill="none" stroke="currentColor" stroke-width="1">' + [0, 1, 2, 3, 4, 5].map((k) => `<ellipse cx="150" cy="60" rx="${120 - k * 16}" ry="${48 - k * 6.5}" stroke-opacity="${(0.25 + k * 0.12).toFixed(2)}"/>`).join('') + '</g><ellipse cx="150" cy="60" rx="40" ry="14" fill="none" stroke="var(--red)" stroke-width="1.6"/>',
+  '<g fill="none" stroke="currentColor" stroke-width="1"><path d="M150 12 250 104 50 104Z M150 12 170 74 50 104 M170 74 250 104"/></g><path d="M150 12 250 104 170 74Z" fill="var(--red)" fill-opacity=".85"/>',
 ]
 const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComponent(q)}&city=110000`
 ---
 
 <Base lang={lang} path="/">
-  <HeroCarousel slides={slides} lang={lang} />
-
-  <section class="band" aria-labelledby="h-intro">
-    <div class="wrap band-grid">
+  <section class="e-hero" aria-labelledby="h-site">
+    <Contours seed={1} variant="hero" />
+    <div class="wrap e-hero-grid">
+      <p class="e-seal" aria-hidden="true"><i>{zh ? '拓扑' : 'Topo'}<br />{zh ? '统计' : 'Stat'}</i><span>{zh ? '雁栖湖畔' : 'Yanqi Lake'}</span></p>
       <div>
-        <h2 id="h-intro">{zh ? '复杂系统拓扑统计理论及应用北京市重点实验室' : 'Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems'}</h2>
-        <p>{zh ? '依托北京雁栖湖应用数学研究院（BIMSA）建设，与中国人民大学数学学院联合共建。实验室把拓扑学引入统计推断，研究网络、流形与高阶互作中的“形状”，并把它用于生物医学、人工智能与真实世界的复杂系统。' : 'Hosted by BIMSA and co-built with Renmin University of China. We bring topology into statistical inference — the shape of networks, manifolds and higher-order interactions — and apply it to biomedicine, AI and real-world complex systems.'}</p>
-        <a class="btn-light" href={L('/about/')}>{zh ? '了解实验室' : 'About the lab'}</a>
-      </div>
-      <div class="stats">
-        <div><b>2025</b><span>{zh ? '挂牌成立' : 'Established'}</span></div>
-        <div><b>{members.length + 2}</b><span>{zh ? '研究人员与学生' : 'Researchers and students'}</span></div>
-        <div><b>{sortedPublications.length}</b><span>{zh ? '署名实验室论文' : 'Papers acknowledging the lab'}</span></div>
-        <div><b>{events.length}</b><span>{zh ? '学术活动' : 'Academic events'}</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-white" id="news" aria-labelledby="h-news">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 class="section-title" id="h-news">{zh ? '科研动态' : 'News'}</h2>
-        <a href={L('/news/')}>{zh ? '全部新闻' : 'All news'}</a>
-      </div>
-      <div class="mgrid mgrid-news">
-        <MediaCard item={feature} lang={lang} feature />
-        {restNews.map((x) => <MediaCard item={x} lang={lang} />)}
+        {zh ? (
+          <h1 id="h-site" class="e-title">复杂系统拓扑统计<br />理论及应用<br />北京市重点实验室</h1>
+        ) : (
+          <h1 id="h-site" class="e-title e-title-en">Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems</h1>
+        )}
+        <p class="e-sub">{zh ? ui.siteName.en : ui.siteName.zh}</p>
+        <p class="e-lead">{zh ? '依托北京雁栖湖应用数学研究院（BIMSA）建设，与中国人民大学数学学院联合共建。实验室把拓扑学引入统计推断，研究网络、流形与高阶互作中的“形状”，并把它用于生物医学、人工智能与真实世界的复杂系统。' : 'Hosted by the Beijing Institute of Mathematical Sciences and Applications (BIMSA) and co-built with the School of Mathematics, Renmin University of China. We bring topology into statistical inference, studying the shape of networks, manifolds and higher-order interactions, and apply it to biomedicine, AI and real-world complex systems.'}</p>
+        <div class="e-cta"><a class="btn" href={L('/about/')}>{zh ? '了解实验室' : 'About the lab'}</a><a class="e-textlink" href={L('/research/')}>{zh ? '研究方向' : 'Research'}</a></div>
       </div>
     </div>
   </section>
 
-  <section class="section section-tint" id="research" aria-labelledby="h-research">
+  <div class="e-facts">
     <div class="wrap">
-      <div class="sec-head">
-        <h2 class="section-title" id="h-research">{zh ? '研究方向' : 'Research'}</h2>
-        <a href={L('/research/')}>{zh ? '查看研究方向' : 'Research directions'}</a>
+      <div><b>2025</b><span>{zh ? '挂牌成立' : 'Established'}</span></div>
+      <div><b>{members.length + 2}</b><span>{zh ? '研究人员与学生' : 'Researchers and students'}</span></div>
+      <div><b>{sortedPublications.length}</b><span>{zh ? '署名实验室论文' : 'Papers acknowledging the lab'}</span></div>
+      <div><b>{events.length}</b><span>{zh ? '学术活动' : 'Academic events'}</span></div>
+    </div>
+  </div>
+
+  <section class="wrap vsec" aria-labelledby="h-news">
+    <h2 class="vlabel" id="h-news">{zh ? '科研动态' : 'News'}<small>{zh ? 'News' : ''}</small></h2>
+    <div>
+      <div class="e-news">
+        <a class="e-figure" {...go(lead.href)}>
+          <Picture image={lead.image!} alt={lead.image!.alt[lang]} sizes="(max-width: 960px) 100vw, 560px" />
+          <span class="e-figcap">{t(lead.title, lang)}</span>
+        </a>
+        <ul class="e-list">
+          {headlines.map((x) => (
+            <li>
+              <a {...go(x.href)}>
+                <time class="e-date" datetime={x.date}>{when(x)}</time>
+                <h3>{t(x.title, lang)}</h3>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div class="dir-grid">
-        {researchDirections.map((d, i) => (
-          <a class="dir-tile" href={L(`/research/#${d.id}`)}>
-            <svg class="dir-art" viewBox="0 0 200 200" aria-hidden="true"><path d={art[i % art.length]} fill="none" stroke="#fff" stroke-width="2" /></svg>
-            <span class="dir-no">{zh ? `方向 ${i + 1}` : `Direction ${i + 1}`}</span>
-            <h3>{t(d.title, lang)}</h3>
-            <p>{t(d.body, lang)}</p>
-            <span class="dir-more">{zh ? '了解更多' : 'Learn more'}</span>
-          </a>
+      <a class="e-more" href={L('/news/')}>{zh ? '全部新闻' : 'All news'}</a>
+    </div>
+  </section>
+
+  <section class="wrap vsec" aria-labelledby="h-events">
+    <h2 class="vlabel" id="h-events">{zh ? '学术活动' : 'Events'}<small>{zh ? 'Events' : ''}</small></h2>
+    <div>
+      <ul class="e-events">
+        {recentEvents.map((e) => (
+          <li>
+            <time class="e-date" datetime={e.date}>{when(e)}</time>
+            <div>
+              <h3>{e.href ? <a {...go(e.href)}>{t(e.title, lang)}</a> : t(e.title, lang)}</h3>
+              <p>{t(e.place, lang)}</p>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
+      <a class="e-more" href={L('/events/')}>{zh ? '全部学术活动与报告' : 'All events and talks'}</a>
     </div>
   </section>
 
-  <section class="section section-white" id="events" aria-labelledby="h-events">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 class="section-title" id="h-events">{zh ? '学术活动' : 'Events'}</h2>
-        <a href={L('/events/')}>{zh ? '全部学术活动' : 'All events'}</a>
-      </div>
-      <div class="mgrid">
-        {upcoming.map((e) => <MediaCard item={e} lang={lang} />)}
-      </div>
+  <section class="wrap vsec" aria-labelledby="h-research">
+    <h2 class="vlabel" id="h-research">{zh ? '研究方向' : 'Research'}<small>{zh ? 'Research' : ''}</small></h2>
+    <div class="e-dirs">
+      {researchDirections.map((d, i) => (
+        <a class="e-dir" href={L(`/research/#${d.id}`)}>
+          <svg viewBox="0 0 300 120" aria-hidden="true" set:html={marks[i % marks.length]} />
+          <h3>{t(d.title, lang)}</h3>
+          <p>{t(d.body, lang)}</p>
+        </a>
+      ))}
     </div>
   </section>
 
-  <section class="section section-tint" id="publications" aria-labelledby="h-pubs">
-    <div class="wrap feature">
-      <figure class="feature-img">
-        <Picture image={media.yauyau} alt={media.yauyau.alt[lang]} sizes="(max-width: 860px) 100vw, 640px" />
-        <figcaption>{zh ? '图片：' : 'Image: '}{media.yauyau.credit[lang]}</figcaption>
-      </figure>
-      <div>
-        <h2 id="h-pubs">{zh ? '科技成果' : 'Research output'}</h2>
-        <p>{zh ? `署名本实验室的论文 ${sortedPublications.length} 篇，发表于 PNAS、Nature Communications、The Innovation、Advanced Science 等期刊；实验室成员 2025 年以来的论文与著作共 ${papersAll.length} 篇。` : `${sortedPublications.length} papers acknowledge the laboratory, in journals including PNAS, Nature Communications, The Innovation and Advanced Science; lab members have published ${papersAll.length} papers and books since 2025.`}</p>
-        <ol class="bib bib-compact">
-          {sortedPublications.slice(0, 3).map((paper) => <BibItem paper={paper} lang={lang} />)}
-        </ol>
-        <p><a class="link" href={L('/publications/')}>{zh ? '全部论文与专利' : 'All papers and patents'}</a></p>
-      </div>
+  <section class="wrap vsec" aria-labelledby="h-pubs">
+    <h2 class="vlabel" id="h-pubs">{zh ? '署名论文' : 'Papers'}<small>{zh ? 'Papers' : ''}</small></h2>
+    <div>
+      <ul class="e-pubs">
+        {papers.map((p) => (
+          <li>
+            <div>
+              <h3>{paperUrl(p) ? <a href={paperUrl(p)} target="_blank" rel="noopener">{p.title}</a> : p.title}</h3>
+              {p.authors && <p>{p.authors}</p>}
+            </div>
+            <p class="e-journal"><b>{p.year}</b>{p.journal}</p>
+          </li>
+        ))}
+      </ul>
+      <a class="e-more" href={L('/publications/')}>{zh ? `全部 ${sortedPublications.length} 篇署名论文与专利` : `All ${sortedPublications.length} papers and patents`}</a>
     </div>
   </section>
 
-  <section class="section section-white" id="people" aria-labelledby="h-people">
-    <div class="wrap row">
-      <div class="main">
-        <h2 class="section-title" id="h-people">{zh ? '组织架构' : 'People'}</h2>
-      </div>
-      <aside class="note">
-        <p>{zh ? `学术委员会由丘成桐先生担任主任，共 ${committeeMembers.length + 1} 位委员。` : `The Academic Committee, chaired by Shing-Tung Yau, has ${committeeMembers.length + 1} members.`}</p>
-        <a href={L('/about/#organization')}>{zh ? '组织架构与学术委员会' : 'Organization and committee'}</a>
-      </aside>
-    </div>
-    <div class="wrap">
-      <ul class="people">
-        {[committeeChair, director, ...deputies].map((p) => (
-          <li class="person">
+  <section class="wrap vsec" aria-labelledby="h-people">
+    <h2 class="vlabel" id="h-people">{zh ? '学术带头人' : 'People'}<small>{zh ? 'People' : ''}</small></h2>
+    <div>
+      <ul class="e-people">
+        {leaders.map((p) => (
+          <li>
             <a href={L(`/about/#${p.id}`)}>
               <Portrait person={p} lang={lang} />
-              <p class="person-name">{p.name[lang]}</p>
-              {p.role && <p class="person-meta">{t(p.role, lang)}</p>}
+              <h3>{p.name[lang]}</h3>
+              {p.role && <p class="e-role">{t(p.role, lang)}</p>}
+              {p.title && <p>{t(p.title, lang)}</p>}
             </a>
           </li>
         ))}
       </ul>
+      <a class="e-more" href={L('/about/#organization')}>{zh ? '组织架构与学术委员会' : 'Organization and committee'}</a>
     </div>
   </section>
 
-  <section class="section section-tint" id="about" aria-labelledby="h-about">
-    <div class="wrap feature feature-reverse">
-      <figure class="feature-img">
-        <Picture image={media.campusMountain} alt={media.campusMountain.alt[lang]} sizes="(max-width: 860px) 100vw, 640px" />
-        <figcaption>{zh ? '图片：' : 'Photo: '}{media.campusMountain.credit[lang]}</figcaption>
-      </figure>
-      <div class="about">
-        <h2 class="section-title" id="h-about">{zh ? '关于实验室' : 'About'}</h2>
-        {zh ? (
-          <>
-            <p>复杂系统拓扑统计理论及应用北京市重点实验室依托北京雁栖湖应用数学研究院建设，与中国人民大学数学学院联合共建，于 2025 年挂牌成立。</p>
-            <p>实验室聚焦应用数学中的拓扑统计方向，推动统计学与拓扑学、统计物理、图论、进化博弈论交叉融合，建设从理论方法、计算软件到跨领域应用的完整研究链条。</p>
-          </>
-        ) : (
-          <>
-            <p>The Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems is hosted by BIMSA and co-built with the School of Mathematics at Renmin University of China. It was established in 2025.</p>
-            <p>The laboratory brings statistics together with topology, statistical physics, graph theory and evolutionary game theory, building a chain from theory and methods to software and cross-disciplinary applications.</p>
-          </>
-        )}
-        <p><a class="link" href="https://kw.beijing.gov.cn/xwdt/kcyx/xwdtscyqld/202502/t20250214_4010193.html" target="_blank" rel="noopener">{zh ? '北京市科委成立公告' : 'Establishment announcement (in Chinese)'}</a></p>
-        <div class="addresses addresses-inline">
-        {site.contact.locations.map((loc) => (
-          <div>
-            <h3>{t(loc.name, lang)}</h3>
-            <p>{t(loc.address, lang)}</p>
-            <a href={amap(loc.mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)}</a>
-          </div>
-        ))}
-        {site.contact.email && <div><h3>{t(ui.email, lang)}</h3><p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p></div>}
-        </div>
-      </div>
+  <section class="e-about" aria-labelledby="h-about">
+    <Picture image={media.campusMountain} alt={media.campusMountain.alt[lang]} sizes="100vw" />
+    <div class="e-about-card">
+      <h2 id="h-about">{zh ? '关于实验室' : 'About the laboratory'}</h2>
+      <p>{zh ? '2025 年挂牌成立，依托北京雁栖湖应用数学研究院建设，与中国人民大学数学学院联合共建。' : 'Established in 2025, hosted by BIMSA and co-built with the School of Mathematics, Renmin University of China.'}</p>
+      {site.contact.locations.map((loc) => (
+        <p class="e-addr"><b>{t(loc.name, lang)}</b>{t(loc.address, lang)}　<a href={amap(loc.mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)}</a></p>
+      ))}
     </div>
   </section>
 </Base>

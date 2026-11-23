@@ -98,14 +98,14 @@ const datasets = [
       const Y = (p: Point) => p.y * s
 
       // ε/2 balls
-      ctx.fillStyle = 'rgba(77, 184, 214, 0.13)'
+      ctx.fillStyle = 'rgba(184, 50, 42, 0.07)'
       for (const p of points) {
         ctx.beginPath()
         ctx.arc(X(p), Y(p), (eps / 2) * s, 0, Math.PI * 2)
         ctx.fill()
       }
       // triangles
-      ctx.fillStyle = 'rgba(23, 64, 122, 0.12)'
+      ctx.fillStyle = 'rgba(184, 50, 42, 0.14)'
       for (const tri of result.triangles) {
         if (tri.value > eps) break
         const a = points[tri.a], b = points[tri.b], c = points[tri.c]
@@ -117,7 +117,7 @@ const datasets = [
         ctx.fill()
       }
       // edges
-      ctx.strokeStyle = 'rgba(23, 64, 122, 0.55)'
+      ctx.strokeStyle = 'rgba(29, 29, 27, 0.5)'
       ctx.lineWidth = 1
       ctx.beginPath()
       for (const e of result.edges) {
@@ -127,14 +127,14 @@ const datasets = [
       }
       ctx.stroke()
       // vertices
-      ctx.fillStyle = '#0f1e2e'
+      ctx.fillStyle = '#1d1d1b'
       for (const p of points) {
         ctx.beginPath()
         ctx.arc(X(p), Y(p), 3.2, 0, Math.PI * 2)
         ctx.fill()
       }
       if (!points.length) {
-        ctx.fillStyle = '#4a5b6b'
+        ctx.fillStyle = '#57564f'
         ctx.font = '14px Inter Variable, system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillText(zh ? '点击这里画出你的点云' : 'Click here to draw a point cloud', s / 2, s / 2)
@@ -156,7 +156,7 @@ const datasets = [
       const row1 = Math.min(10, (h1Area - 10) / Math.max(h1.length, 1))
 
       const drawBars = (bars: typeof h0, top: number, row: number, color: string, label: string) => {
-        ctx.fillStyle = '#4a5b6b'
+        ctx.fillStyle = '#57564f'
         ctx.font = '11px Inter Variable, system-ui, sans-serif'
         ctx.textAlign = 'left'
         ctx.fillText(label, 4, top + 10)
@@ -176,28 +176,28 @@ const datasets = [
           }
         })
       }
-      drawBars(h0, PAD.t, row0, '#17407a', 'H₀')
+      drawBars(h0, PAD.t, row0, '#1d1d1b', 'H₀')
       if (h1.length) {
         const top = PAD.t + h0Area + 10
-        ctx.strokeStyle = 'rgba(18, 70, 96, 0.13)'
+        ctx.strokeStyle = 'rgba(29, 29, 27, 0.1)'
         ctx.beginPath()
         ctx.moveTo(PAD.l, top - 5)
         ctx.lineTo(PAD.l + plotW, top - 5)
         ctx.stroke()
-        drawBars(h1, top, row1, '#c98a1e', 'H₁')
+        drawBars(h1, top, row1, '#b8322a', 'H₁')
       }
 
       // axis
-      ctx.strokeStyle = 'rgba(18, 70, 96, 0.25)'
+      ctx.strokeStyle = 'rgba(29, 29, 27, 0.22)'
       ctx.beginPath()
       ctx.moveTo(PAD.l, h - PAD.b + 4)
       ctx.lineTo(PAD.l + plotW, h - PAD.b + 4)
       ctx.stroke()
-      ctx.fillStyle = '#4a5b6b'
+      ctx.fillStyle = '#57564f'
       ctx.textAlign = 'center'
       for (let v = 0; v <= MAX_EPS + 1e-9; v += 0.1) ctx.fillText(v.toFixed(1), x(v), h - 6)
       // current ε
-      ctx.strokeStyle = '#0f1e2e'
+      ctx.strokeStyle = '#1d1d1b'
       ctx.setLineDash([4, 3])
       ctx.beginPath()
       ctx.moveTo(x(eps), PAD.t - 4)

@@ -30,6 +30,12 @@ export const media = {
   greatwallHall: m('greatwall-hall', { zh: '长城工程科技会议专题会会场', en: 'Great Wall Engineering Forum session' }, { zh: '清华大学', en: 'Tsinghua University' }),
   hebtuHall: m('hebtu-hall', { zh: '东亚代数拓扑会议会场', en: 'East Asian Conference on Algebraic Topology' }, { zh: '河北师范大学', en: 'Hebei Normal University' }),
   tjuHall: m('tju-hall', { zh: '2025 代谢药学学术大会会场', en: '2025 Metabolic Pharmacy Conference' }, { zh: '天津大学', en: 'Tianjin University' }),
+  himisGroup: m('himis-group', { zh: '“生物医学中的数学智能”研讨会与会人员合影', en: 'Participants of the workshop on Mathematical Intelligence in Biomedicine' }, { zh: '实验室', en: 'The laboratory' }),
+  himisWu: m('himis-wu', { zh: '邬荣领在研讨会上作学术报告', en: 'Rongling Wu speaking at the workshop' }, { zh: '实验室', en: 'The laboratory' }),
+  qianhaiPoster: m('qianhai-poster', { zh: '2026 年前海医学学术讲堂第七讲海报', en: 'Poster of the seventh Qianhai Medical Lecture, 2026' }, { zh: '南方医科大学深圳医院', en: 'Shenzhen Hospital of Southern Medical University' }),
+  qianhaiWu: m('qianhai-wu', { zh: '邬荣领在前海医学学术讲堂作报告', en: 'Rongling Wu speaking at the Qianhai Medical Lecture' }, { zh: '实验室', en: 'The laboratory' }),
+  hamburgMpsd: m('hamburg-mpsd', { zh: 'BIMSA 青年科研人员在马克斯·普朗克物质结构与动力学研究所', en: 'BIMSA early-career researchers at the Max Planck Institute for the Structure and Dynamics of Matter' }, { zh: '实验室', en: 'The laboratory' }),
+  hamburgDong: m('hamburg-dong', { zh: '董昂在研讨会上作学术报告', en: 'Ang Dong speaking at the symposium' }, { zh: '实验室', en: 'The laboratory' }),
   tsimf: m('tsimf', { zh: '活动举办地：清华三亚国际数学论坛', en: 'Venue: Tsinghua Sanya International Mathematics Forum' }, { zh: '清华三亚国际数学论坛', en: 'TSIMF' }),
   mlstatWhu: m('mlstat-whu', { zh: 'MLSTAT 2025 举办地武汉大学', en: 'Wuhan University, host of MLSTAT 2025' }, { zh: 'MLSTAT 2025', en: 'MLSTAT 2025' }),
 } satisfies Record<string, Media>

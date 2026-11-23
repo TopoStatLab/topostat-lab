@@ -32,6 +32,21 @@ export type EventItem = NewsItem & {
 }
 
 export const news: NewsItem[] = [
+  // Lab news releases (2026-11-23), published as articles on this site.
+  {
+    date: '2026-11-12',
+    title: { zh: '前海医学学术讲堂第七讲聚焦图医学与肠道微生态', en: 'Seventh Qianhai Medical Lecture on graph medicine and the gut microbiome' },
+    summary: { zh: '邬荣领以《图医学：一个复杂疾病机制解析的新范式》为题作专题报告。', en: 'Rongling Wu spoke on graph medicine as a new paradigm for understanding complex disease.' },
+    href: '/news/qianhai-lecture-2026/',
+    image: media.qianhaiWu,
+  },
+  {
+    date: '2026-11-03',
+    title: { zh: 'BIMSA青年科研人员赴德国汉堡参加怀柔—巴伦费尔德科学城学术研讨会', en: 'BIMSA early-career researchers join the Huairou–Bahrenfeld Science City symposium in Hamburg' },
+    summary: { zh: '董昂作《Graph Statistics》报告，介绍图统计学中的可解释网络建模理论与算法。', en: 'Ang Dong presented interpretable network modelling from graph statistics.' },
+    href: '/news/huairou-bahrenfeld-2026/',
+    image: media.hamburgMpsd,
+  },
   {
     date: '2026-01-21',
     title: {
@@ -83,8 +98,10 @@ export const events: EventItem[] = [
     date: '2026-11-13', kind: 'workshop',
     title: { zh: '生物医学中的数学智能', en: 'Mathematical Intelligence in Biomedicine' },
     place: { zh: '深圳，河套数学与交叉学科研究院', en: 'Hetao Institute of Mathematics and Interdisciplinary Sciences, Shenzhen' },
-    people: { zh: '邬荣领共同组织并作报告；康家熠、车金灿等报告', en: 'Co-organized by Rongling Wu, who also spoke; talks by Jiayi Kang, Jincan Che and others' },
-    href: 'https://www.himis-sz.cn/huiyi_47/199.html',
+    people: { zh: '康家熠、车金灿、邬荣领组织，邬荣领作图统计学报告', en: 'Organized by Jiayi Kang, Jincan Che and Rongling Wu, who spoke on graph statistics' },
+    report: true,
+    href: '/news/himis-biomedicine-2026/',
+    image: media.himisGroup,
   },
   {
     date: '2026-09-18', until: '2026-09-20', kind: 'workshop',
