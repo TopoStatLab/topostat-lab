@@ -956,3 +956,5 @@ html[lang='en'] .article p { text-align: left; line-height: 1.85; }
 
 /* People photos are always shown in full colour. */
 .portrait img, .e-people .portrait img, .bubble-face img, .alumni-face img, .cloud-card-face img, .person img { filter: none !important; }
+/* Event and news photos (often group photos) also stay in full colour. */
+.e-figure img, .mcard-media img, .article figure img { filter: none !important; }
