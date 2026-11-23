@@ -22,12 +22,8 @@ const year = new Date().getFullYear()
       </div>
     </div>
     <div>
-      {site.contact.locations.map((loc, i) => (
-        <p style={i ? 'margin-top:16px' : undefined}>
-          <span style="color:#fff">{i === 0 ? t(ui.labAddress, lang) : t(loc.name, lang)}</span><br />
-          {t(loc.address, lang)}
-        </p>
-      ))}
+      <p><span style="color:#fff">{t(ui.labAddress, lang)}</span><br />{t(site.contact.locations[0].address, lang)}</p>
+      <p style="margin-top:16px"><span style="color:#fff">{zh ? '依托单位' : 'Host institution'}</span><br /><a href={site.hostInstitution.url} target="_blank" rel="noopener">{zh ? '北京雁栖湖应用数学研究院（BIMSA）' : site.hostInstitution.en}</a></p>
       {site.contact.email && (
         <p style="margin-top:16px"><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
       )}
@@ -43,8 +39,8 @@ const year = new Date().getFullYear()
         <a href={L('/visitors/')}>{t(ui.visitors, lang)}</a><br />
         <a href={L('/contact/')}>{t(ui.contact, lang)}</a>
       </p>
-      <h2 style="margin-top:20px">{zh ? '相关机构' : 'Institutions'}</h2>
-      <p><a href={site.hostInstitution.url} target="_blank" rel="noopener">{zh ? site.hostInstitution.zh : 'BIMSA'}</a><br />{site.partnerInstitution[lang]}</p>
+      <h2 style="margin-top:20px">{zh ? '共建单位' : 'Co-building partner'}</h2>
+      <p>{site.partnerInstitution[lang]}</p>
     </div>
   </div>
   <div class="wrap footer-bottom">

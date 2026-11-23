@@ -25,8 +25,8 @@ const fullTitle = title ? `${title} | ${siteName}` : siteName
 const desc =
   description ??
   (lang === 'zh'
-    ? '复杂系统拓扑统计理论及应用北京市重点实验室依托北京雁栖湖应用数学研究院（BIMSA）建设，与中国人民大学数学学院联合共建，聚焦拓扑统计、复杂网络与高阶互作的理论、方法与应用。'
-    : 'The Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems, hosted by BIMSA and co-built with Renmin University of China, studies the theory, methods and applications of topological statistics, complex networks and higher-order interactions.')
+    ? '复杂系统拓扑统计理论及应用北京市重点实验室依托北京雁栖湖应用数学研究院（BIMSA）建设，聚焦拓扑统计、复杂网络与高阶互作的理论、方法与应用。'
+    : 'The Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems, hosted by the Beijing Institute of Mathematical Sciences and Applications (BIMSA), studies the theory, methods and applications of topological statistics, complex networks and higher-order interactions.')
 
 const canonical = new URL(localizedPath(path, lang), site.url).href
 const alternates = {
