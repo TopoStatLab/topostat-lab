@@ -953,3 +953,6 @@ html[lang='en'] .article p { text-align: left; line-height: 1.85; }
 .article-related a { text-decoration: none; font: 600 var(--t-sm)/1.6 var(--serif); }
 .article-related a:hover { color: var(--red); }
 @media (max-width: 960px) { .vsec > p.vlabel { display: none; } }
+
+/* People photos are always shown in full colour. */
+.portrait img, .e-people .portrait img, .bubble-face img, .alumni-face img, .cloud-card-face img, .person img { filter: none !important; }
