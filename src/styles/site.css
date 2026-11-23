@@ -970,3 +970,11 @@ html[lang='en'] .e-chair h3 { letter-spacing: .02em; font-family: 'STIX Two Text
   .e-chair { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .e-chair .portrait { max-width: 260px; }
 }
+
+/* BIMSA as host: hero line and host card */
+.e-host { display: inline-flex; align-items: baseline; gap: 12px; margin-bottom: 26px; padding-bottom: 8px; border-bottom: 1px solid var(--ink); text-decoration: none; font: 400 var(--t-md)/1.4 var(--serif); letter-spacing: .12em; color: var(--ink); }
+.e-host b { font: 700 1.35rem/1 'STIX Two Text', serif; letter-spacing: .06em; color: var(--red); }
+.e-host:hover { color: var(--red); border-color: var(--red); }
+html[lang='en'] .e-host { letter-spacing: .02em; }
+.e-about-card h2 span { display: block; font: 700 1.2rem/1.4 'STIX Two Text', serif; letter-spacing: .08em; color: var(--red); }
+.e-partner { margin-top: 14px !important; padding-top: 10px; border-top: 1px solid var(--rule); font-size: var(--t-xs) !important; color: var(--ink-3) !important; }

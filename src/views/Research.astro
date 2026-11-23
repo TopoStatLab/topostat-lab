@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
-import PersistenceDemo from '../components/PersistenceDemo.astro'
 import { researchDirections, applications } from '../data/research'
 import { sortedPublications, paperUrl } from '../data/publications'
 import { ui, t, localizedPath, type Lang } from '../i18n'
@@ -51,25 +50,6 @@ const zh = lang === 'zh'
         </div>
       )
     })}
-  </section>
-
-  <section class="section" id="demo" aria-labelledby="h-demo">
-    <div class="wrap row">
-      <div class="main">
-        <h2 class="section-title" id="h-demo">{zh ? '持续同调：自己动手' : 'Persistent homology, hands on'}</h2>
-        <p class="section-lead">
-          {zh
-            ? '以每个点为圆心画半径 ε/2 的圆，相交即连边，三点两两相连即填成三角形。拖动 ε，看连通分支如何合并、环如何出现又被填满。也可以清空画布，画出你自己的数据。'
-            : 'Grow a ball of radius ε/2 around each point; connect points whose balls meet and fill in triangles. Drag ε to watch components merge and loops appear and fill in — or clear the canvas and draw your own data.'}
-        </p>
-      </div>
-      <aside class="note">
-        <p>{zh ? '噪声只产生短暂的特征，真实结构会在很宽的尺度范围内持续存在。拓扑统计把这种“形状”变成可以检验、可以推断的统计量。' : 'Noise produces only short-lived features; real structure persists across scales. Topological statistics turns that shape into quantities we can test and infer.'}</p>
-      </aside>
-    </div>
-    <div class="wrap">
-      <PersistenceDemo lang={lang} />
-    </div>
   </section>
 
   <section class="section" aria-labelledby="h-apps">

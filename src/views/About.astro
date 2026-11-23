@@ -40,7 +40,7 @@ const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMe
   description={zh ? '复杂系统拓扑统计理论及应用北京市重点实验室：实验室介绍、组织架构与学术委员会。' : 'Introduction, organization and academic committee of the Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems.'}
   jsonLd={jsonLd}
 >
-  <PageHeading lang={lang} title={t(ui.overview, lang)} lead={zh ? '依托北京雁栖湖应用数学研究院建设，与中国人民大学数学学院联合共建。' : 'Hosted by BIMSA and co-built with the School of Mathematics, Renmin University of China.'} />
+  <PageHeading lang={lang} title={t(ui.overview, lang)} lead={zh ? '依托北京雁栖湖应用数学研究院（BIMSA）建设的北京市重点实验室。' : 'A Beijing Key Laboratory hosted by the Beijing Institute of Mathematical Sciences and Applications (BIMSA).'} />
 
   <section class="section" id="intro" aria-labelledby="h-intro" style="padding-top:clamp(32px,5vw,56px)">
     <div class="wrap row">
@@ -61,8 +61,9 @@ const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMe
         )}
       </div>
       <aside class="note">
-        <h3>{zh ? '依托与共建' : 'Host and partner'}</h3>
+        <h3>{zh ? '依托单位' : 'Host institution'}</h3>
         <p><a href={site.hostInstitution.url} target="_blank" rel="noopener">{site.hostInstitution[lang]}</a></p>
+        <h3 style="margin-top:12px">{zh ? '共建单位' : 'Co-building partner'}</h3>
         <p>{site.partnerInstitution[lang]}</p>
         <p style="margin-top:12px"><a href="https://kw.beijing.gov.cn/xwdt/kcyx/xwdtscyqld/202502/t20250214_4010193.html" target="_blank" rel="noopener">{zh ? '北京市科委成立公告' : 'Establishment announcement (in Chinese)'}</a></p>
       </aside>

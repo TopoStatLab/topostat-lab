@@ -40,13 +40,14 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
     <div class="wrap e-hero-grid">
       <p class="e-seal" aria-hidden="true"><i>{zh ? '拓扑' : 'Topo'}<br />{zh ? '统计' : 'Stat'}</i><span>{zh ? '雁栖湖畔' : 'Yanqi Lake'}</span></p>
       <div>
+        <a class="e-host" href={site.hostInstitution.url} target="_blank" rel="noopener"><b>BIMSA</b>{zh ? '北京雁栖湖应用数学研究院' : 'Beijing Institute of Mathematical Sciences and Applications'}</a>
         {zh ? (
           <h1 id="h-site" class="e-title">复杂系统拓扑统计<br />理论及应用<br />北京市重点实验室</h1>
         ) : (
           <h1 id="h-site" class="e-title e-title-en">Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems</h1>
         )}
         <p class="e-sub">{zh ? ui.siteName.en : ui.siteName.zh}</p>
-        <p class="e-lead">{zh ? '依托北京雁栖湖应用数学研究院（BIMSA）建设，与中国人民大学数学学院联合共建。实验室把拓扑学引入统计推断，研究网络、流形与高阶互作中的“形状”，并把它用于生物医学、人工智能与真实世界的复杂系统。' : 'Hosted by the Beijing Institute of Mathematical Sciences and Applications (BIMSA) and co-built with the School of Mathematics, Renmin University of China. We bring topology into statistical inference, studying the shape of networks, manifolds and higher-order interactions, and apply it to biomedicine, AI and real-world complex systems.'}</p>
+        <p class="e-lead">{zh ? '依托北京雁栖湖应用数学研究院（BIMSA）建设的北京市重点实验室。实验室把拓扑学引入统计推断，研究网络、流形与高阶互作中的“形状”，并把它用于生物医学、人工智能与真实世界的复杂系统。' : 'A Beijing Key Laboratory hosted by the Beijing Institute of Mathematical Sciences and Applications (BIMSA). We bring topology into statistical inference, studying the shape of networks, manifolds and higher-order interactions, and apply it to biomedicine, AI and real-world complex systems.'}</p>
         <div class="e-cta"><a class="btn" href={L('/about/')}>{zh ? '了解实验室' : 'About the lab'}</a><a class="e-textlink" href={L('/research/')}>{zh ? '研究方向' : 'Research'}</a></div>
       </div>
     </div>
@@ -164,11 +165,12 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="e-about" aria-labelledby="h-about">
     <Picture image={media.campusMountain} alt={media.campusMountain.alt[lang]} sizes="100vw" />
     <div class="e-about-card">
-      <h2 id="h-about">{zh ? '关于实验室' : 'About the laboratory'}</h2>
-      <p>{zh ? '2025 年挂牌成立，依托北京雁栖湖应用数学研究院建设，与中国人民大学数学学院联合共建。' : 'Established in 2025, hosted by BIMSA and co-built with the School of Mathematics, Renmin University of China.'}</p>
-      {site.contact.locations.map((loc) => (
-        <p class="e-addr"><b>{t(loc.name, lang)}</b>{t(loc.address, lang)}　<a href={amap(loc.mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)}</a></p>
-      ))}
+      <p class="e-date">{zh ? '依托单位' : 'Host institution'}</p>
+      <h2 id="h-about">{zh ? '北京雁栖湖应用数学研究院' : 'Beijing Institute of Mathematical Sciences and Applications'}<span>BIMSA</span></h2>
+      <p>{zh ? '由丘成桐先生担任院长，坐落于北京怀柔雁栖湖畔，致力于数学基础研究、应用数学以及数学与其他学科的交叉。实验室依托 BIMSA 建设并在此办公。' : 'Led by Shing-Tung Yau as director and set by Yanqi Lake in Huairou, Beijing, BIMSA works on fundamental mathematics, applied mathematics and mathematics across the sciences. The laboratory is hosted at BIMSA.'}</p>
+      <p class="e-addr"><b>{zh ? '实验室地址' : 'Laboratory address'}</b>{t(site.contact.locations[0].address, lang)}　<a href={amap(site.contact.locations[0].mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)}</a></p>
+      <p class="e-addr"><a href={site.hostInstitution.url} target="_blank" rel="noopener">{zh ? '访问 BIMSA 官网' : 'Visit bimsa.cn'}</a></p>
+      <p class="e-partner">{zh ? '共建单位：中国人民大学数学学院' : 'Co-building partner: School of Mathematics, Renmin University of China'}</p>
     </div>
   </section>
 </Base>

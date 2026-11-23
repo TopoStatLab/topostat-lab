@@ -29,7 +29,7 @@ export const site = {
         mapQuery: '北京雁栖湖应用数学研究院',
       },
       {
-        name: { zh: '中国人民大学', en: 'Renmin University of China' },
+        name: { zh: '共建单位：中国人民大学数学学院', en: 'Co-building partner: School of Mathematics, Renmin University of China' },
         tag: { zh: '联合共建单位', en: 'CO-BUILDING PARTNER' },
         address: { zh: '北京市海淀区中关村大街59号', en: 'No. 59 Zhongguancun Street, Haidian District, Beijing' },
         mapQuery: '中国人民大学',
