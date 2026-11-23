@@ -90,7 +90,7 @@ export const committeeChair: Person = {
   id: 'yau-shingtung',
   name: { zh: '丘成桐', en: 'Shing-Tung Yau' },
   role: { zh: '学术委员会主任', en: 'Chair of the Academic Committee' },
-  title: { zh: '菲尔兹奖得主、清华大学求真书院院长', en: 'Fields Medalist; Dean of Qiuzhen College, Tsinghua University' },
+  title: { zh: '菲尔兹奖得主、北京雁栖湖应用数学研究院院长、清华大学求真书院院长', en: 'Fields Medalist; Director of BIMSA; Dean of Qiuzhen College, Tsinghua University' },
   photo: P('yau-shingtung'),
   homepage: personalSite['yau-shingtung'],
   core: true,
