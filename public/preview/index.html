@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>首页风格方案 — 拓扑统计实验室</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+body { background: #f4f5f7; color: #15191f; font: 16px/1.7 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 56px 32px 80px; }
+.top { display: flex; gap: 16px; align-items: center; }
+.top img { width: 52px; height: 52px; }
+h1 { margin: 0; font-size: 28px; font-weight: 700; line-height: 1.3; }
+.intro { color: #555c66; max-width: 46em; margin: 18px 0 40px; }
+.list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+a.card { display: block; background: #fff; border-radius: 12px; overflow: hidden; text-decoration: none; box-shadow: 0 1px 2px rgba(20,30,50,.08); transition: transform .2s, box-shadow .2s; }
+a.card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(20,30,50,.12); }
+a.card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-bottom: 1px solid #eceef1; }
+.info { padding: 18px 22px 22px; }
+.info h2 { margin: 0; font-size: 20px; }
+.info h2 span { color: #8a9099; font-weight: 500; margin-right: 8px; }
+.info p { margin: 6px 0 0; font-size: 15px; color: #555c66; }
+.info .tone { font-size: 13px; color: #8a9099; margin-top: 10px; }
+.note { margin-top: 40px; font-size: 14px; color: #6b727c; }
+@media (max-width: 760px) { .list { grid-template-columns: 1fr; } .wrap { padding-top: 36px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><img src="/brand/mark-144.webp" alt="" /><h1>拓扑统计实验室首页 · 风格方案</h1></div>
+  <p class="intro">五个首页方案，全部使用实验室网站上的真实内容：新闻、署名论文、学术带头人、活动照片和正式 LOGO。点开可以在电脑和手机上直接浏览。选定方向后，再按选中的风格改全站。</p>
+  <div class="list">
+    <a class="card" href="a.html"><img src="thumbs/a.webp" alt="" /><div class="info"><h2><span>A</span>学院典雅</h2><p>白底、深海军蓝与细金线，大号宋体标题，配一幅缓慢旋转的环面线稿。像一所老牌数学研究所。</p><p class="tone">庄重 · 克制 · 适合正式官网</p></div></a>
+    <a class="card" href="b.html"><img src="thumbs/b.webp" alt="" /><div class="info"><h2><span>B</span>瑞士网格</h2><p>纯白、黑字，取 LOGO 里的橙色做唯一点缀。超大字号、严格网格、黑白照片，悬停时照片恢复彩色。</p><p class="tone">理性 · 现代 · 辨识度高</p></div></a>
+    <a class="card" href="c.html"><img src="thumbs/c.webp" alt="" /><div class="info"><h2><span>C</span>科学期刊</h2><p>仿顶级期刊的版式：头条研究配大图，侧栏最新动态，下方研究亮点、活动和人物。酒红色点缀。</p><p class="tone">内容驱动 · 成果突出 · 信息量大</p></div></a>
+    <a class="card" href="d.html"><img src="thumbs/d.webp" alt="" /><div class="info"><h2><span>D</span>计算实验室</h2><p>深色底，首屏是可以拖动的持续同调演示：点云随尺度连成复形，实时显示贝蒂数和条形码。</p><p class="tone">前沿 · 可交互 · 突出拓扑统计本身</p></div></a>
+    <a class="card" href="e.html"><img src="thumbs/e.webp" alt="" /><div class="info"><h2><span>E</span>东方当代</h2><p>宣纸白、墨色与朱砂红。首屏是程序生成的等高线地形，湖岸线用朱红勾出，竖排栏目名。</p><p class="tone">含蓄 · 有文化辨识度 · 雁栖湖意象</p></div></a>
+  </div>
+  <p class="note">说明：这些是首页的视觉方案，按钮和链接暂不跳转。人物照片目前分辨率有限，正式上线时建议换成高清照片。</p>
+</div>
+</body>
+</html>
