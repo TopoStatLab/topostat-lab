@@ -88,7 +88,10 @@ const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMe
         <h3 class="tier-label">{zh ? '成员' : 'Members'}<small>{zh ? `${memberCount} 人` : `${memberCount} people`}</small></h3>
         <div>
           {tiers.map((tier) => {
-            const list = members.filter((m) => m.tier === tier.id)
+            const inTier = members.filter((m) => m.tier === tier.id)
+            // 研究员 are listed by surname (pinyin); for transliterated names the surname is the part after '·'.
+            const surname = (m: (typeof members)[number]) => (m.name.zh.includes('·') ? m.name.zh.split('·').pop()! : m.name.zh)
+            const list = tier.id === 'professor' ? [...inTier].sort((x, y) => surname(x).localeCompare(surname(y), 'zh-CN')) : inTier
             return list.length > 0 && (
               <div class="team-block" id={`tier-${tier.id}`}>
                 <h4 class="team-name">{t(tier.label, lang)}<span>{zh ? `${list.length} 人` : list.length}</span></h4>
