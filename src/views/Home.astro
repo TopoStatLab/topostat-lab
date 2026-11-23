@@ -6,7 +6,7 @@ import Portrait from '../components/Portrait.astro'
 import { researchDirections } from '../data/research'
 import { sortedPublications, paperUrl } from '../data/publications'
 import { news, events, formatDate, formatRange, type NewsItem, type EventItem } from '../data/news'
-import { director, deputies, committeeChair, members } from '../data/people'
+import { director, deputies, committeeChair, members, linkNames } from '../data/people'
 import { media } from '../data/media'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
@@ -31,21 +31,6 @@ const marks = [
   '<g fill="none" stroke="currentColor" stroke-width="1">' + [0, 1, 2, 3, 4, 5].map((k) => `<ellipse cx="150" cy="60" rx="${120 - k * 16}" ry="${48 - k * 6.5}" stroke-opacity="${(0.25 + k * 0.12).toFixed(2)}"/>`).join('') + '</g><ellipse cx="150" cy="60" rx="40" ry="14" fill="none" stroke="var(--red)" stroke-width="1.6"/>',
   '<g fill="none" stroke="currentColor" stroke-width="1"><path d="M150 12 250 104 50 104Z M150 12 170 74 50 104 M170 74 250 104"/></g><path d="M150 12 250 104 170 74Z" fill="var(--red)" fill-opacity=".85"/>',
 ]
-// Same two lines for every leader: institution and position.
-const leaderInfo: Record<string, { unit: { zh: string; en: string }; post: { zh: string; en: string } }> = {
-  'yau-shingtung': {
-    unit: { zh: '北京雁栖湖应用数学研究院', en: 'Beijing Institute of Mathematical Sciences and Applications (BIMSA)' },
-    post: { zh: '院长；菲尔兹奖、沃尔夫数学奖、克拉福德奖获得者，美国国家科学院院士', en: 'Director; Fields Medal, Wolf Prize and Crafoord Prize laureate; member of the US National Academy of Sciences' },
-  },
-  'wu-rongling': {
-    unit: { zh: '北京雁栖湖应用数学研究院', en: 'Beijing Institute of Mathematical Sciences and Applications (BIMSA)' },
-    post: { zh: '研究员、副院长', en: 'Professor and Vice President' },
-  },
-  'gong-xinqi': {
-    unit: { zh: '中国人民大学', en: 'Renmin University of China' },
-    post: { zh: '教授', en: 'Professor' },
-  },
-}
 const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComponent(q)}&city=110000`
 ---
 
@@ -155,15 +140,12 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
       <ul class="e-leaders">
         {[committeeChair, director, ...deputies].map((p) => (
           <li>
-            <a href={L(`/about/#${p.id}`)}>
+            <a {...(p.homepage ? { href: p.homepage, target: '_blank', rel: 'noopener' } : { href: L(`/about/#${p.id}`) })}>
               <Portrait person={p} lang={lang} />
               <div>
                 <h3>{p.name[lang]}</h3>
                 {p.role && <p class="e-role">{t(p.role, lang)}</p>}
-                <dl class="e-facts-mini">
-                  <div><dt>{zh ? '单位' : 'Institution'}</dt><dd>{t(leaderInfo[p.id].unit, lang)}</dd></div>
-                  <div><dt>{zh ? '身份' : 'Position'}</dt><dd>{t(leaderInfo[p.id].post, lang)}</dd></div>
-                </dl>
+                {p.title && <p class="e-leader-line">{t(p.title, lang)}</p>}
               </div>
             </a>
           </li>
@@ -178,7 +160,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
     <div class="e-about-card">
       <p class="e-date">{zh ? '依托单位' : 'Host institution'}</p>
       <h2 id="h-about">{zh ? '北京雁栖湖应用数学研究院' : 'Beijing Institute of Mathematical Sciences and Applications'}<span>BIMSA</span></h2>
-      <p>{zh ? '由丘成桐先生担任院长，坐落于北京怀柔雁栖湖畔，致力于数学基础研究、应用数学以及数学与其他学科的交叉。实验室依托 BIMSA 建设并在此办公。' : 'Led by Shing-Tung Yau as director and set by Yanqi Lake in Huairou, Beijing, BIMSA works on fundamental mathematics, applied mathematics and mathematics across the sciences. The laboratory is hosted at BIMSA.'}</p>
+      <p set:html={linkNames(zh ? '由丘成桐先生担任院长，坐落于北京怀柔雁栖湖畔，致力于数学基础研究、应用数学以及数学与其他学科的交叉。实验室依托 BIMSA 建设并在此办公。' : 'Led by Shing-Tung Yau as director and set by Yanqi Lake in Huairou, Beijing, BIMSA works on fundamental mathematics, applied mathematics and mathematics across the sciences. The laboratory is hosted at BIMSA.')} />
       <p class="e-addr"><b>{zh ? '实验室地址' : 'Laboratory address'}</b>{t(site.contact.locations[0].address, lang)}　<a href={amap(site.contact.locations[0].mapQuery)} target="_blank" rel="noopener">{t(ui.openMap, lang)}</a></p>
       <p class="e-addr"><a href={site.hostInstitution.url} target="_blank" rel="noopener">{zh ? '访问 BIMSA 官网' : 'Visit bimsa.cn'}</a></p>
       <p class="e-partner">{zh ? '共建单位：中国人民大学数学学院' : 'Co-building partner: School of Mathematics, Renmin University of China'}</p>

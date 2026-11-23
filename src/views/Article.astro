@@ -4,6 +4,7 @@ import PageHeading from '../components/PageHeading.astro'
 import Picture from '../components/Picture.astro'
 import { articles, articleHref, type Article } from '../data/articles'
 import { formatDate } from '../data/news'
+import { linkNames } from '../data/people'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -32,7 +33,7 @@ const ld = {
       <p class="article-meta"><time datetime={article.date}>{formatDate(article.date, lang)}</time><span>{t(article.place, lang)}</span></p>
       {article.blocks.map((b) =>
         'p' in b ? (
-          <p>{t(b.p, lang)}</p>
+          <p set:html={linkNames(t(b.p, lang))} />
         ) : (
           <figure>
             <Picture image={b.img} alt={b.img.alt[lang]} sizes="(max-width: 760px) 100vw, 704px" />

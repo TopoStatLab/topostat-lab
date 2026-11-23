@@ -22,6 +22,20 @@ export type Person = {
   core?: boolean
 }
 
+/** Personal websites; wherever these people appear, their names link here. */
+export const personalSite: Record<string, string> = {
+  'yau-shingtung': 'https://masteryau.com/',
+  'wu-rongling': 'https://wurongling.com/',
+}
+/** Plain text → HTML with 丘成桐 / 邬荣领 (and English names) linked to their sites. */
+export function linkNames(text: string) {
+  const esc = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  return esc.replace(/丘成桐|Shing-Tung Yau|邬荣领|Rongling Wu/g, (m) => {
+    const url = /丘|Yau/.test(m) ? personalSite['yau-shingtung'] : personalSite['wu-rongling']
+    return `<a class="name-link" href="${url}" target="_blank" rel="noopener">${m}</a>`
+  })
+}
+
 const P = (id: string) => `/people/portraits/${id}.webp`
 const bimsa = (slug: string) => `https://www.bimsa.cn/zh-CN/detail/${slug}.html`
 
@@ -30,9 +44,9 @@ export const director: Person = {
   id: 'wu-rongling',
   name: { zh: '邬荣领', en: 'Rongling Wu' },
   role: { zh: '实验室主任', en: 'Director' },
-  title: { zh: 'BIMSA 研究员、副院长', en: 'Professor and Vice President, BIMSA' },
+  title: { zh: '北京雁栖湖应用数学研究院副院长、北京市科技战略人才', en: 'Vice President of BIMSA; Beijing Strategic Science and Technology Talent' },
   photo: P('wu-rongling'),
-  homepage: bimsa('ronglingwu'),
+  homepage: personalSite['wu-rongling'],
   core: true,
 }
 
@@ -41,6 +55,7 @@ export const deputies: Person[] = [
     id: 'gong-xinqi',
     name: { zh: '龚新奇', en: 'Xinqi Gong' },
     role: { zh: '实验室副主任', en: 'Deputy Director' },
+    title: { zh: '中国人民大学交叉科学研究院副院长、国家治理大数据和人工智能创新平台主任', en: 'Vice Dean, Institute of Interdisciplinary Sciences, Renmin University of China; Director, National Governance Big Data and AI Innovation Platform' },
     photo: P('gong-xinqi'),
     core: true,
   },
@@ -75,8 +90,9 @@ export const committeeChair: Person = {
   id: 'yau-shingtung',
   name: { zh: '丘成桐', en: 'Shing-Tung Yau' },
   role: { zh: '学术委员会主任', en: 'Chair of the Academic Committee' },
-  title: U.bimsa,
+  title: { zh: '菲尔兹奖得主、清华大学求真书院院长', en: 'Fields Medalist; Dean of Qiuzhen College, Tsinghua University' },
   photo: P('yau-shingtung'),
+  homepage: personalSite['yau-shingtung'],
   core: true,
 }
 
@@ -90,7 +106,7 @@ export const committeeMembers: Person[] = [
   { id: 'yang-fan', name: { zh: '杨帆', en: 'Fan Yang' }, title: { zh: '清华大学', en: 'Tsinghua University' }, photo: P('yang-fan') },
   { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, title: U.bimsa, photo: P('qiu-chengdong') },
   { id: 'gong-xinqi', name: { zh: '龚新奇', en: 'Xinqi Gong' }, title: U.ruc, photo: P('gong-xinqi') },
-  { id: 'wu-rongling', name: { zh: '邬荣领', en: 'Rongling Wu' }, title: U.bimsa, photo: P('wu-rongling') },
+  { id: 'wu-rongling', name: { zh: '邬荣领', en: 'Rongling Wu' }, title: U.bimsa, photo: P('wu-rongling'), homepage: personalSite['wu-rongling'] },
 ].map((p): Person => ({ ...p, role: { zh: '委员', en: 'Member' } }))
 
 // ---------- Members ----------

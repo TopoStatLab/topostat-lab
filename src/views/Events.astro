@@ -4,6 +4,7 @@ import PageHeading from '../components/PageHeading.astro'
 import MediaCard from '../components/MediaCard.astro'
 import { events } from '../data/news'
 import { talks } from '../data/talks'
+import { linkNames } from '../data/people'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -41,7 +42,7 @@ const fmt = (d: string) => {
   <section class={`section ${years.length % 2 ? 'section-tint' : 'section-white'}`} id="talks" aria-labelledby="h-talks">
     <div class="wrap row">
       <div class="main">
-        <h2 class="section-title" id="h-talks">{zh ? '邬荣领教授学术报告' : 'Talks by Rongling Wu'}</h2>
+        <h2 class="section-title" id="h-talks" set:html={linkNames(zh ? '邬荣领教授学术报告' : 'Talks by Rongling Wu')} />
         {talkYears.map((y) => (
           <div class="talk-year">
             <h3 class="year-head">{y}</h3>

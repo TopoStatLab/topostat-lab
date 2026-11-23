@@ -999,3 +999,9 @@ html[lang='en'] .e-facts-mini div { grid-template-columns: 6.5em minmax(0, 1fr);
 .e-facts-mini dd { margin: 0; color: var(--ink); max-width: 32rem; }
 .visiting li { padding: 14px 0; }
 .visiting-name { font-weight: 600; letter-spacing: .12em; }
+
+/* names linked to personal sites (丘成桐 → masteryau.com, 邬荣领 → wurongling.com) */
+.name-link, .person-name a { color: inherit; text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.name-link:hover, .person-name a:hover { color: var(--red); }
+.section-title .name-link { text-decoration-thickness: 2px; }
+.e-leader-line { margin-top: 12px !important; color: var(--ink) !important; font-size: var(--t-md) !important; line-height: 1.8; max-width: 34rem; }
