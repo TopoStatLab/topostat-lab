@@ -978,3 +978,16 @@ html[lang='en'] .e-chair h3 { letter-spacing: .02em; font-family: 'STIX Two Text
 html[lang='en'] .e-host { letter-spacing: .02em; }
 .e-about-card h2 span { display: block; font: 700 1.2rem/1.4 'STIX Two Text', serif; letter-spacing: .08em; color: var(--red); }
 .e-partner { margin-top: 14px !important; padding-top: 10px; border-top: 1px solid var(--rule); font-size: var(--t-xs) !important; color: var(--ink-3) !important; }
+
+/* Home: leaders one per row, equal photos, name and role to the right */
+.e-leaders { list-style: none; margin: 0; padding: 0; }
+.e-leaders li + li { border-top: 1px solid var(--rule); }
+.e-leaders a { display: grid; grid-template-columns: clamp(150px, 15vw, 200px) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: center; padding: 26px 0; text-decoration: none; }
+.e-leaders li:first-child a { padding-top: 0; }
+.e-leaders h3 { margin: 0; font: 600 clamp(1.7rem, 2.6vw, 2.1rem)/1.3 var(--cn-serif); letter-spacing: .3em; }
+html[lang='en'] .e-leaders h3 { letter-spacing: .02em; font-family: 'STIX Two Text', serif; }
+.e-leaders p { margin: 4px 0 0; color: var(--ink-2); font-size: var(--t-sm); }
+.e-leaders .e-role { color: var(--red); font-family: var(--serif); letter-spacing: .12em; font-size: var(--t-md); }
+.e-leaders .e-chair-note { margin-top: 12px; max-width: 30rem; line-height: 1.85; }
+.e-leaders a:hover h3 { color: var(--red); }
+@media (max-width: 600px) { .e-leaders a { grid-template-columns: 112px minmax(0, 1fr); gap: 18px; } .e-leaders h3 { letter-spacing: .15em; } }

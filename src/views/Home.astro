@@ -137,23 +137,17 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="wrap vsec" aria-labelledby="h-people">
     <h2 class="vlabel" id="h-people">{zh ? '学术带头人' : 'People'}<small>{zh ? 'People' : ''}</small></h2>
     <div>
-      <a class="e-chair" href={L(`/about/#${committeeChair.id}`)}>
-        <Portrait person={committeeChair} lang={lang} />
-        <div>
-          <p class="e-role">{committeeChair.role && t(committeeChair.role, lang)}</p>
-          <h3>{committeeChair.name[lang]}</h3>
-          {committeeChair.title && <p>{t(committeeChair.title, lang)}</p>}
-          <p class="e-chair-note">{zh ? '菲尔兹奖、沃尔夫数学奖、克拉福德奖获得者，美国国家科学院院士。' : 'Fields Medal, Wolf Prize in Mathematics and Crafoord Prize laureate; member of the US National Academy of Sciences.'}</p>
-        </div>
-      </a>
-      <ul class="e-people">
-        {[director, ...deputies].map((p) => (
+      <ul class="e-leaders">
+        {[committeeChair, director, ...deputies].map((p) => (
           <li>
             <a href={L(`/about/#${p.id}`)}>
               <Portrait person={p} lang={lang} />
-              <h3>{p.name[lang]}</h3>
-              {p.role && <p class="e-role">{t(p.role, lang)}</p>}
-              {p.title && <p>{t(p.title, lang)}</p>}
+              <div>
+                <h3>{p.name[lang]}</h3>
+                {p.role && <p class="e-role">{t(p.role, lang)}</p>}
+                {p.title && <p>{t(p.title, lang)}</p>}
+                {p === committeeChair && <p class="e-chair-note">{zh ? '菲尔兹奖、沃尔夫数学奖、克拉福德奖获得者，美国国家科学院院士。' : 'Fields Medal, Wolf Prize in Mathematics and Crafoord Prize laureate; member of the US National Academy of Sciences.'}</p>}
+              </div>
             </a>
           </li>
         ))}
