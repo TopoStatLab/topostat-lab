@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site'
+import LabMark from './LabMark.astro'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -13,9 +14,12 @@ const year = new Date().getFullYear()
 
 <footer class="footer">
   <div class="wrap footer-main">
-    <div>
+    <div class="footer-brand">
+      <LabMark class="footer-mark" />
+      <div>
       <p class="footer-name">{ui.siteName.zh}</p>
       <p class="footer-en">{ui.siteName.en}</p>
+      </div>
     </div>
     <div>
       {site.contact.locations.map((loc, i) => (
