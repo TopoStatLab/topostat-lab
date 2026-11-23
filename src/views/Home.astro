@@ -31,6 +31,21 @@ const marks = [
   '<g fill="none" stroke="currentColor" stroke-width="1">' + [0, 1, 2, 3, 4, 5].map((k) => `<ellipse cx="150" cy="60" rx="${120 - k * 16}" ry="${48 - k * 6.5}" stroke-opacity="${(0.25 + k * 0.12).toFixed(2)}"/>`).join('') + '</g><ellipse cx="150" cy="60" rx="40" ry="14" fill="none" stroke="var(--red)" stroke-width="1.6"/>',
   '<g fill="none" stroke="currentColor" stroke-width="1"><path d="M150 12 250 104 50 104Z M150 12 170 74 50 104 M170 74 250 104"/></g><path d="M150 12 250 104 170 74Z" fill="var(--red)" fill-opacity=".85"/>',
 ]
+// Same two lines for every leader: institution and position.
+const leaderInfo: Record<string, { unit: { zh: string; en: string }; post: { zh: string; en: string } }> = {
+  'yau-shingtung': {
+    unit: { zh: '北京雁栖湖应用数学研究院', en: 'Beijing Institute of Mathematical Sciences and Applications (BIMSA)' },
+    post: { zh: '院长；菲尔兹奖、沃尔夫数学奖、克拉福德奖获得者，美国国家科学院院士', en: 'Director; Fields Medal, Wolf Prize and Crafoord Prize laureate; member of the US National Academy of Sciences' },
+  },
+  'wu-rongling': {
+    unit: { zh: '北京雁栖湖应用数学研究院', en: 'Beijing Institute of Mathematical Sciences and Applications (BIMSA)' },
+    post: { zh: '研究员、副院长', en: 'Professor and Vice President' },
+  },
+  'gong-xinqi': {
+    unit: { zh: '中国人民大学', en: 'Renmin University of China' },
+    post: { zh: '教授', en: 'Professor' },
+  },
+}
 const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComponent(q)}&city=110000`
 ---
 
@@ -145,8 +160,10 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
               <div>
                 <h3>{p.name[lang]}</h3>
                 {p.role && <p class="e-role">{t(p.role, lang)}</p>}
-                {p.title && <p>{t(p.title, lang)}</p>}
-                {p === committeeChair && <p class="e-chair-note">{zh ? '菲尔兹奖、沃尔夫数学奖、克拉福德奖获得者，美国国家科学院院士。' : 'Fields Medal, Wolf Prize in Mathematics and Crafoord Prize laureate; member of the US National Academy of Sciences.'}</p>}
+                <dl class="e-facts-mini">
+                  <div><dt>{zh ? '单位' : 'Institution'}</dt><dd>{t(leaderInfo[p.id].unit, lang)}</dd></div>
+                  <div><dt>{zh ? '身份' : 'Position'}</dt><dd>{t(leaderInfo[p.id].post, lang)}</dd></div>
+                </dl>
               </div>
             </a>
           </li>

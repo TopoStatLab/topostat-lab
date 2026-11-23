@@ -991,3 +991,9 @@ html[lang='en'] .e-leaders h3 { letter-spacing: .02em; font-family: 'STIX Two Te
 .e-leaders .e-chair-note { margin-top: 12px; max-width: 30rem; line-height: 1.85; }
 .e-leaders a:hover h3 { color: var(--red); }
 @media (max-width: 600px) { .e-leaders a { grid-template-columns: 112px minmax(0, 1fr); gap: 18px; } .e-leaders h3 { letter-spacing: .15em; } }
+
+.e-facts-mini { display: grid; gap: 4px; margin: 12px 0 0; font-size: var(--t-sm); }
+.e-facts-mini div { display: grid; grid-template-columns: 3.2em minmax(0, 1fr); gap: 12px; }
+html[lang='en'] .e-facts-mini div { grid-template-columns: 6.5em minmax(0, 1fr); }
+.e-facts-mini dt { color: var(--ink-3); font-family: var(--serif); letter-spacing: .1em; }
+.e-facts-mini dd { margin: 0; color: var(--ink); max-width: 32rem; }
