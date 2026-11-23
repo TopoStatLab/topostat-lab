@@ -26,7 +26,6 @@ const lead = latest.find((x) => x.image)!
 const headlines = latest.slice(0, 6)
 const recentEvents = events.slice(0, 6)
 const papers = sortedPublications.slice(0, 3)
-const leaders = [committeeChair, director, ...deputies]
 const marks = [
   '<g stroke="currentColor" stroke-width="1" fill="none"><path d="M30 90 90 40 150 80 210 30 270 85 150 80 90 40"/></g><g fill="currentColor"><circle cx="30" cy="90" r="3.5"/><circle cx="90" cy="40" r="3.5"/><circle cx="210" cy="30" r="3.5"/><circle cx="270" cy="85" r="3.5"/></g><circle cx="150" cy="80" r="6" fill="var(--red)"/>',
   '<g fill="none" stroke="currentColor" stroke-width="1">' + [0, 1, 2, 3, 4, 5].map((k) => `<ellipse cx="150" cy="60" rx="${120 - k * 16}" ry="${48 - k * 6.5}" stroke-opacity="${(0.25 + k * 0.12).toFixed(2)}"/>`).join('') + '</g><ellipse cx="150" cy="60" rx="40" ry="14" fill="none" stroke="var(--red)" stroke-width="1.6"/>',
@@ -137,8 +136,17 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
   <section class="wrap vsec" aria-labelledby="h-people">
     <h2 class="vlabel" id="h-people">{zh ? '学术带头人' : 'People'}<small>{zh ? 'People' : ''}</small></h2>
     <div>
+      <a class="e-chair" href={L(`/about/#${committeeChair.id}`)}>
+        <Portrait person={committeeChair} lang={lang} />
+        <div>
+          <p class="e-role">{committeeChair.role && t(committeeChair.role, lang)}</p>
+          <h3>{committeeChair.name[lang]}</h3>
+          {committeeChair.title && <p>{t(committeeChair.title, lang)}</p>}
+          <p class="e-chair-note">{zh ? '菲尔兹奖、沃尔夫数学奖、克拉福德奖获得者，美国国家科学院院士。' : 'Fields Medal, Wolf Prize in Mathematics and Crafoord Prize laureate; member of the US National Academy of Sciences.'}</p>
+        </div>
+      </a>
       <ul class="e-people">
-        {leaders.map((p) => (
+        {[director, ...deputies].map((p) => (
           <li>
             <a href={L(`/about/#${p.id}`)}>
               <Portrait person={p} lang={lang} />
