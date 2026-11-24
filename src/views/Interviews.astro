@@ -25,8 +25,8 @@ const list = [...interviews].sort((a, b) => b.date.localeCompare(a.date))
         <ul class="interviews">
           {list.map((a) => (
             <li>
-              <a href={localizedPath(`/interviews/${a.slug}/`, lang)}>
-                <Picture image={a.cover} alt={a.cover.alt[lang]} sizes="(max-width: 960px) 100vw, 420px" />
+              <a class={a.cover ? '' : 'no-cover'} href={localizedPath(`/interviews/${a.slug}/`, lang)}>
+                {a.cover && <Picture image={a.cover} alt={a.cover.alt[lang]} sizes="(max-width: 960px) 100vw, 420px" />}
                 <div>
                   <time class="e-date" datetime={a.date}>{formatDate(a.date, lang)}</time>
                   <h3>{t(a.title, lang)}</h3>

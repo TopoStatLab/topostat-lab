@@ -1017,3 +1017,8 @@ html[lang='en'] .e-facts-mini div { grid-template-columns: 6.5em minmax(0, 1fr);
 .interviews p { margin: 0; color: var(--ink-2); font-size: var(--t-sm); }
 .interviews a:hover h3 { color: var(--red); }
 @media (max-width: 760px) { .interviews a { grid-template-columns: minmax(0, 1fr); } }
+
+.interviews a.no-cover { grid-template-columns: minmax(0, 1fr); }
+.interviews a.no-cover h3 { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+.article-source { margin-top: 2em !important; padding: 14px 18px; background: var(--paper-2); font-size: var(--t-sm) !important; line-height: 1.8 !important; color: var(--ink-2) !important; text-align: left !important; }
+.article-source a { color: var(--ink); text-decoration-color: var(--red); text-underline-offset: 3px; }

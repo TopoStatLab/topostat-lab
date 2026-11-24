@@ -26,7 +26,7 @@ const ld = {
   '@type': section === 'interviews' ? 'Article' : 'NewsArticle',
   headline: t(article.title, lang),
   datePublished: article.date,
-  image: [new URL(article.cover.src, 'https://topostat.cn').href],
+  ...(article.cover ? { image: [new URL(article.cover.src, 'https://topostat.cn').href] } : {}),
   publisher: { '@type': 'Organization', name: zh ? '复杂系统拓扑统计理论及应用北京市重点实验室' : ui.siteName.en },
 }
 ---
@@ -48,7 +48,13 @@ const ld = {
           </figure>
         ),
       )}
-      {!zh && <p style="font-size:var(--t-xs);color:var(--ink-3)">Translated from the laboratory’s Chinese news release.</p>}
+      {article.source ? (
+        <p class="article-source">
+          {zh ? '本文据' : 'Based on the report in '}{article.source.url ? <a href={article.source.url} target="_blank" rel="noopener">{t(article.source.name, lang)}</a> : t(article.source.name, lang)}{zh ? '报道整理摘编' : ''}{article.source.authors && (zh ? `（撰文：${t(article.source.authors, lang)}）` : ` by ${t(article.source.authors, lang)}`)}{zh ? '，完整内容请阅读原文。' : '. Please read the original for the full text.'}
+        </p>
+      ) : (
+        !zh && <p style="font-size:var(--t-xs);color:var(--ink-3)">Translated from the laboratory’s Chinese news release.</p>
+      )}
       <div class="article-foot">
         <a href={localizedPath(base, lang)}>{zh ? `返回${sectionName}` : `All ${sectionName.toLowerCase()}`}</a>
       </div>
