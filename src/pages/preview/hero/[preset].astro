@@ -1,0 +1,22 @@
+---
+// Preview only (noindex, not in the sitemap): the home page with the Brownian
+// idopNetwork in place of the contour map, one route per parameter preset.
+import Home from '../../../views/Home.astro'
+export function getStaticPaths() {
+  return ['sparse', 'medium', 'dense'].map((preset) => ({ params: { preset } }))
+}
+const { preset } = Astro.params as { preset: 'sparse' | 'medium' | 'dense' }
+const names = { sparse: 'A 疏朗', medium: 'B 适中', dense: 'C 稠密' } as const
+---
+<Home lang="zh" heroNet={preset} noindex />
+<nav class="preview-switch" aria-label="背景参数">
+  <span>预览 · 首页背景</span>
+  {(['sparse', 'medium', 'dense'] as const).map((p) => <a href={`/preview/hero/${p}/`} aria-current={p === preset ? 'page' : undefined}>{names[p]}</a>)}
+  <a href="/">现行版（等高线）</a>
+</nav>
+<style>
+  .preview-switch { position: fixed; left: 16px; bottom: 16px; z-index: 50; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding: 6px; background: #fff; border: 1px solid var(--rule); box-shadow: 0 8px 24px rgba(29,29,27,.1); font: 13px/1 var(--serif); }
+  .preview-switch span { padding: 0 8px; color: var(--ink-3); }
+  .preview-switch a { padding: 7px 10px; color: var(--ink-2); text-decoration: none; }
+  .preview-switch a[aria-current] { background: var(--ink); color: var(--paper); }
+</style>

@@ -1,0 +1,211 @@
+---
+/**
+ * 布朗 idopNetwork as a quiet background (after RanchoTao/edge-point).
+ * Nodes drift by Brownian motion; a directed, signed coefficient a_ij acts only
+ * while two nodes are within radius R, so arrows keep forming and dissolving.
+ * dE_i/dt = g_i E_i (1 − E_i/K_i) + Σ_j s·a_ij·E_j·(1 − d_ij/R)
+ * No controls: presets are fixed here. Every few seconds a ripple runs along
+ * the arrows from one node, the single moment of emphasis.
+ */
+interface Props {
+  preset?: 'sparse' | 'medium' | 'dense'
+}
+const { preset = 'medium' } = Astro.props
+---
+
+<canvas class="idopnet" data-preset={preset} aria-hidden="true"></canvas>
+
+<script>
+  type Node = { x: number; y: number; vx: number; vy: number; E: number; g: number; K: number; flash: number; d: number }
+  type Link = { from: number; to: number; q: number }
+  const PRESETS = {
+    //          nodes per 100k px², radius, drift, density, promote share, strength
+    sparse: { per: 2.4, R: 215, speed: 0.22, density: 0.32, promote: 0.62, strength: 0.55 },
+    medium: { per: 3.4, R: 200, speed: 0.26, density: 0.38, promote: 0.6, strength: 0.55 },
+    dense: { per: 4.8, R: 180, speed: 0.3, density: 0.4, promote: 0.58, strength: 0.5 },
+  }
+
+  function run(cv: HTMLCanvasElement) {
+    const ctx = cv.getContext('2d')!
+    const P = PRESETS[(cv.dataset.preset as keyof typeof PRESETS) || 'medium'] || PRESETS.medium
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const cs = getComputedStyle(document.documentElement)
+    const ink = cs.getPropertyValue('--ink').trim() || '#1d1d1b'
+    const red = cs.getPropertyValue('--red').trim() || '#b8322a'
+    const paper = cs.getPropertyValue('--paper').trim() || '#f7f6f2'
+    let W = 1, H = 1, dpr = 1, R = P.R, left = 0
+    let nodes: Node[] = [], A: number[][] = [], links: Link[] = [], keys = new Set<number>()
+    let pulses: { from: number; to: number; t: number; depth: number }[] = [], seen = new Set<number>()
+    let nextRipple = 2.5, running = false, raf = 0, last = 0
+
+    const rand = (a: number, b: number) => a + Math.random() * (b - a)
+    const rad = (E: number) => 3 + 7.5 * Math.sqrt(Math.max(0, E) / 1.2)
+    const rgba = (hex: string, a: number) => {
+      const h = hex.replace('#', ''), v = h.length === 3 ? [...h].map((c) => c + c).join('') : h
+      return `rgba(${parseInt(v.slice(0, 2), 16)},${parseInt(v.slice(2, 4), 16)},${parseInt(v.slice(4, 6), 16)},${a})`
+    }
+    // Text sits on the left on wide screens; keep the network to the right of it.
+    // Measured from the hero's text block, so nothing drifts under the title.
+    const host = cv.parentElement!
+    const leftEdge = () => {
+      if (W <= 900) return 0
+      const base = cv.getBoundingClientRect().left
+      let right = 0
+      host.querySelectorAll('.e-host, .e-title, .e-sub, .e-lead, .e-cta').forEach((el) => {
+        const r = el.getBoundingClientRect(); right = Math.max(right, r.right - base)
+      })
+      return Math.min(W * 0.62, (right || W * 0.46) + 56)
+    }
+    const fade = (x: number) => (W > 900 ? Math.min(1, Math.max(0, (x - left + 30) / 150)) : 0.2)
+
+    function size() {
+      const r = cv.getBoundingClientRect()
+      dpr = Math.min(devicePixelRatio || 1, 2)
+      const nw = Math.max(1, r.width), nh = Math.max(1, r.height)
+      const changed = Math.abs(nw - W) > 40 || Math.abs(nh - H) > 40 || !nodes.length
+      W = nw; H = nh
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr)
+      R = P.R * Math.min(1.15, Math.max(0.6, Math.min(W, H) / 820))
+      left = leftEdge()
+      if (changed) build()
+    }
+    function build() {
+      const n = Math.round(Math.min(64, Math.max(14, ((W - left) * H) / 100000 * P.per * (W > 900 ? 1 : 0.6))))
+      nodes = Array.from({ length: n }, () => ({ x: rand(left + 30, W - 30), y: rand(30, H - 30), vx: 0, vy: 0, E: rand(0.2, 0.8), g: rand(0.25, 0.7), K: rand(0.35, 1.4), flash: 0, d: 0 }))
+      A = nodes.map((_, i) => nodes.map((_, j) => (i !== j && Math.random() < P.density ? (Math.random() < P.promote ? 1 : -1) * rand(0.25, 1) : 0)))
+      for (let k = 0; k < 400; k++) step(1 / 30) // settle before the first frame
+    }
+
+    function step(dt: number) {
+      const n = nodes.length
+      for (const p of nodes) {
+        p.vx = p.vx * 0.93 + (Math.random() - 0.5) * 90 * P.speed * dt
+        p.vy = p.vy * 0.93 + (Math.random() - 0.5) * 90 * P.speed * dt
+        p.x += p.vx; p.y += p.vy
+        const r = rad(p.E) + 14
+        if (p.x < left + r) { p.x += Math.min(left + r - p.x, 1.5); p.vx = Math.abs(p.vx) } else if (p.x > W - r) { p.x = W - r; p.vx = -Math.abs(p.vx) }
+        if (p.y < r) { p.y = r; p.vy = Math.abs(p.vy) } else if (p.y > H - r) { p.y = H - r; p.vy = -Math.abs(p.vy) }
+      }
+      for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+        const a = nodes[i], b = nodes[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1
+        const min = rad(a.E) + rad(b.E) + 26
+        if (d < min) { const k = ((min - d) / d) * 0.25; a.x -= dx * k; a.y -= dy * k; b.x += dx * k; b.y += dy * k }
+      }
+      links = []; keys = new Set()
+      const s = P.strength * 0.7
+      for (let i = 0; i < n; i++) {
+        const p = nodes[i]
+        let dep = 0
+        for (let j = 0; j < n; j++) {
+          const a = A[i][j]
+          if (!a) continue
+          const q0 = nodes[j], d = Math.hypot(q0.x - p.x, q0.y - p.y)
+          if (d > R) continue
+          const q = s * a * q0.E * (1 - d / R)
+          dep += q
+          if (Math.abs(q) > 0.014) { links.push({ from: j, to: i, q }); keys.add(j * 1000 + i) }
+        }
+        p.d = p.g * p.E * (1 - p.E / p.K) + dep
+      }
+      for (const p of nodes) p.E = Math.min(1.8, Math.max(0.05, p.E + p.d * dt * 0.8))
+    }
+
+    function ripple() {
+      // start from a node with several outgoing arrows, so the wave travels
+      const out = nodes.map((_, i) => links.filter((l) => l.from === i).length)
+      const cands = out.map((c, i) => [c, i]).filter(([c]) => c >= 2)
+      if (!cands.length) return
+      const src = cands[Math.floor(Math.random() * cands.length)][1]
+      seen = new Set([src]); nodes[src].flash = 1; pulses = []
+      launch(src, 0)
+    }
+    function launch(i: number, depth: number) {
+      if (depth > 4) return
+      for (const l of links) if (l.from === i && !seen.has(l.to)) pulses.push({ from: l.from, to: l.to, t: 0, depth })
+    }
+    function stepPulses(dt: number) {
+      const done: typeof pulses = []
+      for (const p of pulses) p.t += dt / 0.9
+      pulses = pulses.filter((p) => (p.t >= 1 ? (done.push(p), false) : true))
+      for (const p of done) if (!seen.has(p.to)) { seen.add(p.to); nodes[p.to].flash = 1; launch(p.to, p.depth + 1) }
+      for (const nd of nodes) nd.flash = Math.max(0, nd.flash - dt * 0.7)
+    }
+
+    function geo(l: Link) {
+      const a = nodes[l.from], b = nodes[l.to]
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, ux = dx / d, uy = dy / d
+      const bend = keys.has(l.to * 1000 + l.from) ? 12 : 0
+      const mx = (a.x + b.x) / 2 - uy * bend, my = (a.y + b.y) / 2 + ux * bend
+      const ra = rad(a.E) + 2, rb = rad(b.E) + 3
+      const sa = Math.hypot(mx - a.x, my - a.y) || 1, sb = Math.hypot(b.x - mx, b.y - my) || 1
+      const sx = a.x + ((mx - a.x) / sa) * ra, sy = a.y + ((my - a.y) / sa) * ra
+      const ex = b.x - ((b.x - mx) / sb) * rb, ey = b.y - ((b.y - my) / sb) * rb
+      return { sx, sy, mx, my, ex, ey, ang: Math.atan2(ey - my, ex - mx) }
+    }
+
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, W, H)
+      for (const l of links) {
+        const g = geo(l), w = Math.min(1, Math.abs(l.q) * 3.2), pro = l.q > 0
+        const f = fade((g.sx + g.ex) / 2)
+        if (f <= 0.01) continue
+        const col = pro ? red : ink
+        ctx.globalAlpha = f * (pro ? 0.22 + 0.5 * w : 0.16 + 0.34 * w)
+        ctx.strokeStyle = col; ctx.lineWidth = 0.7 + 1.3 * w
+        ctx.setLineDash(pro ? [] : [4, 4])
+        ctx.beginPath(); ctx.moveTo(g.sx, g.sy); ctx.quadraticCurveTo(g.mx, g.my, g.ex, g.ey); ctx.stroke()
+        ctx.setLineDash([])
+        ctx.save(); ctx.translate(g.ex, g.ey); ctx.rotate(g.ang); ctx.fillStyle = col
+        const s = 4.5 + 2 * w
+        if (pro) { ctx.beginPath(); ctx.moveTo(2, 0); ctx.lineTo(-s, -s * 0.5); ctx.lineTo(-s, s * 0.5); ctx.closePath(); ctx.fill() }
+        else ctx.fillRect(-0.5, -s * 0.7, 1.8, s * 1.4)
+        ctx.restore()
+      }
+      for (const p of pulses) {
+        const l = links.find((x) => x.from === p.from && x.to === p.to)
+        if (!l) continue
+        const g = geo(l), t = Math.min(1, p.t), u = 1 - t
+        const x = u * u * g.sx + 2 * u * t * g.mx + t * t * g.ex, y = u * u * g.sy + 2 * u * t * g.my + t * t * g.ey
+        ctx.globalAlpha = 0.85 * Math.max(0.35, fade(x)); ctx.fillStyle = red
+        ctx.beginPath(); ctx.arc(x, y, 2.8, 0, Math.PI * 2); ctx.fill()
+      }
+      for (const p of nodes) {
+        const f = fade(p.x)
+        if (f <= 0.01) continue
+        const r = rad(p.E), grow = p.d >= 0
+        ctx.globalAlpha = f
+        ctx.fillStyle = paper; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill()
+        ctx.fillStyle = grow ? rgba(red, 0.16) : rgba(ink, 0.06); ctx.fill()
+        ctx.strokeStyle = rgba(ink, 0.55); ctx.lineWidth = 1; ctx.stroke()
+        if (p.flash > 0) {
+          ctx.globalAlpha = f * p.flash; ctx.strokeStyle = red; ctx.lineWidth = 1.4
+          ctx.beginPath(); ctx.arc(p.x, p.y, r + 3 + (1 - p.flash) * 14, 0, Math.PI * 2); ctx.stroke()
+        }
+      }
+      ctx.globalAlpha = 1
+    }
+
+    function frame(now: number) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now
+      step(dt); stepPulses(dt)
+      nextRipple -= dt
+      if (nextRipple <= 0) { ripple(); nextRipple = rand(6, 9) }
+      draw()
+      if (running) raf = requestAnimationFrame(frame)
+    }
+    const start = () => { if (running || reduce) return; running = true; last = performance.now(); raf = requestAnimationFrame(frame) }
+    const stop = () => { running = false; cancelAnimationFrame(raf) }
+
+    size(); draw()
+    new ResizeObserver(() => { size(); if (!running) draw() }).observe(cv)
+    new IntersectionObserver(([e]) => (e.isIntersecting && !document.hidden ? start() : stop())).observe(cv)
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()))
+  }
+
+  document.querySelectorAll<HTMLCanvasElement>('canvas.idopnet').forEach(run)
+</script>
+
+<style>
+  .idopnet { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+</style>

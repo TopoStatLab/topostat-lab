@@ -9,7 +9,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !/\/team\/$/.test(page),
+      filter: (page) => !/\/team\/$/.test(page) && !/\/preview\//.test(page),
       i18n: {
         defaultLocale: 'zh',
         locales: { zh: 'zh-CN', en: 'en' },
