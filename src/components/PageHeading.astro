@@ -14,6 +14,7 @@ const seed = Astro.props.seed ?? [...title].reduce((s, c) => (s * 31 + c.codePoi
 ---
 <header class="page-banner">
   <Contours seed={seed} />
+  <p class="watermark watermark-banner" aria-hidden="true">{t(ui.motto, lang)}</p>
   <div class="wrap">
     <p class="crumbs"><a href={localizedPath('/', lang)}>{t(ui.home, lang)}</a><span aria-hidden="true">／</span>{title}</p>
     <h1>{title}</h1>

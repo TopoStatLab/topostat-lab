@@ -1024,3 +1024,13 @@ html[lang='en'] .e-facts-mini div { grid-template-columns: 6.5em minmax(0, 1fr);
 .article-source a { color: var(--ink); text-decoration-color: var(--red); text-underline-offset: 3px; }
 
 .article-sub { margin: 2.2em 0 .9em; font: 600 var(--t-lg)/1.5 var(--cn-serif); letter-spacing: .06em; padding-left: 12px; border-left: 3px solid var(--red); }
+
+/* 邬荣领: “任何数据内都藏着图” — faint marks tucked into corners */
+.watermark { position: absolute; margin: 0; pointer-events: none; user-select: none; font-family: var(--cn-serif); color: var(--ink); }
+html[lang='en'] .watermark { font-family: 'STIX Two Text', serif; font-style: italic; }
+.watermark-hero { right: var(--gutter); bottom: 22px; font-size: 15px; letter-spacing: .5em; opacity: .16; }
+.watermark-hero span { margin-left: 1.2em; font-size: 12px; letter-spacing: .3em; }
+.watermark-banner { right: var(--gutter); bottom: 12px; font-size: 12px; letter-spacing: .4em; opacity: .13; }
+.watermark-foot { margin-left: 1.6em; font-family: var(--cn-serif); letter-spacing: .3em; opacity: .38; }
+html[lang='en'] .watermark-foot { letter-spacing: .04em; font-style: italic; }
+@media (max-width: 600px) { .watermark-hero { bottom: 12px; font-size: 12px; letter-spacing: .3em; } .watermark-foot { display: block; margin: 4px 0 0; } }
