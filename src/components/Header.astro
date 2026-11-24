@@ -1,6 +1,7 @@
 ---
 import LabMark from './LabMark.astro'
 import { site } from '../data/site'
+import { tiers, members } from '../data/people'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -23,6 +24,12 @@ const navItems = [
       [t(ui.organization, lang), L('/about/#organization')],
       [t(ui.committee, lang), L('/about/#committee')],
     ],
+  },
+  {
+    label: t(ui.people, lang),
+    href: L('/people/'),
+    match: ['/people/'],
+    children: tiers.filter((x) => members.some((m) => m.tier === x.id)).map((x) => [t(x.label, lang), L(`/people/#tier-${x.id}`)] as [string, string]),
   },
   {
     label: t(ui.research, lang),

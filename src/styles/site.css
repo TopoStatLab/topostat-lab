@@ -1054,7 +1054,7 @@ html[lang='en'] .watermark-foot { letter-spacing: .04em; font-style: italic; }
 
 /* Ten top-level items: keep each label on one line and tighten as the header narrows */
 .nav-link { white-space: nowrap; }
-@media (max-width: 1440px) and (min-width: 901px) {
+@media (min-width: 901px) {
   .nav { gap: 0; }
   .nav-link { padding: 0 9px; letter-spacing: .03em; font-size: 14.5px; }
   .nav .lang { margin-left: 8px; padding-left: 12px; }
@@ -1063,4 +1063,19 @@ html[lang='en'] .watermark-foot { letter-spacing: .04em; font-style: italic; }
   .nav-link { padding: 0 6px; letter-spacing: 0; font-size: 14px; }
   .nav-caret { display: none; }
   .brand-sub { display: none; }
+}
+
+/* 研究人员 */
+.people-jump { display: flex; flex-wrap: wrap; gap: 8px 28px; padding: 0 0 26px; }
+.people-jump a { font: 400 var(--t-md)/1.6 var(--serif); letter-spacing: .06em; color: var(--ink-2); text-decoration: none; }
+.people-jump a:hover { color: var(--red); }
+.people-jump span { margin-left: 6px; font-size: .8em; color: var(--ink-3); }
+.org-more { margin: 36px 0 0; color: var(--ink-2); }
+.org-more a { color: var(--ink); text-decoration-color: var(--red); text-underline-offset: 3px; }
+[id^='tier-'] { scroll-margin-top: calc(var(--header-h, 76px) + 16px); }
+
+.brand-name, .brand-sub { white-space: nowrap; }
+@media (max-width: 1120px) and (min-width: 901px) {
+  .brand > span { display: none; }
+  .nav-link { padding: 0 5px; }
 }
