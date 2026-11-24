@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>“任何数据内都藏着图” 动态候选</title>
+<style>
+:root { --paper: #f7f6f2; --ink: #1d1d1b; --ink2: #57564f; --ink3: #8f8d84; --rule: #dedbd2; --red: #b8322a; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.8 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 48px 28px 80px; }
+h1 { margin: 0; font: 600 30px/1.3 'Songti SC', 'STSong', 'Noto Serif SC', serif; letter-spacing: .12em; }
+.intro { color: var(--ink2); max-width: 44em; margin: 12px 0 36px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 32px; }
+.card { border-top: 1px solid var(--ink); padding-top: 14px; }
+.card h2 { margin: 0; font: 600 20px/1.4 'Songti SC', 'STSong', 'Noto Serif SC', serif; letter-spacing: .1em; }
+.card h2 span { color: var(--red); margin-right: 10px; font-family: Georgia, serif; letter-spacing: 0; }
+.card p { margin: 4px 0 12px; color: var(--ink2); font-size: 14px; }
+canvas { display: block; width: 100%; aspect-ratio: 8 / 5; background: #fbfaf7; border: 1px solid var(--rule); cursor: pointer; }
+.cap { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--ink3); }
+.cap button { font: inherit; color: var(--ink); background: none; border: 0; border-bottom: 1px solid var(--red); padding: 0; cursor: pointer; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>任何数据内都藏着图</h1>
+  <p class="intro">四个动态候选：每个都从一份看似杂乱的数据出发，让其中的“图”自己浮现出来。点画面或“重播”可以从头再看。选中后再决定放在网站的什么位置。</p>
+  <div class="grid">
+    <section class="card"><h2><span>A</span>数表成网</h2><p>一张相关系数表。强相关的格子亮起，变量从表头走出来成为节点，亮起的格子化作连边：表格里藏着一张网络。</p><canvas id="cA"></canvas><div class="cap"><span>数据表 → 互作网络</span><button data-r="A">重播</button></div></section>
+    <section class="card"><h2><span>B</span>点云藏骨</h2><p>一团带噪声的散点。尺度渐大，近邻相连，随后一副朱红的“骨架图”从点云中显形，散点退去：形状就是一张图。</p><canvas id="cB"></canvas><div class="cap"><span>点云 → 骨架图</span><button data-r="B">重播</button></div></section>
+    <section class="card"><h2><span>C</span>曲线成图</h2><p>几条随时间生长的曲线（如基因表达）。曲线收拢为节点，彼此之间的促进与抑制显现为连边：动态数据里藏着互作网络。</p><canvas id="cC"></canvas><div class="cap"><span>时间序列 → idopNetwork</span><button data-r="C">重播</button></div></section>
+    <section class="card"><h2><span>D</span>墨点藏字</h2><p>满纸看似随机的墨点。连线一笔笔接上，一个“图”字从点阵里浮出，其余墨点淡去：图本来就藏在数据里。</p><canvas id="cD"></canvas><div class="cap"><span>随机墨点 → “图”</span><button data-r="D">重播</button></div></section>
+  </div>
+</div>
+
+<script>
+const INK = '#1d1d1b', RED = '#b8322a', PAPER = '#fbfaf7'
+const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t))
+const seg = (t, a, b) => ease((t - a) / (b - a))
+const lerp = (a, b, k) => a + (b - a) * k
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647 }
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/** Mount a looping animation on a canvas in a 800×500 logical space. */
+function mount(id, duration, draw) {
+  const cv = document.getElementById(id), g = cv.getContext('2d')
+  let t0 = performance.now()
+  const size = () => { const r = devicePixelRatio || 1; cv.width = cv.clientWidth * r; cv.height = cv.clientHeight * r }
+  size(); addEventListener('resize', size)
+  const frame = (now) => {
+    const t = reduce ? duration * 0.8 : ((now - t0) / 1000) % (duration + 1.6)
+    const s = cv.width / 800
+    g.setTransform(s, 0, 0, s, 0, 0); g.fillStyle = PAPER; g.fillRect(0, 0, 800, 500)
+    draw(g, Math.min(t, duration))
+    if (!reduce) requestAnimationFrame(frame)
+  }
+  requestAnimationFrame(frame)
+  const restart = () => { t0 = performance.now(); if (reduce) requestAnimationFrame(frame) }
+  cv.addEventListener('click', restart)
+  return restart
+}
+const replay = {}
+
+/* ---------------- A 数表成网 ---------------- */
+{
+  const r = rng(5), n = 8, names = ['x₁', 'x₂', 'x₃', 'x₄', 'x₅', 'x₆', 'x₇', 'x₈']
+  const M = [...Array(n)].map(() => Array(n).fill(0))
+  const strong = [[0, 1, .82], [0, 4, -.71], [1, 2, .77], [2, 3, .69], [3, 6, .74], [4, 5, .8], [5, 6, -.66], [6, 7, .85], [1, 5, .63], [2, 7, -.62]]
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) M[i][j] = i === j ? 1 : +(r() * .9 - .45).toFixed(2)
+  for (const [i, j, v] of strong) { M[i][j] = v; M[j][i] = v }
+  for (let i = 0; i < n; i++) for (let j = 0; j < i; j++) M[i][j] = M[j][i]
+  const cell = 34, tx = 120, ty = 95
+  const cx = 600, cy = 250, R = 150
+  const node = (i) => [cx + R * Math.cos(-Math.PI / 2 + (i * 2 * Math.PI) / n), cy + R * Math.sin(-Math.PI / 2 + (i * 2 * Math.PI) / n)]
+  const isStrong = (i, j) => Math.abs(M[i][j]) >= .6 && i !== j
+  replay.A = mount('cA', 9, (g, t) => {
+    const fadeIn = seg(t, 0, 1.2), light = seg(t, 1.6, 2.8), fly = seg(t, 3.2, 5.2), edges = seg(t, 4.6, 6.6), dim = seg(t, 5, 6.5)
+    g.textAlign = 'center'; g.textBaseline = 'middle'
+    // table
+    g.globalAlpha = fadeIn * (1 - .75 * dim)
+    g.font = '13px Georgia, serif'; g.fillStyle = '#8f8d84'
+    for (let i = 0; i < n; i++) { g.fillText(names[i], tx + i * cell + cell / 2, ty - 16); }
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const x = tx + j * cell, y = ty + i * cell
+      if (isStrong(i, j)) { g.fillStyle = `rgba(184,50,42,${.85 * light})`; g.fillRect(x + 2, y + 2, cell - 4, cell - 4) }
+      g.fillStyle = isStrong(i, j) && light > .5 ? '#fff' : '#57564f'
+      g.font = '11px Menlo, monospace'
+      g.fillText(i === j ? '1' : M[i][j].toFixed(2).replace('0.', '.'), x + cell / 2, y + cell / 2)
+    }
+    g.strokeStyle = '#dedbd2'; g.lineWidth = 1; g.strokeRect(tx, ty, cell * n, cell * n)
+    g.globalAlpha = 1
+    // edges from lit cells to node pairs
+    for (const [i, j, v] of strong) {
+      const k = edges, [x1, y1] = node(i), [x2, y2] = node(j)
+      const sx = tx + j * cell + cell / 2, sy = ty + i * cell + cell / 2
+      if (k <= 0) continue
+      // a lit cell travels to the edge midpoint, then the edge draws out
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2
+      const travel = seg(k, 0, .5), grow = seg(k, .4, 1)
+      if (travel < 1) { g.fillStyle = RED; g.globalAlpha = 1 - travel * .3; g.fillRect(lerp(sx, mx, travel) - 6, lerp(sy, my, travel) - 6, 12, 12); g.globalAlpha = 1 }
+      if (grow > 0) {
+        g.strokeStyle = v > 0 ? RED : INK; g.lineWidth = 1.2 + Math.abs(v) * 3
+        g.setLineDash(v > 0 ? [] : [7, 5])
+        g.beginPath(); g.moveTo(lerp(mx, x1, grow), lerp(my, y1, grow)); g.lineTo(lerp(mx, x2, grow), lerp(my, y2, grow)); g.stroke(); g.setLineDash([])
+      }
+    }
+    // headers fly out to become nodes
+    for (let i = 0; i < n; i++) {
+      const [nx, ny] = node(i), hx = tx + i * cell + cell / 2, hy = ty - 16
+      const x = lerp(hx, nx, fly), y = lerp(hy, ny, fly)
+      if (fly > 0) { g.fillStyle = '#fbfaf7'; g.strokeStyle = INK; g.lineWidth = 1.4; g.beginPath(); g.arc(x, y, lerp(8, 17, fly), 0, 7); g.fill(); g.stroke() }
+      g.fillStyle = INK; g.font = `${Math.round(lerp(13, 15, fly))}px Georgia, serif`; g.globalAlpha = fly > 0 ? 1 : 0
+      g.fillText(names[i], x, y + 1); g.globalAlpha = 1
+    }
+    g.globalAlpha = seg(t, 7, 7.8); g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
+    g.fillText('任何数据内都藏着图', 780, 476); g.globalAlpha = 1; g.textAlign = 'center'
+  })
+}
+
+/* ---------------- B 点云藏骨 ---------------- */
+{
+  const r = rng(13)
+  // hidden skeleton: a ring with a chord and a tail (a θ with a stem)
+  const SK = []
+  const C = [400, 240], RR = 130
+  for (let k = 0; k < 16; k++) { const a = (k / 16) * 2 * Math.PI; SK.push([C[0] + RR * Math.cos(a), C[1] + RR * .78 * Math.sin(a)]) }
+  const chord = [[C[0] - RR * .55, C[1] - 40], [C[0] - RR * .15, C[1] - 12], [C[0] + RR * .25, C[1] + 12], [C[0] + RR * .62, C[1] + 34]]
+  const tail = [[C[0] + RR + 50, C[1] + 70], [C[0] + RR + 100, C[1] + 130], [C[0] + RR + 150, C[1] + 175]]
+  const nodes = [...SK, ...chord, ...tail]
+  const links = []
+  for (let k = 0; k < 16; k++) links.push([k, (k + 1) % 16])
+  links.push([9, 16], [16, 17], [17, 18], [18, 19], [19, 1], [1, 20], [20, 21], [21, 22])
+  const pts = []
+  for (const [a, b] of links) for (let m = 0; m < 9; m++) { const k = r(); const p = nodes[a], q = nodes[b]; pts.push([lerp(p[0], q[0], k) + (r() - .5) * 26, lerp(p[1], q[1], k) + (r() - .5) * 26]) }
+  for (let m = 0; m < 30; m++) pts.push([60 + r() * 680, 40 + r() * 420])
+  const nb = []
+  for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) { const d = Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1]); if (d < 46) nb.push([i, j, d]) }
+  replay.B = mount('cB', 9, (g, t) => {
+    const appear = seg(t, 0, 1.2), grow = seg(t, 1.5, 4), bone = seg(t, 4.2, 6.6), fade = seg(t, 5.2, 7)
+    const eps = 46 * grow
+    g.strokeStyle = 'rgba(29,29,27,.32)'; g.lineWidth = 1; g.beginPath()
+    for (const [i, j, d] of nb) if (d < eps) { g.moveTo(pts[i][0], pts[i][1]); g.lineTo(pts[j][0], pts[j][1]) }
+    g.globalAlpha = 1 - .8 * fade; g.stroke()
+    pts.forEach((p, i) => { g.fillStyle = INK; g.globalAlpha = appear * (1 - .75 * fade) * (i % 5 === 0 ? .7 : 1); g.beginPath(); g.arc(p[0], p[1], 2.6, 0, 7); g.fill() })
+    g.globalAlpha = 1
+    // skeleton graph draws itself
+    const L = links.length
+    links.forEach(([a, b], k) => {
+      const kk = seg(bone, k / L * .7, k / L * .7 + .3)
+      if (kk <= 0) return
+      const p = nodes[a], q = nodes[b]
+      g.strokeStyle = RED; g.lineWidth = 3; g.lineCap = 'round'
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(lerp(p[0], q[0], kk), lerp(p[1], q[1], kk)); g.stroke()
+    })
+    nodes.forEach((p, k) => { const kk = seg(bone, .2 + (k / nodes.length) * .6, .3 + (k / nodes.length) * .6); if (kk > 0) { g.fillStyle = RED; g.beginPath(); g.arc(p[0], p[1], 5.5 * kk, 0, 7); g.fill() } })
+    g.globalAlpha = seg(t, 7.2, 8); g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
+    g.fillText('任何数据内都藏着图', 780, 476); g.globalAlpha = 1
+  })
+}
+
+/* ---------------- C 曲线成图 ---------------- */
+{
+  const n = 6, r = rng(29)
+  const params = [...Array(n)].map((_, i) => ({ K: 120 + r() * 180, rate: 3 + r() * 5, mid: .25 + r() * .5, wob: r() * 18 }))
+  const y0 = 420, x0 = 70, x1 = 470
+  const curve = (i, u) => { const p = params[i]; return y0 - p.K / (1 + Math.exp(-p.rate * 2 * (u - p.mid))) - p.wob * Math.sin(u * 9 + i) * u }
+  const nodePos = [...Array(n)].map((_, i) => [620 + 120 * Math.cos(-Math.PI / 2 + i * 2 * Math.PI / n), 250 + 120 * Math.sin(-Math.PI / 2 + i * 2 * Math.PI / n)])
+  const E = [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, 1], [4, 5, -1], [5, 0, 1], [0, 3, -1], [1, 4, 1], [2, 5, 1]]
+  const colors = [INK, RED, INK, RED, INK, RED]
+  replay.C = mount('cC', 9, (g, t) => {
+    const draw = seg(t, 0, 2.6), gather = seg(t, 3, 5), edges = seg(t, 4.8, 7)
+    // axes
+    g.strokeStyle = '#dedbd2'; g.lineWidth = 1; g.globalAlpha = 1 - gather
+    g.beginPath(); g.moveTo(x0, 60); g.lineTo(x0, y0); g.lineTo(x1 + 10, y0); g.stroke()
+    g.fillStyle = '#8f8d84'; g.font = '12px Georgia, serif'; g.fillText('t', x1 + 16, y0 + 4); g.globalAlpha = 1
+    for (let i = 0; i < n; i++) {
+      const end = [x1, curve(i, 1)], target = nodePos[i]
+      g.strokeStyle = colors[i]; g.lineWidth = 1.8; g.globalAlpha = i % 2 ? .95 : .8
+      g.beginPath()
+      const steps = 80, umax = draw
+      for (let k = 0; k <= steps; k++) {
+        const u = (k / steps) * umax
+        let x = lerp(x0, x1, u), y = curve(i, u)
+        // gather: the whole curve slides and shrinks into its node
+        x = lerp(x, target[0], gather * (0.4 + 0.6 * (1 - u))); y = lerp(y, target[1], gather * (0.4 + 0.6 * (1 - u)))
+        x = lerp(x, target[0], gather); y = lerp(y, target[1], gather)
+        k ? g.lineTo(x, y) : g.moveTo(x, y)
+      }
+      g.stroke(); g.globalAlpha = 1
+      if (gather > .6) { const k = seg(gather, .6, 1); g.fillStyle = PAPER; g.strokeStyle = colors[i]; g.lineWidth = 2; g.beginPath(); g.arc(target[0], target[1], 15 * k, 0, 7); g.fill(); g.stroke() }
+    }
+    E.forEach(([a, b, s], k) => {
+      const kk = seg(edges, k / E.length * .6, k / E.length * .6 + .4); if (kk <= 0) return
+      const p = nodePos[a], q = nodePos[b], d = Math.hypot(q[0] - p[0], q[1] - p[1]), ux = (q[0] - p[0]) / d, uy = (q[1] - p[1]) / d
+      const sx = p[0] + ux * 18, sy = p[1] + uy * 18, ex = lerp(sx, q[0] - ux * 22, kk), ey = lerp(sy, q[1] - uy * 22, kk)
+      g.strokeStyle = s > 0 ? RED : INK; g.lineWidth = 2; g.setLineDash(s > 0 ? [] : [6, 5])
+      g.beginPath(); g.moveTo(sx, sy); g.lineTo(ex, ey); g.stroke(); g.setLineDash([])
+      if (kk > .95) { // arrow (promote) or bar (inhibit)
+        g.save(); g.translate(ex, ey); g.rotate(Math.atan2(uy, ux)); g.fillStyle = g.strokeStyle
+        if (s > 0) { g.beginPath(); g.moveTo(4, 0); g.lineTo(-7, -5); g.lineTo(-7, 5); g.fill() } else { g.fillRect(-1, -7, 3, 14) }
+        g.restore()
+      }
+    })
+    g.globalAlpha = seg(t, 7.2, 8); g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
+    g.fillText('任何数据内都藏着图', 780, 476); g.textAlign = 'left'; g.font = '12px "PingFang SC", sans-serif'; g.fillStyle = '#8f8d84'
+    g.fillText('朱红实线：促进　墨色虚线：抑制', 24, 476); g.globalAlpha = 1
+  })
+}
+
+/* ---------------- D 墨点藏字 ---------------- */
+{
+  const r = rng(41)
+  // strokes of 图 in a 300×300 box (囗 outside, 冬 inside), as polylines
+  const S = [
+    [[0, 0], [0, 300]], [[0, 0], [300, 0], [300, 300]], [[0, 300], [300, 300]],
+    [[118, 36], [70, 112]], [[112, 58], [212, 58], [150, 128], [72, 176]], [[124, 96], [190, 150], [238, 170]],
+    [[128, 192], [158, 208]], [[112, 236], [170, 262]],
+  ]
+  const ox = 250, oy = 100, sc = 1
+  const P = (p) => [ox + p[0] * sc, oy + p[1] * sc]
+  const strokes = S.map((pl) => {
+    const out = []
+    for (let k = 0; k < pl.length - 1; k++) {
+      const a = P(pl[k]), b = P(pl[k + 1]), len = Math.hypot(b[0] - a[0], b[1] - a[1]), m = Math.max(2, Math.round(len / 34))
+      for (let q = 0; q < m; q++) out.push([lerp(a[0], b[0], q / m) + (r() - .5) * 14, lerp(a[1], b[1], q / m) + (r() - .5) * 14])
+    }
+    const last = P(pl[pl.length - 1]); out.push([last[0] + (r() - .5) * 14, last[1] + (r() - .5) * 14])
+    return out
+  })
+  const hidden = strokes.flat()
+  const noise = [...Array(300)].map(() => [30 + r() * 740, 25 + r() * 450])
+  const all = [...noise, ...hidden].sort(() => r() - .5)
+  const total = strokes.reduce((s, x) => s + x.length - 1, 0)
+  replay.D = mount('cD', 9, (g, t) => {
+    const appear = seg(t, 0, 1.4), link = seg(t, 1.8, 5.8), fade = seg(t, 5, 6.8)
+    all.forEach((p, k) => {
+      const isHidden = hidden.includes(p)
+      const a = seg(appear, (k / all.length) * .7, (k / all.length) * .7 + .3)
+      g.globalAlpha = a * (isHidden ? 1 : 1 - .82 * fade); g.fillStyle = INK
+      g.beginPath(); g.arc(p[0], p[1], isHidden ? 3 + 1.5 * fade : 3, 0, 7); g.fill()
+    })
+    g.globalAlpha = 1
+    let done = 0
+    for (const st of strokes) {
+      for (let k = 0; k < st.length - 1; k++) {
+        const kk = seg(link * total, done, done + 1.6); done++
+        if (kk <= 0) continue
+        const a = st[k], b = st[k + 1]
+        g.strokeStyle = RED; g.lineWidth = 2.6 + 2 * fade; g.lineCap = 'round'
+        g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(lerp(a[0], b[0], kk), lerp(a[1], b[1], kk)); g.stroke()
+      }
+    }
+    g.globalAlpha = seg(t, 7.2, 8); g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
+    g.fillText('任何数据内都藏着图', 780, 476); g.globalAlpha = 1
+  })
+}
+
+document.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => replay[b.dataset.r]()))
+</script>
+</body>
+</html>
