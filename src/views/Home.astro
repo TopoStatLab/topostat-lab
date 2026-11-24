@@ -14,8 +14,8 @@ import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
   lang: Lang
-  /** Preview only: draw the hero with the Brownian idopNetwork instead of contours. */
-  heroNet?: 'sparse' | 'medium' | 'dense'
+  /** Hero background: the Brownian idopNetwork (preset C by default); 'contours' is the old map, kept for the preview switcher. */
+  heroNet?: 'sparse' | 'medium' | 'dense' | 'contours'
   noindex?: boolean
 }
 const { lang, heroNet, noindex = false } = Astro.props
@@ -40,7 +40,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
 
 <Base lang={lang} path="/" noindex={noindex}>
   <section class="e-hero" aria-labelledby="h-site">
-    {heroNet ? <IdopNet preset={heroNet} /> : <Contours seed={1} variant="hero" />}
+    {heroNet === 'contours' ? <Contours seed={1} variant="hero" /> : <IdopNet preset={heroNet ?? 'dense'} />}
     <p class="watermark watermark-hero" aria-hidden="true">{t(ui.motto, lang)}<span>{zh ? '邬荣领' : 'Rongling Wu'}</span></p>
     <div class="wrap e-hero-grid">
       <p class="e-seal" aria-hidden="true"><i>{zh ? '拓扑' : 'Topo'}<br />{zh ? '统计' : 'Stat'}</i><span>{zh ? '雁栖湖畔' : 'Yanqi Lake'}</span></p>
@@ -156,7 +156,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
           </li>
         ))}
       </ul>
-      <a class="e-more" href={L('/about/#organization')}>{zh ? '组织架构与学术委员会' : 'Organization and committee'}</a>
+      <a class="e-more" href={L('/people/')}>{zh ? '全部研究人员' : 'All researchers'}</a>
     </div>
   </section>
 

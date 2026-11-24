@@ -34,6 +34,7 @@ export const ui = {
   visitors: { zh: '访学', en: 'Visitors' },
   demo: { zh: '交互演示', en: 'Interactive Demo' },
   team: { zh: '研究团队', en: 'People' },
+  people: { zh: '研究人员', en: 'Researchers' },
   news: { zh: '新闻', en: 'News' },
   motto: { zh: '任何数据内都藏着图', en: 'Every dataset hides a graph' },
   interviews: { zh: '人物专访', en: 'Interviews' },

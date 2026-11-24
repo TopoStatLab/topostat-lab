@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeading from '../components/PageHeading.astro'
+import PersonCard from '../components/PersonCard.astro'
+import { director, deputies, committeeChair, committeeMembers, members, tiers } from '../data/people'
+import { ui, t, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+// People who also appear on /about/ keep their anchor there, not here.
+const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMembers].map((p) => p.id))
+// 研究员 are listed by surname (pinyin); for transliterated names the surname is the part after '·'.
+const surname = (m: (typeof members)[number]) => (m.name.zh.includes('·') ? m.name.zh.split('·').pop()! : m.name.zh)
+const groups = tiers
+  .map((tier) => {
+    const inTier = members.filter((m) => m.tier === tier.id)
+    return { tier, list: tier.id === 'professor' ? [...inTier].sort((x, y) => surname(x).localeCompare(surname(y), 'zh-CN')) : inTier }
+  })
+  .filter((g) => g.list.length > 0)
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@graph': members.map((p) => ({
+      '@type': 'Person',
+      name: p.name.zh,
+      alternateName: p.name.en,
+      jobTitle: t(tiers.find((x) => x.id === p.tier)!.label, 'en'),
+      ...(p.homepage ? { url: p.homepage } : {}),
+      affiliation: { '@type': 'ResearchOrganization', name: ui.siteName.zh },
+    })),
+  },
+]
+---
+
+<Base
+  lang={lang}
+  path="/people/"
+  title={t(ui.people, lang)}
+  description={zh ? `复杂系统拓扑统计理论及应用北京市重点实验室的 ${members.length} 位研究人员：研究员、副研究员、助理研究员、博士后与学生。` : `The ${members.length} researchers of the laboratory: professors, associate and assistant professors, postdocs and students.`}
+  jsonLd={jsonLd}
+>
+  <PageHeading lang={lang} title={t(ui.people, lang)} lead={zh ? `实验室现有研究人员 ${members.length} 人。研究员按姓氏拼音排列。` : `${members.length} researchers and students. Professors are listed by surname.`} />
+
+  <section class="section" aria-label={t(ui.people, lang)} style="padding-top:clamp(32px,5vw,56px);border-top:0">
+    <div class="wrap">
+      <nav class="people-jump" aria-label={zh ? '按职级跳转' : 'Jump to rank'}>
+        {groups.map(({ tier, list }) => <a href={`#tier-${tier.id}`}>{t(tier.label, lang)}<span>{list.length}</span></a>)}
+      </nav>
+      {groups.map(({ tier, list }) => (
+        <div class="tier" id={`tier-${tier.id}`}>
+          <h2 class="tier-label">{t(tier.label, lang)}<small>{zh ? `${list.length} 人` : `${list.length}`}</small></h2>
+          <ul class="people">{list.map((p) => <PersonCard person={p} lang={lang} showRole={false} anchor={!elsewhere.has(p.id)} />)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

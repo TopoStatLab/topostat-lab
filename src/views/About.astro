@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
 import PersonCard from '../components/PersonCard.astro'
-import { director, deputies, committeeChair, committeeMembers, members, tiers, type Person, linkNames } from '../data/people'
+import { director, deputies, committeeChair, committeeMembers, members, type Person, linkNames } from '../data/people'
 import { site } from '../data/site'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
@@ -30,7 +30,6 @@ const jsonLd = [
 ]
 const memberCount = members.length
 const leaders = new Set([director, ...deputies].map((p) => p.id))
-const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMembers].map((p) => p.id))
 ---
 
 <Base
@@ -84,23 +83,10 @@ const elsewhere = new Set([director, ...deputies, committeeChair, ...committeeMe
           <ul class="people">{deputies.map((p) => <PersonCard person={p} lang={lang} showRole={false} />)}</ul>
         </div>
       </div>
-      <div class="tier">
-        <h3 class="tier-label">{zh ? '成员' : 'Members'}<small>{zh ? `${memberCount} 人` : `${memberCount} people`}</small></h3>
-        <div>
-          {tiers.map((tier) => {
-            const inTier = members.filter((m) => m.tier === tier.id)
-            // 研究员 are listed by surname (pinyin); for transliterated names the surname is the part after '·'.
-            const surname = (m: (typeof members)[number]) => (m.name.zh.includes('·') ? m.name.zh.split('·').pop()! : m.name.zh)
-            const list = tier.id === 'professor' ? [...inTier].sort((x, y) => surname(x).localeCompare(surname(y), 'zh-CN')) : inTier
-            return list.length > 0 && (
-              <div class="team-block" id={`tier-${tier.id}`}>
-                <h4 class="team-name">{t(tier.label, lang)}<span>{zh ? `${list.length} 人` : list.length}</span></h4>
-                <ul class="people">{list.map((p) => <PersonCard person={p} lang={lang} showRole={false} anchor={!elsewhere.has(p.id)} />)}</ul>
-              </div>
-            )
-          })}
-        </div>
-      </div>
+      <p class="org-more">
+        {zh ? `实验室现有研究人员 ${memberCount} 人，按研究员、副研究员、助理研究员、博士后与学生分列，见` : `The laboratory has ${memberCount} researchers and students, listed by rank on the `}
+        <a href={localizedPath('/people/', lang)}>{t(ui.people, lang)}</a>{zh ? '栏目。' : ' page.'}
+      </p>
     </div>
   </section>
 
