@@ -35,6 +35,7 @@ export const ui = {
   demo: { zh: '交互演示', en: 'Interactive Demo' },
   team: { zh: '研究团队', en: 'People' },
   news: { zh: '新闻', en: 'News' },
+  interviews: { zh: '人物专访', en: 'Interviews' },
   newsUpdates: { zh: '新闻动态', en: 'News' },
   events: { zh: '学术活动', en: 'Academic Events' },
   progress: { zh: '研究进展', en: 'Research Progress' },

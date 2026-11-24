@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeading from '../components/PageHeading.astro'
+import Picture from '../components/Picture.astro'
+import { interviews } from '../data/interviews'
+import { formatDate } from '../data/news'
+import { ui, t, localizedPath, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+const list = [...interviews].sort((a, b) => b.date.localeCompare(a.date))
+---
+
+<Base lang={lang} path="/interviews/" title={t(ui.interviews, lang)} description={zh ? '实验室人物专访：走近实验室的学者与学生。' : 'Interviews with the people of the laboratory.'}>
+  <PageHeading lang={lang} title={t(ui.interviews, lang)} lead={zh ? '走近实验室的学者与学生：他们的研究、经历与思考。' : 'Meet the scholars and students of the laboratory: their research, paths and ideas.'} />
+  <section class="wrap vsec" style="padding-top:clamp(48px,6vw,72px)">
+    <p class="vlabel" aria-hidden="true">{t(ui.interviews, lang)}<small>{zh ? 'Interviews' : ''}</small></p>
+    <div>
+      {list.length === 0 ? (
+        <p class="interview-empty">{zh ? '首期人物专访正在采写中，敬请期待。' : 'The first interviews are being written. Please check back soon.'}</p>
+      ) : (
+        <ul class="interviews">
+          {list.map((a) => (
+            <li>
+              <a href={localizedPath(`/interviews/${a.slug}/`, lang)}>
+                <Picture image={a.cover} alt={a.cover.alt[lang]} sizes="(max-width: 960px) 100vw, 420px" />
+                <div>
+                  <time class="e-date" datetime={a.date}>{formatDate(a.date, lang)}</time>
+                  <h3>{t(a.title, lang)}</h3>
+                  <p>{t(a.summary, lang)}</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</Base>
