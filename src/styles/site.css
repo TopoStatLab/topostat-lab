@@ -1005,3 +1005,15 @@ html[lang='en'] .e-facts-mini div { grid-template-columns: 6.5em minmax(0, 1fr);
 .name-link:hover, .person-name a:hover { color: var(--red); }
 .section-title .name-link { text-decoration-thickness: 2px; }
 .e-leader-line { margin-top: 12px !important; color: var(--ink) !important; font-size: var(--t-md) !important; line-height: 1.8; max-width: 34rem; }
+
+/* 人物专访 */
+.interview-empty { margin: 0; padding: 28px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); font: 400 var(--t-md)/1.8 var(--serif); letter-spacing: .08em; color: var(--ink-2); }
+.interviews { list-style: none; margin: 0; padding: 0; }
+.interviews li + li { border-top: 1px solid var(--rule); }
+.interviews a { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: clamp(20px, 3vw, 40px); padding: 26px 0; text-decoration: none; }
+.interviews li:first-child a { padding-top: 0; }
+.interviews img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.interviews h3 { margin: 6px 0 8px; font: 600 var(--t-lg)/1.5 var(--cn-serif); letter-spacing: .04em; }
+.interviews p { margin: 0; color: var(--ink-2); font-size: var(--t-sm); }
+.interviews a:hover h3 { color: var(--red); }
+@media (max-width: 760px) { .interviews a { grid-template-columns: minmax(0, 1fr); } }

@@ -1,0 +1,7 @@
+---
+import View from '../../../views/Article.astro'
+import { interviews } from '../../../data/interviews'
+export const getStaticPaths = () => interviews.map((a) => ({ params: { slug: a.slug }, props: { article: a } }))
+const { article } = Astro.props
+---
+<View lang="en" article={article} section="interviews" />

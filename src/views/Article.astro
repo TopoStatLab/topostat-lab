@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro'
 import PageHeading from '../components/PageHeading.astro'
 import Picture from '../components/Picture.astro'
-import { articles, articleHref, type Article } from '../data/articles'
+import { articles, type Article } from '../data/articles'
+import { interviews } from '../data/interviews'
 import { formatDate } from '../data/news'
 import { linkNames } from '../data/people'
 import { ui, t, localizedPath, type Lang } from '../i18n'
@@ -10,13 +11,19 @@ import { ui, t, localizedPath, type Lang } from '../i18n'
 interface Props {
   lang: Lang
   article: Article
+  /** Which column the article belongs to. */
+  section?: 'news' | 'interviews'
 }
-const { lang, article } = Astro.props
+const { lang, article, section = 'news' } = Astro.props
 const zh = lang === 'zh'
-const others = articles.filter((a) => a.slug !== article.slug)
+const pool = section === 'interviews' ? interviews : articles
+const others = pool.filter((a) => a.slug !== article.slug)
+const base = `/${section}/`
+const href = (slug: string) => `${base}${slug}/`
+const sectionName = section === 'interviews' ? t(ui.interviews, lang) : zh ? '新闻' : 'News'
 const ld = {
   '@context': 'https://schema.org',
-  '@type': 'NewsArticle',
+  '@type': section === 'interviews' ? 'Article' : 'NewsArticle',
   headline: t(article.title, lang),
   datePublished: article.date,
   image: [new URL(article.cover.src, 'https://topostat.cn').href],
@@ -24,10 +31,10 @@ const ld = {
 }
 ---
 
-<Base lang={lang} path={articleHref(article.slug)} title={t(article.title, lang)} description={t(article.summary, lang)} jsonLd={[ld]}>
-  <PageHeading lang={lang} title={zh ? '新闻' : 'News'} />
+<Base lang={lang} path={href(article.slug)} title={t(article.title, lang)} description={t(article.summary, lang)} jsonLd={[ld]}>
+  <PageHeading lang={lang} title={sectionName} />
   <section class="wrap vsec" style="padding-top:clamp(48px,6vw,72px)">
-    <p class="vlabel" aria-hidden="true">{zh ? '实验室新闻' : 'Lab news'}</p>
+    <p class="vlabel" aria-hidden="true">{section === 'interviews' ? sectionName : zh ? '实验室新闻' : 'Lab news'}</p>
     <article class="article">
       <h1 class="section-title" style="margin-bottom:16px">{t(article.title, lang)}</h1>
       <p class="article-meta"><time datetime={article.date}>{formatDate(article.date, lang)}</time><span>{t(article.place, lang)}</span></p>
@@ -43,13 +50,13 @@ const ld = {
       )}
       {!zh && <p style="font-size:var(--t-xs);color:var(--ink-3)">Translated from the laboratory’s Chinese news release.</p>}
       <div class="article-foot">
-        <a href={localizedPath('/news/', lang)}>{zh ? '返回新闻' : 'All news'}</a>
+        <a href={localizedPath(base, lang)}>{zh ? `返回${sectionName}` : `All ${sectionName.toLowerCase()}`}</a>
       </div>
       {others.length > 0 && (
         <div style="margin-top:40px">
-          <p class="e-date" style="margin-bottom:6px">{zh ? '其他新闻' : 'More news'}</p>
+          <p class="e-date" style="margin-bottom:6px">{section === 'interviews' ? (zh ? '其他专访' : 'More interviews') : zh ? '其他新闻' : 'More news'}</p>
           <ul class="article-related">
-            {others.map((a) => <li><a href={localizedPath(articleHref(a.slug), lang)}>{t(a.title, lang)}</a></li>)}
+            {others.map((a) => <li><a href={localizedPath(href(a.slug), lang)}>{t(a.title, lang)}</a></li>)}
           </ul>
         </div>
       )}
