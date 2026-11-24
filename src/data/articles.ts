@@ -12,8 +12,11 @@ export type Article = {
   title: L10n
   summary: L10n
   place: L10n
-  cover: Media
+  /** Optional: articles without a photo are listed as text. */
+  cover?: Media
   blocks: Block[]
+  /** For pieces based on another outlet's report: who published it, and where. */
+  source?: { name: L10n; authors?: L10n; url?: string }
 }
 
 export const articles: Article[] = [
