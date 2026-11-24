@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeading from '../components/PageHeading.astro'
+import { software } from '../data/software'
+import { ui, t, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+const { lang } = Astro.props
+const zh = lang === 'zh'
+---
+
+<Base lang={lang} path="/software/" title={t(ui.software, lang)} description={zh ? '实验室研发的计算机软件与在线分析平台。' : 'Software and online platforms developed by the laboratory.'}>
+  <PageHeading lang={lang} title={t(ui.software, lang)} lead={zh ? '实验室研发的计算机软件与在线分析平台，点击即可在浏览器中使用。' : 'Software and online platforms developed by the laboratory. Each one opens in your browser.'} />
+  <section class="wrap vsec" style="padding-top:clamp(48px,6vw,72px)">
+    <p class="vlabel" aria-hidden="true">{t(ui.software, lang)}<small>{zh ? 'Software' : ''}</small></p>
+    <ul class="software">
+      {software.map((s) => (
+        <li id={s.id}>
+          <div class="software-head">
+            <h3><a href={s.url} target="_blank" rel="noopener">{s.name}</a></h3>
+            <span class="software-kind">{t(s.kind, lang)}</span>
+          </div>
+          <p class="software-summary">{t(s.summary, lang)}</p>
+          <p class="software-meta">
+            {zh ? '开发：' : 'Developed by '}
+            {s.authors.map((a, i) => (
+              <>{i > 0 && (zh ? '、' : ', ')}{a.href ? <a href={a.href} target="_blank" rel="noopener">{t(a.name, lang)}</a> : t(a.name, lang)}</>
+            ))}
+          </p>
+          <a class="software-open" href={s.url} target="_blank" rel="noopener">{zh ? '打开平台' : 'Open the platform'}<span class="software-host">{s.host}</span></a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

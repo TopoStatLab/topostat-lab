@@ -37,6 +37,7 @@ export const ui = {
   news: { zh: '新闻', en: 'News' },
   motto: { zh: '任何数据内都藏着图', en: 'Every dataset hides a graph' },
   interviews: { zh: '人物专访', en: 'Interviews' },
+  software: { zh: '计算机软件', en: 'Software' },
   newsUpdates: { zh: '新闻动态', en: 'News' },
   events: { zh: '学术活动', en: 'Academic Events' },
   progress: { zh: '研究进展', en: 'Research Progress' },
