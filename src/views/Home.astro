@@ -37,6 +37,7 @@ const amap = (q: string) => `https://uri.amap.com/search?keyword=${encodeURIComp
 <Base lang={lang} path="/">
   <section class="e-hero" aria-labelledby="h-site">
     <Contours seed={1} variant="hero" />
+    <p class="watermark watermark-hero" aria-hidden="true">{t(ui.motto, lang)}<span>{zh ? '邬荣领' : 'Rongling Wu'}</span></p>
     <div class="wrap e-hero-grid">
       <p class="e-seal" aria-hidden="true"><i>{zh ? '拓扑' : 'Topo'}<br />{zh ? '统计' : 'Stat'}</i><span>{zh ? '雁栖湖畔' : 'Yanqi Lake'}</span></p>
       <div>

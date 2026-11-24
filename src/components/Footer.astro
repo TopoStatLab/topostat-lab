@@ -45,7 +45,7 @@ const year = new Date().getFullYear()
     </div>
   </div>
   <div class="wrap footer-bottom">
-    <span>© {year} {zh ? '复杂系统拓扑统计理论及应用北京市重点实验室' : ui.siteName.en}</span>
+    <span>© {year} {zh ? '复杂系统拓扑统计理论及应用北京市重点实验室' : ui.siteName.en}<span class="watermark-foot" aria-hidden="true">{t(ui.motto, lang)}</span></span>
     <span>
       {site.icp && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">{site.icp}</a>}
       {site.policeFiling && (
