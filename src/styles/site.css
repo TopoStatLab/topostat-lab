@@ -1034,3 +1034,33 @@ html[lang='en'] .watermark { font-family: 'STIX Two Text', serif; font-style: it
 .watermark-foot { margin-left: 1.6em; font-family: var(--cn-serif); letter-spacing: .3em; opacity: .38; }
 html[lang='en'] .watermark-foot { letter-spacing: .04em; font-style: italic; }
 @media (max-width: 600px) { .watermark-hero { bottom: 12px; font-size: 12px; letter-spacing: .3em; } .watermark-foot { display: block; margin: 4px 0 0; } }
+
+/* 计算机软件 */
+.software { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.software li { padding: 28px 0 30px; border-bottom: 1px solid var(--rule); }
+.software-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; }
+.software h3 { margin: 0; font: 600 clamp(1.5rem, 2.4vw, 2rem)/1.3 var(--serif); letter-spacing: .01em; }
+.software h3 a { color: var(--ink); text-decoration: none; }
+.software h3 a:hover { color: var(--red); }
+.software-kind { font-size: var(--t-sm); color: var(--red); letter-spacing: .08em; }
+.software-summary { margin: 12px 0 8px; max-width: 42em; color: var(--ink-2); line-height: 1.9; }
+.software-meta { margin: 0 0 18px; font-size: var(--t-sm); color: var(--ink-3); }
+.software-meta a { color: var(--ink-2); text-decoration-color: var(--red); text-underline-offset: 3px; }
+.software-open { display: inline-flex; align-items: baseline; gap: 12px; padding: 10px 18px; border: 1px solid var(--ink); color: var(--ink); text-decoration: none; font-size: var(--t-sm); letter-spacing: .06em; }
+.software-open:hover, .software-open:focus-visible { background: var(--ink); color: var(--paper); }
+.software-host { font-size: .82em; color: var(--ink-3); letter-spacing: 0; }
+.software-open:hover .software-host { color: var(--paper-2); }
+@media (max-width: 560px) { .software-host { display: none; } }
+
+/* Ten top-level items: keep each label on one line and tighten as the header narrows */
+.nav-link { white-space: nowrap; }
+@media (max-width: 1440px) and (min-width: 901px) {
+  .nav { gap: 0; }
+  .nav-link { padding: 0 9px; letter-spacing: .03em; font-size: 14.5px; }
+  .nav .lang { margin-left: 8px; padding-left: 12px; }
+}
+@media (max-width: 1240px) and (min-width: 901px) {
+  .nav-link { padding: 0 6px; letter-spacing: 0; font-size: 14px; }
+  .nav-caret { display: none; }
+  .brand-sub { display: none; }
+}
