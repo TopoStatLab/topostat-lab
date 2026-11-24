@@ -26,13 +26,14 @@ canvas { display: block; width: 100%; aspect-ratio: 8 / 5; background: #fbfaf7; 
 <body>
 <div class="wrap">
   <h1>任何数据内都藏着图</h1>
-  <p class="intro">五个动态候选：每个都从一份看似杂乱的数据出发，让其中的“图”自己浮现出来。点画面或“重播”可以从头再看。选中后再决定放在网站的什么位置。</p>
+  <p class="intro">六个动态候选：每个都从一份看似杂乱的数据出发，让其中的“图”自己浮现出来。点画面或“重播”可以从头再看。选中后再决定放在网站的什么位置。</p>
   <div class="grid">
     <section class="card"><h2><span>A</span>数表成网</h2><p>一张相关系数表。强相关的格子亮起，变量从表头走出来成为节点，亮起的格子化作连边：表格里藏着一张网络。</p><canvas id="cA"></canvas><div class="cap"><span>数据表 → 互作网络</span><button data-r="A">重播</button></div></section>
     <section class="card"><h2><span>B</span>点云藏骨</h2><p>一团带噪声的散点。尺度渐大，近邻相连，随后一副朱红的“骨架图”从点云中显形，散点退去：形状就是一张图。</p><canvas id="cB"></canvas><div class="cap"><span>点云 → 骨架图</span><button data-r="B">重播</button></div></section>
     <section class="card"><h2><span>C</span>曲线成图</h2><p>几条随时间生长的曲线（如基因表达）。曲线收拢为节点，彼此之间的促进与抑制显现为连边：动态数据里藏着互作网络。</p><canvas id="cC"></canvas><div class="cap"><span>时间序列 → idopNetwork</span><button data-r="C">重播</button></div></section>
     <section class="card"><h2><span>D</span>墨点藏字</h2><p>满纸看似随机的墨点。连线一笔笔接上，一个“图”字从点阵里浮出，其余墨点淡去：图本来就藏在数据里。</p><canvas id="cD"></canvas><div class="cap"><span>随机墨点 → “图”</span><button data-r="D">重播</button></div></section>
     <section class="card"><h2><span>E</span>布朗成网</h2><p>改编自 edge-point：数据点各自随机游走，彼此靠近时自动连边，网络随之生灭。不时从一个点出发做广度优先搜索，朱红波纹沿着此刻的连边扩散：关系一出现，图就在那里。</p><canvas id="cE"></canvas><div class="cap"><span>随机游走的点 → 随时生长的邻接网络</span><button data-r="E">重播</button></div></section>
+    <section class="card" style="grid-column:1/-1"><h2><span>F</span>布朗 idopNetwork</h2><p>在 E 的布朗网络上加入 idopNetwork 的机制：每个节点的大小是它的“表达量”，等于自身的独立生长加上邻近节点对它的定向作用。朱红箭头是促进，墨色虚线（末端短横）是抑制；节点在游走中相遇、产生作用、彼此改变大小。点击一个节点，可以看它的独立效应与依赖效应。</p><canvas id="cF" style="aspect-ratio:16/7"></canvas><div class="cap"><span id="fInfo">E<sub>i</sub>(t) = Q<sub>i</sub>(E<sub>i</sub>) ＋ Σ<sub>j≠i</sub> Q<sub>i←j</sub>(E<sub>j</sub>)　独立效应 ＋ 依赖效应</span><button data-r="F">重置</button></div></section>
   </div>
 </div>
 
@@ -326,6 +327,100 @@ const replay = {}
   requestAnimationFrame(frame)
   replay.E = reset
   cv.addEventListener('click', reset)
+}
+
+/* ---------------- F 布朗 idopNetwork ---------------- */
+{
+  const cv = document.getElementById('cF'), g = cv.getContext('2d'), info = document.getElementById('fInfo')
+  const W = 1120, H = 490, N = 26, R = 170
+  let P, A, sel = -1, born = 0, last = performance.now(), r
+  const names = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+  function reset() {
+    r = rng(91)
+    P = [...Array(N)].map((_, i) => ({ x: 60 + r() * (W - 120), y: 50 + r() * (H - 100), vx: 0, vy: 0, E: 0.15 + r() * 0.6, g: 0.25 + r() * 0.5, K: 0.25 + r() * 1.25, indep: 0, dep: 0 }))
+    // sparse signed, directed interaction coefficients a[i][j]: effect of j on i
+    A = [...Array(N)].map(() => Array(N).fill(0))
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) if (i !== j && r() < 0.42) A[i][j] = (r() < 0.6 ? 1 : -1) * (0.25 + r() * 0.75)
+    sel = -1; born = 0
+  }
+  reset()
+  const size = () => { const d = devicePixelRatio || 1; cv.width = cv.clientWidth * d; cv.height = cv.clientHeight * d }
+  size(); addEventListener('resize', size)
+  cv.addEventListener('click', (e) => {
+    const b = cv.getBoundingClientRect(), x = ((e.clientX - b.left) / b.width) * W, y = ((e.clientY - b.top) / b.height) * H
+    let best = -1, bd = 1e9; P.forEach((p, i) => { const d = Math.hypot(p.x - x, p.y - y); if (d < bd) { bd = d; best = i } })
+    sel = bd < 40 ? (sel === best ? -1 : best) : -1
+  })
+  const radius = (E) => 5 + 14 * Math.sqrt(Math.max(0.02, E))
+  function frame(now) {
+    const dt = reduce ? 0 : Math.min(0.05, (now - last) / 1000); last = now; born += dt
+    // Brownian drift
+    for (const p of P) {
+      p.vx = p.vx * 0.93 + (r() - 0.5) * 30 * dt; p.vy = p.vy * 0.93 + (r() - 0.5) * 30 * dt
+      p.x += p.vx; p.y += p.vy
+      if (p.x < 30 || p.x > W - 30) { p.vx *= -1; p.x = Math.max(30, Math.min(W - 30, p.x)) }
+      if (p.y < 30 || p.y > H - 40) { p.vy *= -1; p.y = Math.max(30, Math.min(H - 40, p.y)) }
+    }
+    // keep circles from overlapping (soft repulsion)
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const a = P[i], b = P[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, min = radius(a.E) + radius(b.E) + 8
+      if (d < min) { const k = (min - d) / d * 0.5; a.x -= dx * k; a.y -= dy * k; b.x += dx * k; b.y += dy * k }
+    }
+    // idopNetwork-style dynamics: dE_i = Q_i(E_i) + sum_j Q_{i<-j}(E_j), with Q_{i<-j} active only when j is near i
+    const links = []
+    for (let i = 0; i < N; i++) {
+      const p = P[i]
+      p.indep = p.g * p.E * (1 - p.E / p.K)
+      p.dep = 0
+      for (let j = 0; j < N; j++) {
+        if (!A[i][j]) continue
+        const d = Math.hypot(P[j].x - p.x, P[j].y - p.y); if (d > R) continue
+        const q = A[i][j] * P[j].E * (1 - d / R) * 0.35
+        p.dep += q
+        if (Math.abs(q) > 0.03) links.push([j, i, q])
+      }
+    }
+    for (const p of P) p.E = Math.max(0.03, Math.min(1.6, p.E + (p.indep + p.dep) * dt * 0.8))
+    // draw
+    const s = cv.width / W; g.setTransform(s, 0, 0, s, 0, 0); g.fillStyle = PAPER; g.fillRect(0, 0, W, H)
+    const appear = ease(born / 1.5)
+    for (const [j, i, q] of links) {
+      const a = P[j], b = P[i], focus = sel < 0 || sel === i || sel === j
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), ux = dx / d, uy = dy / d
+      const sx = a.x + ux * radius(a.E), sy = a.y + uy * radius(a.E), ex = b.x - ux * (radius(b.E) + 4), ey = b.y - uy * (radius(b.E) + 4)
+      const w = Math.min(1, Math.abs(q) * 4)
+      g.globalAlpha = appear * (focus ? 0.25 + 0.7 * w : 0.06)
+      g.strokeStyle = q > 0 ? RED : INK; g.lineWidth = 0.8 + 2.4 * w; g.setLineDash(q > 0 ? [] : [6, 5])
+      g.beginPath(); g.moveTo(sx, sy); g.lineTo(ex, ey); g.stroke(); g.setLineDash([])
+      g.save(); g.translate(ex, ey); g.rotate(Math.atan2(uy, ux)); g.fillStyle = g.strokeStyle
+      if (q > 0) { g.beginPath(); g.moveTo(3, 0); g.lineTo(-8, -4.5); g.lineTo(-8, 4.5); g.fill() } else g.fillRect(-1, -6, 2.5, 12)
+      g.restore()
+    }
+    g.globalAlpha = appear
+    P.forEach((p, i) => {
+      const focus = sel < 0 || sel === i || links.some(([a, b]) => (a === sel && b === i) || (b === sel && a === i))
+      const rr = radius(p.E), growing = p.indep + p.dep >= 0
+      g.globalAlpha = appear * (focus ? 1 : 0.25)
+      g.fillStyle = '#fbfaf7'; g.strokeStyle = INK; g.lineWidth = sel === i ? 2.4 : 1.2
+      g.beginPath(); g.arc(p.x, p.y, rr, 0, 7); g.fill(); g.stroke()
+      g.fillStyle = growing ? 'rgba(184,50,42,.16)' : 'rgba(29,29,27,.08)'
+      g.beginPath(); g.arc(p.x, p.y, rr - 2, 0, 7); g.fill()
+      g.fillStyle = INK; g.font = '12px Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle'
+      g.fillText(names[i], p.x, p.y + 1)
+    })
+    g.globalAlpha = 1; g.textBaseline = 'alphabetic'
+    g.fillStyle = '#8f8d84'; g.font = '12px "PingFang SC", sans-serif'; g.textAlign = 'left'
+    g.fillText(`节点 ${N}　此刻作用 ${links.length} 条（促进 ${links.filter((l) => l[2] > 0).length}，抑制 ${links.filter((l) => l[2] < 0).length}）`, 24, H - 14)
+    g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
+    g.fillText('任何数据内都藏着图', W - 20, H - 14)
+    if (sel >= 0) {
+      const p = P[sel], ins = links.filter((l) => l[1] === sel), outs = links.filter((l) => l[0] === sel)
+      info.innerHTML = `节点 <b>${names[sel]}</b>：表达量 ${p.E.toFixed(2)}　独立效应 ${p.indep >= 0 ? '+' : ''}${p.indep.toFixed(3)}　依赖效应 ${p.dep >= 0 ? '+' : ''}${p.dep.toFixed(3)}　受 ${ins.length} 个节点作用，作用于 ${outs.length} 个节点`
+    } else info.innerHTML = 'E<sub>i</sub>(t) = Q<sub>i</sub>(E<sub>i</sub>) ＋ Σ<sub>j≠i</sub> Q<sub>i←j</sub>(E<sub>j</sub>)　独立效应 ＋ 依赖效应　·　点击节点查看'
+    requestAnimationFrame(frame)
+  }
+  requestAnimationFrame(frame)
+  replay.F = reset
 }
 
 document.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => replay[b.dataset.r]()))
