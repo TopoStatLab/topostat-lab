@@ -26,12 +26,13 @@ canvas { display: block; width: 100%; aspect-ratio: 8 / 5; background: #fbfaf7; 
 <body>
 <div class="wrap">
   <h1>任何数据内都藏着图</h1>
-  <p class="intro">四个动态候选：每个都从一份看似杂乱的数据出发，让其中的“图”自己浮现出来。点画面或“重播”可以从头再看。选中后再决定放在网站的什么位置。</p>
+  <p class="intro">五个动态候选：每个都从一份看似杂乱的数据出发，让其中的“图”自己浮现出来。点画面或“重播”可以从头再看。选中后再决定放在网站的什么位置。</p>
   <div class="grid">
     <section class="card"><h2><span>A</span>数表成网</h2><p>一张相关系数表。强相关的格子亮起，变量从表头走出来成为节点，亮起的格子化作连边：表格里藏着一张网络。</p><canvas id="cA"></canvas><div class="cap"><span>数据表 → 互作网络</span><button data-r="A">重播</button></div></section>
     <section class="card"><h2><span>B</span>点云藏骨</h2><p>一团带噪声的散点。尺度渐大，近邻相连，随后一副朱红的“骨架图”从点云中显形，散点退去：形状就是一张图。</p><canvas id="cB"></canvas><div class="cap"><span>点云 → 骨架图</span><button data-r="B">重播</button></div></section>
     <section class="card"><h2><span>C</span>曲线成图</h2><p>几条随时间生长的曲线（如基因表达）。曲线收拢为节点，彼此之间的促进与抑制显现为连边：动态数据里藏着互作网络。</p><canvas id="cC"></canvas><div class="cap"><span>时间序列 → idopNetwork</span><button data-r="C">重播</button></div></section>
     <section class="card"><h2><span>D</span>墨点藏字</h2><p>满纸看似随机的墨点。连线一笔笔接上，一个“图”字从点阵里浮出，其余墨点淡去：图本来就藏在数据里。</p><canvas id="cD"></canvas><div class="cap"><span>随机墨点 → “图”</span><button data-r="D">重播</button></div></section>
+    <section class="card"><h2><span>E</span>布朗成网</h2><p>改编自 edge-point：数据点各自随机游走，彼此靠近时自动连边，网络随之生灭。不时从一个点出发做广度优先搜索，朱红波纹沿着此刻的连边扩散：关系一出现，图就在那里。</p><canvas id="cE"></canvas><div class="cap"><span>随机游走的点 → 随时生长的邻接网络</span><button data-r="E">重播</button></div></section>
   </div>
 </div>
 
@@ -255,6 +256,76 @@ const replay = {}
     g.globalAlpha = seg(t, 7.2, 8); g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
     g.fillText('任何数据内都藏着图', 780, 476); g.globalAlpha = 1
   })
+}
+
+/* ---------------- E 布朗成网 (after RanchoTao/edge-point) ---------------- */
+{
+  const cv = document.getElementById('cE'), g = cv.getContext('2d')
+  const N = 62, R = 100, r = rng(77)
+  let P = []
+  const reset = () => { P = [...Array(N)].map(() => ({ x: 40 + r() * 720, y: 30 + r() * 440, vx: 0, vy: 0 })); wave = null; nextWave = 1.2; born = 0 }
+  let wave = null, nextWave = 1.2, born = 0, last = performance.now()
+  reset()
+  const size = () => { const d = devicePixelRatio || 1; cv.width = cv.clientWidth * d; cv.height = cv.clientHeight * d }
+  size(); addEventListener('resize', size)
+  function step(dt) {
+    for (const p of P) {
+      p.vx = p.vx * 0.92 + (r() - 0.5) * 38 * dt; p.vy = p.vy * 0.92 + (r() - 0.5) * 38 * dt
+      p.x += p.vx; p.y += p.vy
+      if (p.x < 24 || p.x > 776) p.vx *= -1, p.x = Math.max(24, Math.min(776, p.x))
+      if (p.y < 20 || p.y > 480) p.vy *= -1, p.y = Math.max(20, Math.min(480, p.y))
+    }
+  }
+  function frame(now) {
+    const dt = reduce ? 0 : Math.min(0.05, (now - last) / 1000); last = now; born += dt
+    step(dt)
+    const s = cv.width / 800; g.setTransform(s, 0, 0, s, 0, 0); g.fillStyle = PAPER; g.fillRect(0, 0, 800, 500)
+    const appear = ease(born / 1.5)
+    // adjacency at this instant
+    const adj = P.map(() => []), E = []
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) { const d = Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y); if (d < R) { adj[i].push(j); adj[j].push(i); E.push([i, j, d]) } }
+    // a BFS ripple every few seconds, re-run on the live graph each frame
+    nextWave -= dt
+    if (!wave && nextWave <= 0) {
+      // start from a well-connected point inside the largest component, so the ripple travels far
+      const comp = Array(N).fill(-1); let best = -1, bestSize = 0
+      for (let i = 0; i < N; i++) if (comp[i] < 0) { const q = [i]; comp[i] = i; let k = 0; while (k < q.length) { for (const v of adj[q[k++]]) if (comp[v] < 0) { comp[v] = i; q.push(v) } } if (q.length > bestSize) { bestSize = q.length; best = i } }
+      const pool = [...Array(N).keys()].filter((i) => comp[i] === best).sort((x, y) => adj[y].length - adj[x].length)
+      wave = { src: pool[Math.floor(r() * Math.min(3, pool.length))], t: 0 }
+    }
+    let depth = null
+    if (wave) {
+      wave.t += dt
+      depth = Array(N).fill(-1); depth[wave.src] = 0; const q = [wave.src]
+      while (q.length) { const u = q.shift(); for (const v of adj[u]) if (depth[v] < 0) { depth[v] = depth[u] + 1; q.push(v) } }
+      if (wave.t > 6.5) { wave = null; nextWave = 1.6 }
+    }
+    const front = wave ? wave.t * 2.2 : -1
+    const lit = (i) => depth && depth[i] >= 0 && depth[i] <= front
+    for (const [i, j, d] of E) {
+      const on = lit(i) && lit(j) && Math.abs(depth[i] - depth[j]) === 1
+      const a = (1 - d / R) * appear
+      g.strokeStyle = on ? `rgba(184,50,42,${0.35 + 0.6 * a})` : `rgba(29,29,27,${0.08 + 0.34 * a})`
+      g.lineWidth = on ? 1.8 : 1
+      g.beginPath(); g.moveTo(P[i].x, P[i].y); g.lineTo(P[j].x, P[j].y); g.stroke()
+    }
+    P.forEach((p, i) => {
+      const on = lit(i), isSrc = wave && i === wave.src
+      g.globalAlpha = appear
+      g.fillStyle = on ? RED : INK
+      g.beginPath(); g.arc(p.x, p.y, isSrc ? 6 : on ? 4 : 3, 0, 7); g.fill()
+      if (on && depth[i] === Math.floor(front)) { g.strokeStyle = 'rgba(184,50,42,.35)'; g.lineWidth = 1; g.beginPath(); g.arc(p.x, p.y, 9 + 6 * (front % 1), 0, 7); g.stroke() }
+    })
+    g.globalAlpha = 1
+    g.fillStyle = '#8f8d84'; g.font = '12px "PingFang SC", sans-serif'; g.textAlign = 'left'
+    g.fillText(`节点 ${N}　连边 ${E.length}`, 24, 476)
+    g.fillStyle = '#57564f'; g.font = '15px "Songti SC", "STSong", serif'; g.textAlign = 'right'
+    g.fillText('任何数据内都藏着图', 780, 476)
+    requestAnimationFrame(frame)
+  }
+  requestAnimationFrame(frame)
+  replay.E = reset
+  cv.addEventListener('click', reset)
 }
 
 document.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => replay[b.dataset.r]()))
