@@ -20,6 +20,11 @@ const pool = section === 'interviews' ? interviews : articles
 const others = pool.filter((a) => a.slug !== article.slug)
 const base = `/${section}/`
 const href = (slug: string) => `${base}${slug}/`
+// Authorized reprints: a plain-text file at src/content/<section>/<slug>.md replaces the summary
+// blocks (blank line = new paragraph; a line starting with "## " = subheading).
+const fullTexts = import.meta.glob('/src/content/**/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const fullText = (fullTexts[`/src/content/${section}/${article.slug}.md`] ?? '').trim()
+const fullBlocks = fullText ? fullText.split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean) : []
 const sectionName = section === 'interviews' ? t(ui.interviews, lang) : zh ? '新闻' : 'News'
 const ld = {
   '@context': 'https://schema.org',
@@ -38,7 +43,8 @@ const ld = {
     <article class="article">
       <h1 class="section-title" style="margin-bottom:16px">{t(article.title, lang)}</h1>
       <p class="article-meta"><time datetime={article.date}>{formatDate(article.date, lang)}</time><span>{t(article.place, lang)}</span></p>
-      {article.blocks.map((b) =>
+      {fullBlocks.length > 0 && fullBlocks.map((b) => (b.startsWith('## ') ? <h2 class="article-sub">{b.slice(3)}</h2> : <p set:html={linkNames(b.replace(/\n/g, ''))} />))}
+      {fullBlocks.length === 0 && article.blocks.map((b) =>
         'p' in b ? (
           <p set:html={linkNames(t(b.p, lang))} />
         ) : (
@@ -48,7 +54,9 @@ const ld = {
           </figure>
         ),
       )}
-      {article.source ? (
+      {article.source && fullBlocks.length > 0 ? (
+        <p class="article-source">{zh ? '本文经授权转载自' : 'Reprinted with permission from '}{t(article.source.name, lang)}{article.source.authors && (zh ? `，撰文：${t(article.source.authors, lang)}。` : `, by ${t(article.source.authors, lang)}.`)}</p>
+      ) : article.source ? (
         <p class="article-source">
           {zh ? '本文据' : 'Based on the report in '}{article.source.url ? <a href={article.source.url} target="_blank" rel="noopener">{t(article.source.name, lang)}</a> : t(article.source.name, lang)}{zh ? '报道整理摘编' : ''}{article.source.authors && (zh ? `（撰文：${t(article.source.authors, lang)}）` : ` by ${t(article.source.authors, lang)}`)}{zh ? '，完整内容请阅读原文。' : '. Please read the original for the full text.'}
         </p>
