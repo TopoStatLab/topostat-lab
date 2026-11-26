@@ -1079,3 +1079,15 @@ html[lang='en'] .watermark-foot { letter-spacing: .04em; font-style: italic; }
   .brand > span { display: none; }
   .nav-link { padding: 0 5px; }
 }
+
+/* 组织架构：照片与姓名在左，头衔逐行列在右侧 */
+.org-row { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 0 48px; align-items: start; }
+.org-row .people.lead { grid-template-columns: 1fr; margin: 0; }
+.org-titles { list-style: none; margin: 0; padding: 4px 0 0; }
+.org-titles li { padding: 5px 0 5px 14px; position: relative; font: 400 var(--t-md)/1.6 var(--serif); color: var(--ink-2); }
+.org-titles li::before { content: ''; position: absolute; left: 0; top: 1.05em; width: 5px; height: 5px; background: var(--red); }
+@media (max-width: 720px) {
+  .org-row { grid-template-columns: 1fr; gap: 16px; }
+  .org-row .people.lead { max-width: 220px; }
+  .org-titles { columns: 1; }
+}

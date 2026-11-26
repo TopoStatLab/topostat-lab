@@ -18,6 +18,8 @@ export type Person = {
   title?: L10n
   homepage?: string
   email?: string
+  /** Full list of titles and honours, one per line (shown in the organization chart). */
+  honors?: L10n[]
   /** Core people: their papers and patents are listed first. */
   core?: boolean
 }
@@ -47,6 +49,19 @@ export const director: Person = {
   title: { zh: '北京雁栖湖应用数学研究院副院长、北京市科技战略人才', en: 'Vice President of BIMSA; Beijing Strategic Science and Technology Talent' },
   photo: P('wu-rongling'),
   homepage: personalSite['wu-rongling'],
+  honors: [
+    { zh: '北京雁栖湖应用数学研究院副院长、研究员', en: 'Vice President and Professor, BIMSA' },
+    { zh: '国家杰出青年基金获得者', en: 'National Science Fund for Distinguished Young Scholars' },
+    { zh: '教育部长江讲座教授', en: 'Changjiang Chair Professor, Ministry of Education' },
+    { zh: '中组部国家特聘专家', en: 'National Distinguished Expert' },
+    { zh: '北京市科技战略人才', en: 'Beijing Strategic Science and Technology Talent' },
+    { zh: '美国科学促进会会士', en: 'Fellow, American Association for the Advancement of Science' },
+    { zh: '美国统计学会会士', en: 'Fellow, American Statistical Association' },
+    { zh: '佛罗里达大学研究基金教授', en: 'University of Florida Research Foundation Professor' },
+    { zh: '宾夕法尼亚州立大学杰出大学教授', en: 'Distinguished University Professor, Pennsylvania State University' },
+    { zh: 'Floyd科学创新奖获得者', en: 'Recipient of the Floyd Award for Scientific Innovation' },
+    { zh: '全球高被引学者', en: 'Highly Cited Researcher' },
+  ],
   core: true,
 }
 

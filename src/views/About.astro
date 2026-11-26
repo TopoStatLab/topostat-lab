@@ -31,6 +31,13 @@ const jsonLd = [
 const memberCount = members.length
 // Academic secretary, with the photo and homepage from the member list.
 const secretary = members.find((m) => m.id === 'dong-ang')
+// Organization chart: photo and name on the left, every title on its own line to the right.
+const lines = (p: Person) => (p.honors?.length ? p.honors.map((h) => t(h, lang)) : p.title ? t(p.title, lang).split(zh ? '、' : '; ') : [])
+const org = [
+  { label: zh ? '主任' : 'Director', person: director, anchor: true },
+  ...deputies.map((p) => ({ label: zh ? '副主任' : 'Deputy director', person: p, anchor: true })),
+  ...(secretary ? [{ label: zh ? '学术秘书' : 'Academic secretary', person: { ...secretary, title: { zh: '北京雁栖湖应用数学研究院助理研究员', en: 'Assistant Professor, BIMSA' } }, anchor: false }] : []),
+]
 const leaders = new Set([director, ...deputies].map((p) => p.id))
 ---
 
@@ -77,20 +84,15 @@ const leaders = new Set([director, ...deputies].map((p) => p.id))
     <div class="wrap">
       <h2 class="section-title" id="h-org">{t(ui.organization, lang)}</h2>
 
-      <div class="tier">
-        <h3 class="tier-label">{zh ? '主任' : 'Director'}</h3>
-        <ul class="people lead"><PersonCard person={director} lang={lang} showRole={false} eager /></ul>
-      </div>
-      <div class="tier">
-        <h3 class="tier-label">{zh ? '副主任' : 'Deputy director'}</h3>
-        <ul class="people lead">{deputies.map((p) => <PersonCard person={p} lang={lang} showRole={false} />)}</ul>
-      </div>
-      {secretary && (
+      {org.map(({ label, person, anchor }, i) => (
         <div class="tier">
-          <h3 class="tier-label">{zh ? '学术秘书' : 'Academic secretary'}</h3>
-          <ul class="people lead"><PersonCard person={secretary} lang={lang} showRole={false} anchor={false} /></ul>
+          <h3 class="tier-label">{label}</h3>
+          <div class="org-row">
+            <ul class="people lead"><PersonCard person={{ ...person, title: undefined }} lang={lang} showRole={false} eager={i === 0} anchor={anchor} /></ul>
+            <ul class="org-titles">{lines(person).map((l) => <li>{l}</li>)}</ul>
+          </div>
         </div>
-      )}
+      ))}
       <p class="org-more">
         {zh ? `实验室现有研究人员 ${memberCount} 人，按研究员、副研究员、助理研究员、博士后与学生分列，见` : `The laboratory has ${memberCount} researchers and students, listed by rank on the `}
         <a href={localizedPath('/people/', lang)}>{t(ui.people, lang)}</a>{zh ? '栏目。' : ' page.'}
