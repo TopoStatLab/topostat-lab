@@ -110,6 +110,22 @@ export const committeeChair: Person = {
   title: { zh: '菲尔兹奖得主、北京雁栖湖应用数学研究院院长、清华大学求真书院院长', en: 'Fields Medalist; Director of BIMSA; Dean of Qiuzhen College, Tsinghua University' },
   photo: P('yau-shingtung'),
   homepage: personalSite['yau-shingtung'],
+  honors: [
+    { zh: '菲尔兹奖得主', en: 'Fields Medal' },
+    { zh: '北京雁栖湖应用数学研究院院长', en: 'Director, Beijing Institute of Mathematical Sciences and Applications' },
+    { zh: '清华大学求真书院院长', en: 'Dean, Qiuzhen College, Tsinghua University' },
+    { zh: '清华大学丘成桐数学科学中心主任', en: 'Director, Yau Mathematical Sciences Center, Tsinghua University' },
+    { zh: '哈佛大学数学系和物理系终身教授', en: 'Professor of Mathematics and Physics, Harvard University' },
+    { zh: '美国科学院院士', en: 'Member, US National Academy of Sciences' },
+    { zh: '美国艺术与科学院院士', en: 'Fellow, American Academy of Arts and Sciences' },
+    { zh: '中国科学院外籍院士', en: 'Foreign Member, Chinese Academy of Sciences' },
+    { zh: '俄罗斯科学院外籍院士', en: 'Foreign Member, Russian Academy of Sciences' },
+    { zh: '台湾中研院院士', en: 'Academician, Academia Sinica' },
+    { zh: '麦克阿瑟奖得主', en: 'MacArthur Fellowship' },
+    { zh: '克拉福德奖得主', en: 'Crafoord Prize' },
+    { zh: '沃尔夫奖得主', en: 'Wolf Prize' },
+    { zh: '马塞尔·格罗斯曼奖得主', en: 'Marcel Grossmann Award' },
+  ],
   core: true,
 }
 

@@ -105,7 +105,10 @@ const leaders = new Set([director, ...deputies].map((p) => p.id))
       <h2 class="section-title" id="h-committee">{t(ui.committee, lang)}</h2>
       <div class="tier">
         <h3 class="tier-label">{zh ? '主席' : 'Chair'}</h3>
-        <ul class="people lead"><PersonCard person={committeeChair} lang={lang} showRole={false} /></ul>
+        <div class="org-row">
+          <ul class="people lead"><PersonCard person={{ ...committeeChair, title: undefined }} lang={lang} showRole={false} /></ul>
+          <ul class="org-titles">{lines(committeeChair).map((l) => <li>{l}</li>)}</ul>
+        </div>
       </div>
       <div class="tier">
         <h3 class="tier-label">{zh ? '委员' : 'Members'}</h3>
