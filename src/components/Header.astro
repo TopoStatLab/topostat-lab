@@ -2,6 +2,7 @@
 import LabMark from './LabMark.astro'
 import { site } from '../data/site'
 import { tiers, members } from '../data/people'
+import { journals } from '../data/journals'
 import { ui, t, localizedPath, type Lang } from '../i18n'
 
 interface Props {
@@ -48,6 +49,7 @@ const navItems = [
       [t(ui.patents, lang), L('/publications/#patents')],
     ],
   },
+  { label: t(ui.journals, lang), href: L('/journals/'), match: ['/journals/'], children: journals.map((j) => [j.name, j.url] as [string, string]) },
   { label: t(ui.software, lang), href: L('/software/'), match: ['/software/'] },
   { label: t(ui.news, lang), href: L('/news/'), match: ['/news/'] },
   { label: t(ui.interviews, lang), href: L('/interviews/'), match: ['/interviews/'] },
@@ -79,7 +81,7 @@ const navItems = [
             </a>
             {item.children && (
               <div class="nav-dropdown">
-                {item.children.map(([label, href]) => <a href={href}>{label}</a>)}
+                {item.children.map(([label, href]) => (href.startsWith('http') ? <a href={href} target="_blank" rel="noopener">{label}</a> : <a href={href}>{label}</a>))}
               </div>
             )}
           </div>
