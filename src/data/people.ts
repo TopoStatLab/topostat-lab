@@ -61,6 +61,8 @@ export const director: Person = {
     { zh: '宾夕法尼亚州立大学杰出大学教授', en: 'Distinguished University Professor, Pennsylvania State University' },
     { zh: 'Floyd科学创新奖获得者', en: 'Recipient of the Floyd Award for Scientific Innovation' },
     { zh: '全球高被引学者', en: 'Highly Cited Researcher' },
+    { zh: 'Data Analytics and Topology 主编', en: 'Editor-in-Chief, Data Analytics and Topology' },
+    { zh: 'Statistics Innovation 主编', en: 'Editor-in-Chief, Statistics Innovation' },
   ],
   core: true,
 }
