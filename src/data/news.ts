@@ -85,7 +85,7 @@ export const news: NewsItem[] = [
       en: 'The Beijing Key Laboratory of Topological Statistics and Applications for Complex Systems is officially established',
     },
     summary: {
-      zh: '实验室依托 BIMSA 建设，与中国人民大学数学学院联合共建，丘成桐任学术委员会主任，邬荣领任实验室主任。',
+      zh: '实验室依托 BIMSA 建设，与中国人民大学数学学院联合共建，丘成桐任学术委员会主席，邬荣领任实验室主任。',
       en: 'Hosted by BIMSA and co-built with Renmin University; Shing-Tung Yau chairs the Academic Committee and Rongling Wu is Director.',
     },
     href: 'https://kw.beijing.gov.cn/xwdt/kcyx/xwdtscyqld/202502/t20250214_4010193.html',
