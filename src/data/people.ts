@@ -97,14 +97,14 @@ export const committeeChair: Person = {
 }
 
 export const committeeMembers: Person[] = [
-  { id: 'liu-jingyuan', name: { zh: '刘婧媛', en: 'Jingyuan Liu' }, title: { zh: '厦门大学', en: 'Xiamen University' }, photo: P('liu-jingyuan') },
-  { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' }, title: { zh: '美国密西根州立大学', en: 'Michigan State University' }, photo: P('cui-yuehua') },
-  { id: 'liu-jun', name: { zh: '刘军', en: 'Jun Liu' }, title: { zh: '哈佛大学', en: 'Harvard University' }, photo: P('liu-jun') },
-  { id: 'fang-fuquan', name: { zh: '方复全', en: 'Fuquan Fang' }, title: { zh: '首都师范大学', en: 'Capital Normal University' }, photo: P('fang-fuquan') },
-  { id: 'rao-yi', name: { zh: '饶毅', en: 'Yi Rao' }, title: { zh: '首都医科大学', en: 'Capital Medical University' }, photo: P('rao-yi') },
-  { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, title: U.ruc, photo: P('zhu-liping') },
+  { id: 'liu-jingyuan', name: { zh: '刘婧媛', en: 'Jingyuan Liu' }, title: { zh: '长江特聘教授，厦门大学', en: 'Changjiang Distinguished Professor, Xiamen University' }, photo: P('liu-jingyuan') },
+  { id: 'cui-yuehua', name: { zh: '崔跃华', en: 'Yuehua Cui' }, title: { zh: '终生教授，美国密西根州立大学', en: 'Tenured Professor, Michigan State University' }, photo: P('cui-yuehua') },
+  { id: 'liu-jun', name: { zh: '刘军', en: 'Jun Liu' }, title: { zh: '美国科学院院士，哈佛大学', en: 'Member of the US National Academy of Sciences, Harvard University' }, photo: P('liu-jun') },
+  { id: 'fang-fuquan', name: { zh: '方复全', en: 'Fuquan Fang' }, title: { zh: '中国科学院院士，首都师范大学', en: 'Academician of the Chinese Academy of Sciences, Capital Normal University' }, photo: P('fang-fuquan') },
+  { id: 'rao-yi', name: { zh: '饶毅', en: 'Yi Rao' }, title: { zh: '讲座教授，北京大学；校长，首都医科大学', en: 'Chair Professor, Peking University; President, Capital Medical University' }, photo: P('rao-yi') },
+  { id: 'zhu-liping', name: { zh: '朱利平', en: 'Liping Zhu' }, title: { zh: '长江特聘教授，中国人民大学', en: 'Changjiang Distinguished Professor, Renmin University of China' }, photo: P('zhu-liping') },
   { id: 'yang-fan', name: { zh: '杨帆', en: 'Fan Yang' }, title: { zh: '清华大学', en: 'Tsinghua University' }, photo: P('yang-fan') },
-  { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, title: U.bimsa, photo: P('qiu-chengdong') },
+  { id: 'qiu-chengdong', name: { zh: '丘成栋', en: 'Stephen Shing-Toung Yau' }, title: { zh: '杰出教授，美国伊利诺伊大学芝加哥分校', en: 'Distinguished Professor, University of Illinois Chicago' }, photo: P('qiu-chengdong') },
   { id: 'gong-xinqi', name: { zh: '龚新奇', en: 'Xinqi Gong' }, title: U.ruc, photo: P('gong-xinqi') },
   { id: 'wu-rongling', name: { zh: '邬荣领', en: 'Rongling Wu' }, title: U.bimsa, photo: P('wu-rongling'), homepage: personalSite['wu-rongling'] },
 ].map((p): Person => ({ ...p, role: { zh: '委员', en: 'Member' } }))
