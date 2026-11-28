@@ -103,6 +103,10 @@ export const talks: Talk[] = [
     href: 'https://www.c2.org.cn/h-nd-2281.html',
   },
   {
+    date: '2025-10-28', title: same('The mathematical dissection of the gut microbiota organization at the interplay of health and disease'),
+    venue: { zh: '清华大学统计与数据科学系', en: 'Department of Statistics and Data Science, Tsinghua University' },
+  },
+  {
     date: '2025-11-02', venue: { zh: '数学与医学交叉论坛，BIMSA', en: 'Interdisciplinary forum: How mathematics is merged into medicine, BIMSA' },
     href: 'https://www.bimsa.cn/zh-CN/research_detail/MathMed.html',
   },
